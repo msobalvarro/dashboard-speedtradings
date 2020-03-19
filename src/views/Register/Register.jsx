@@ -1,4 +1,5 @@
 import React, { useState } from "react"
+import { Link } from "react-router-dom"
 import Axios from 'axios'
 
 // Import styles
@@ -10,12 +11,15 @@ import Logo from "../../static/images/logo.png"
 // Import Components
 import Countries from "../../utils/countries.json"
 import ModalTerms from "../../components/Modal/ModalTerms"
+import ActivityIndicator from "../../components/ActivityIndicator/Activityindicator"
 
 const Register = (props) => {
 
     const { match } = props
 
     console.log(match.params)
+
+    const [loader, setLoader] = useState(true)
 
     const [tabActive, setTab] = useState(1)
     const [modal, setModal] = useState(false)
@@ -39,7 +43,7 @@ const Register = (props) => {
         const data = {
 
         }
-    }    
+    }
 
     return (
         <div className="container-register">
@@ -49,6 +53,8 @@ const Register = (props) => {
 
             <div className="form-container">
                 <img className="image-logo" src={Logo} alt="logo" />
+
+                {/* <ActivityIndicator /> */}
 
                 {/* <h2>Registro</h2> */}
 
@@ -89,7 +95,8 @@ const Register = (props) => {
                             <input value={phone} onChange={e => setPhone(e.target.value)} type="text" className="text-input" />
                         </div>
 
-                        <div className="collection-buttons flex-end">
+                        <div className="collection-buttons">
+                            <Link to="/" className="link">Iniciar sesion</Link>
                             <button className="button no-border" onClick={_ => setTab(2)}>Siguiente</button>
                         </div>
                     </div>
@@ -114,7 +121,7 @@ const Register = (props) => {
                         </div>
 
                         <div className="row">
-                            <span>Wallet</span>
+                            <span>Direccion Wallet</span>
 
                             <input value={wallet} onChange={e => setWallet(e.target.value)} type="text" className="text-input" />
                         </div>

@@ -6,9 +6,15 @@ div.container-register {
 
   .cover-image {
     flex: 1;
+    background-image: url(../../static/images/cover-login.jpg);
+    background-position-y: 85%;
+    background-position-x: 50%;
+    background-attachment: scroll;
+    background-repeat: no-repeat;
   }
 
   .form-container {
+    animation: fadeEffect 1s;
     display: flex;
     flex-direction: column;
     justify-content: space-between;
@@ -54,6 +60,7 @@ div.container-register {
       }
 
       .collection-buttons {
+        align-items: center;
         display: flex;
         justify-content: space-between;
 
@@ -71,14 +78,5 @@ div.container-register {
         color: #fff;
       }
     }
-  }  
-}
-
-@keyframes fadeEffect {
-  from {
-    opacity: 0;
-  }
-  to {
-    opacity: 1;
   }
 }
