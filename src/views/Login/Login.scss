@@ -15,6 +15,12 @@ div.container-login {
         flex-direction: column;
         width: 512px;
 
+        h2 {
+            color: $colorSecondary;
+            font-weight: normal;
+            margin: 10px 0;
+        }
+
 
         img.img-logo {
             max-width: 80%;

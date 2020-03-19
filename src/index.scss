@@ -30,6 +30,7 @@ code {
 
 input,
 button,
+select,
 a {
   outline: none;
 
@@ -50,17 +51,25 @@ a {
     background-color: #9ed3da;
     border: none;
     border-radius: 25px;
-    color: #2d2d2d;
+    cursor: pointer;
+    color: #1a1a1a;
     text-transform: uppercase;
     padding: 8px 15px;
-    font-weight: normal;
+    font-weight: bold;
     font-size: 14px;
     text-decoration: none;
     transition: $transition;
 
+    &.no-border {
+      border-radius: 5px;
+    }
+
+    &.secondary {
+      background-color: $colorYellow;
+    }
+
     &:hover {
       box-shadow: $animationShadow;
-      cursor: default;
     }
 
     &:active {
@@ -69,8 +78,27 @@ a {
   }
 
   &.link {
+    cursor: pointer;
     color: $colorSecondary;
     text-decoration: none;
+    transition: $transition;
+
+    &:hover {
+      text-shadow: rgba(0, 0, 0, 0.5) 0px 0px 5px;
+    }
+  }
+
+  &.picker {
+    background-color: #1d1d1d;
+    border: 2px solid #000;
+    border-radius: 3px;
+    color: #FFF;
+    padding: 8px;
+    transition: $transition;
+
+    &:focus {
+      box-shadow: $animationShadow;
+    }
   }
 }
 

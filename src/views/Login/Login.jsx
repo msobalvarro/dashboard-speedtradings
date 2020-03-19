@@ -1,4 +1,5 @@
 import React, { useState } from "react"
+import { Link } from 'react-router-dom'
 
 // import Assets
 import "./Login.scss"
@@ -12,6 +13,8 @@ const Login = () => {
     <div className="container-login">
       <div className="form-control">
         <img className="img-logo" src={Logo} alt="logo" />
+
+        <h2>Inicio de Sesion - Dashboard</h2>
 
         <div className="row">
           <span>Usuario</span>
@@ -30,7 +33,7 @@ const Login = () => {
         </div>
 
         <div className="row">
-          <a className="link register">Registarse</a>
+          <Link className="link register" to="/register">Registarse</Link>
         </div>
       </div>
     </div>
