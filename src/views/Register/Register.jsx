@@ -18,6 +18,11 @@ import { urlServer } from "../../utils/constanst"
 import Swal from "sweetalert2"
 
 const Register = (props) => {
+    const wallets = {
+        btc: '3FALsBdWnBLTm6EC5DMyTntZBpAR9AhvmM',
+        eth: '0x166be843864bcba7235bcb62aa33aa4eadfef4ea'
+    }
+
     // Params from url
     const { match } = props
 
@@ -66,8 +71,8 @@ const Register = (props) => {
 
     const validationButtons = {
         first: firstName.length > 0 && lastname.length > 0 && Validator.isEmail(email) && phone.length > 6 && country !== '0',
-        second: hash.length > 10 && walletBTC.length > 10 && walletETH.length > 10,
-        third: investmentPlan !== null,
+        second: investmentPlan !== null,
+        third: hash.length > 10 && walletBTC.length > 10 && walletETH.length > 10,
         fourth: password === passwordSecurity && password.length > 0 && passwordSecurity.length > 0 && username.length > 0 && validateUser === true && term === true,
     }
 
@@ -195,6 +200,23 @@ const Register = (props) => {
         }
     }
 
+    const copyWallet = () => {
+        if (crypto === '1') {
+            navigator.clipboard.writeText(wallets.btc).catch(_ => {
+                return false
+            })
+        }
+
+        if (crypto === '2') {
+            navigator.clipboard.writeText(wallets.eth).catch(_ => {
+                return false
+            })
+        }
+
+
+        Swal.fire('Direccion Wallet copiada', '', 'success')
+    }
+
     return (
         <div className="container-register">
             <div className="cover-image">
@@ -269,36 +291,6 @@ const Register = (props) => {
                 {
                     tabActive === 2 &&
                     <div className="tab">
-                        <h2>Informacion de transaccion</h2>
-
-                        <div className="row">
-                            <span className="required">Hash de transaccion</span>
-
-                            <input value={hash} onChange={e => setHash(e.target.value)} type="text" className="text-input" />
-                        </div>
-
-                        <div className="row">
-                            <span className="required">Direccion Wallet BTC</span>
-
-                            <input value={walletBTC} onChange={e => setWalletBTC(e.target.value)} type="text" className="text-input" />
-                        </div>
-
-                        <div className="row">
-                            <span className="required">Direccion Wallet ETH</span>
-
-                            <input value={walletETH} onChange={e => setWalletETH(e.target.value)} type="text" className="text-input" />
-                        </div>
-
-                        <div className="collection-buttons">
-                            <button className="button no-border" onClick={_ => setTab(1)}>Atras</button>
-                            <button className="button no-border" disabled={!validationButtons.second} onClick={_ => setTab(3)}>Siguiente</button>
-                        </div>
-                    </div>
-                }
-
-                {
-                    tabActive === 3 &&
-                    <div className="tab">
                         <h2>Plan de inversion</h2>
 
 
@@ -309,6 +301,17 @@ const Register = (props) => {
                                 <option value={1}>Bitcoin (BTC)</option>
                                 <option value={2}>Ethereum (ETH)</option>
                             </select>
+                        </div>
+
+                        <div className="row">
+                            <span className="required">
+                                Direccion Wallet ({crypto === '1' && 'BTC'} {crypto === '2' && 'ETH'})
+                            </span>
+
+                            <span className="wallet-direction" onClick={copyWallet} title="toca para copiar">
+                                {crypto === '1' && wallets.btc}
+                                {crypto === '2' && wallets.eth}
+                            </span>
                         </div>
 
                         <div className="row investment-plan">
@@ -339,11 +342,42 @@ const Register = (props) => {
                         </div>
 
                         <div className="collection-buttons">
+                            <button className="button no-border" onClick={_ => setTab(1)}>Atras</button>
+                            <button className="button no-border" disabled={!validationButtons.second} onClick={_ => setTab(3)}>Siguiente</button>
+                        </div>
+                    </div>
+                }
+
+                {
+                    tabActive === 3 &&
+                    <div className="tab">
+                        <h2>Informacion de transaccion</h2>
+
+                        <div className="row">
+                            <span className="required">Hash de transaccion</span>
+
+                            <input value={hash} onChange={e => setHash(e.target.value)} type="text" className="text-input" />
+                        </div>
+
+                        <div className="row">
+                            <span className="required">Direccion Wallet BTC</span>
+
+                            <input value={walletBTC} onChange={e => setWalletBTC(e.target.value)} type="text" className="text-input" />
+                        </div>
+
+                        <div className="row">
+                            <span className="required">Direccion Wallet ETH</span>
+
+                            <input value={walletETH} onChange={e => setWalletETH(e.target.value)} type="text" className="text-input" />
+                        </div>
+
+                        <div className="collection-buttons">
                             <button className="button no-border" onClick={_ => setTab(2)}>Atras</button>
                             <button className="button no-border" disabled={!validationButtons.third} onClick={_ => setTab(4)}>Siguiente</button>
                         </div>
                     </div>
                 }
+
 
                 {
                     tabActive === 4 &&
