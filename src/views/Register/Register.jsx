@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react"
-import { Link } from "react-router-dom"
-import Axios from 'axios'
+import { Link, Redirect } from "react-router-dom"
+import Axios from "axios"
+import Validator from "validator"
 
 // Import styles
 import "./Register.scss"
@@ -16,15 +17,22 @@ import ActivityIndicator from "../../components/ActivityIndicator/Activityindica
 import { urlServer, Toast } from "../../utils/constanst"
 
 const Register = (props) => {
-
     // Params from url
     const { match } = props
+
+    const [redirect, setRedirect] = useState(false)
 
     // Show render loader
     const [loader, setLoader] = useState(true)
 
+    // Valida si el usuario ya existe
+    const [validateUser, setValidateUser] = useState(null)
+
+    // Valida si el usuario sponsor existe
+    const [validateUserSponsor, setValidateUserSponsor] = useState(null)
+
     // State for show tabs view
-    const [tabActive, setTab] = useState(3)
+    const [tabActive, setTab] = useState(4)
 
     // Show modal terms
     const [modal, setModal] = useState(false)
@@ -37,26 +45,40 @@ const Register = (props) => {
     const [lastname, setLastname] = useState('')
     const [email, setEmail] = useState('')
     const [phone, setPhone] = useState('')
-    const [country, setCountry] = useState('')
+    const [country, setCountry] = useState('0')
     const [hash, setHash] = useState('')
     const [username, setUsername] = useState('')
     const [password, setPassword] = useState('')
     const [passwordSecurity, setPasswordSecurity] = useState('')
     const [walletBTC, setWalletBTC] = useState('')
     const [walletETH, setWalletETH] = useState('')
-    const [investmentPlan, setInvestmentPlan] = useState(0)
-    const [usernameSponsor, setUsernameSponsor] = useState(Object.keys(match.params).length === 0 ? match.params.username : '')
-
+    const [investmentPlan, setInvestmentPlan] = useState(null)
+    const [usernameSponsor, setUsernameSponsor] = useState('')
     // Crypto select
     const [crypto, setCrypto] = useState('1')
 
+    // Plan selection
     const [plan, setPlan] = useState([])
 
+    const validationButtons = {
+        first: firstName.length > 0 && lastname.length > 0 && Validator.isEmail(email) && phone.length > 6 && country !== '0',
+        second: hash.length > 10 && walletBTC.length > 10 && walletETH.length > 10,
+        third: investmentPlan !== null,
+        fourth: password === passwordSecurity && password.length > 0 && passwordSecurity.length > 0 && username.length > 0 && validateUser === true && term === true,
+    }
+
     useEffect(() => {
+        if (Object.keys(match.params).length) {
+            setUsernameSponsor(match.params.username)
+
+            validateUsernameSponsor(match.params.username)
+        } else {
+            setUsernameSponsor('')
+        }
+
         try {
             Axios.get(`${urlServer}/collection/investment-plan`)
                 .then(response => {
-                    console.log(response.data)
                     setPlan(response.data)
                 })
                 .catch(reason => {
@@ -69,9 +91,81 @@ const Register = (props) => {
         }
     }, [])
 
+    /**Function handled submit form */
     const onSubmitInformation = () => {
         const data = {
+            firstname: firstName,
+            lastname: lastname,
+            email,
+            phone: `${Countries[Number(country)].phoneCode} ${phone}`,
+            country: Countries[Number(country)].name,
+            hash,
+            username,
+            password,
+            walletBTC,
+            walletETH,
+            id_investment_plan: Number(investmentPlan),
+            username_sponsor: usernameSponsor
+        }
 
+
+        console.log(data)
+    }
+
+
+    /**Validate user register form */
+    const validateUsername = async () => {
+        setLoader(true)
+        try {
+            if (username.length > 5) {
+                await Axios.post(`${urlServer}/comprobate/username`, { username })
+                    .then((response) => {
+                        console.log(response)
+                        setValidateUser(response.data.length === 0)
+                    })
+                    .catch(reason => {
+                        throw reason
+                    })
+            } else {
+                setValidateUser(false)
+            }
+        } catch (error) {
+            Toast('error', error)
+        } finally {
+            setLoader(false)
+        }
+    }
+
+    /**Function validate user sponsor */
+    const validateUsernameSponsor = async (username = '') => {
+        setLoader(true)
+
+        try {
+            if (username.length > 0) {
+                await Axios.post(`${urlServer}/comprobate/username`, { username })
+                    .then((response) => {
+                        console.log(response.data)
+                        if (response.data.length > 0) {
+                            setValidateUserSponsor(true)
+                        } else {
+                            setRedirect(true)
+                            setValidateUserSponsor(false)
+                            
+                            setTimeout(() => {
+                                setValidateUserSponsor(null)
+                                setUsernameSponsor('')
+                            }, 5000)
+                        }
+                    })
+                    .catch(reason => {
+                        throw reason
+                    })
+            }
+        } catch (error) {
+            console.log(error)
+            Toast('error', error)
+        } finally {
+            setLoader(false)
         }
     }
 
@@ -82,11 +176,23 @@ const Register = (props) => {
             </div>
 
             <div className="form-container">
+                {
+                    redirect &&
+                    <Redirect to='/register' />
+                }
+
+                {
+                    (validateUserSponsor !== null) &&
+                    <>
+                        {
+                            validateUserSponsor
+                                ? <div className="sponsor-message valid">Registro patrocinado por {usernameSponsor}</div>
+                                : <div className="sponsor-message invalid">Sponsor "{usernameSponsor}" no es valido</div>
+                        }
+                    </>
+                }
+
                 <img className="image-logo" src={Logo} alt="logo" />
-
-                {/* <ActivityIndicator /> */}
-
-                {/* <h2>Registro</h2> */}
 
                 {
                     tabActive === 1 &&
@@ -114,7 +220,7 @@ const Register = (props) => {
                         <div className="row">
                             <span className="required">Pais</span>
 
-                            <select className="picker" value={country} onChange={e => setCountry(console.log(e.target.value))}>
+                            <select className="picker" value={country} onChange={e => setCountry(e.target.value)}>
                                 {Countries.map(
                                     ({ name }, index) => <option value={index} key={index}>{name}</option>
                                 )}
@@ -129,7 +235,7 @@ const Register = (props) => {
 
                         <div className="collection-buttons">
                             <Link to="/" className="link">Iniciar sesion</Link>
-                            <button className="button no-border" onClick={_ => setTab(2)}>Siguiente</button>
+                            <button className="button no-border" disabled={!validationButtons.first} onClick={_ => setTab(2)}>Siguiente</button>
                         </div>
                     </div>
                 }
@@ -138,15 +244,6 @@ const Register = (props) => {
                     tabActive === 2 &&
                     <div className="tab">
                         <h2>Informacion de transaccion</h2>
-
-                        {
-                            Object.keys(match.params).length === 0 &&
-                            <div className="row">
-                                <span>Usuario Sponsor</span>
-
-                                <input value={usernameSponsor} onChange={e => setUsernameSponsor(e.target.value)} type="text" className="text-input" />
-                            </div>
-                        }
 
                         <div className="row">
                             <span className="required">Hash de transaccion</span>
@@ -168,7 +265,7 @@ const Register = (props) => {
 
                         <div className="collection-buttons">
                             <button className="button no-border" onClick={_ => setTab(1)}>Atras</button>
-                            <button className="button no-border" onClick={_ => setTab(3)}>Siguiente</button>
+                            <button className="button no-border" disabled={!validationButtons.second} onClick={_ => setTab(3)}>Siguiente</button>
                         </div>
                     </div>
                 }
@@ -180,7 +277,7 @@ const Register = (props) => {
 
 
                         <div className="row">
-                            <span className="required">Moneda</span>
+                            <span>Moneda</span>
 
                             <select className="picker" value={crypto} onChange={e => setCrypto(e.target.value)}>
                                 <option value={1}>Bitcoin (BTC)</option>
@@ -202,7 +299,7 @@ const Register = (props) => {
                                     if (item.id_currency === Number(crypto)) {
                                         return (
                                             <div className="element" key={index}>
-                                                <input onChange={e => console.log(e.target.value)} value={item.id} type="radio" id={`plan-${index}`} className="check" name="plan" />
+                                                <input onChange={e => setInvestmentPlan(e.target.value)} value={item.id} type="radio" id={`plan-${index}`} className="check" name="plan" />
                                                 <label htmlFor={`plan-${index}`}>
                                                     {item.amount}
                                                     {item.id_currency === 1 && ' BTC'}
@@ -217,7 +314,7 @@ const Register = (props) => {
 
                         <div className="collection-buttons">
                             <button className="button no-border" onClick={_ => setTab(2)}>Atras</button>
-                            <button className="button no-border" onClick={_ => setTab(4)}>Siguiente</button>
+                            <button className="button no-border" disabled={!validationButtons.third} onClick={_ => setTab(4)}>Siguiente</button>
                         </div>
                     </div>
                 }
@@ -228,9 +325,27 @@ const Register = (props) => {
                         <h2>Seguridad</h2>
 
                         <div className="row">
-                            <span className="required">Usuario</span>
+                            <span className="required comprobate">
+                                Usuario
 
-                            <input value={username} onChange={e => setUsername(e.target.value)} type="text" className="text-input" />
+                                {
+                                    loader &&
+                                    <ActivityIndicator size={24} />
+                                }
+
+                                {
+                                    (validateUser !== null) &&
+                                    <>
+                                        {
+                                            validateUser
+                                                ? <span className="valid">Usuario valido</span>
+                                                : <span className="invalid">El usuario ya existe</span>
+                                        }
+                                    </>
+                                }
+                            </span>
+
+                            <input value={username} onBlur={validateUsername} onChange={e => setUsername(e.target.value)} type="text" className="text-input" />
                         </div>
 
                         <div className="row">
@@ -248,12 +363,18 @@ const Register = (props) => {
                         <div className="terms">
                             <label htmlFor="terms-input">He leído términos y condiciones</label>
 
-                            <input type="checkbox" value={term} id="terms-input" onChange={e => setTerms(e.target.value)} />
+                            <input type="checkbox" id="terms-input" onChange={e => setTerms(!term)} />
                         </div>
 
                         <div className="collection-buttons">
                             <button className="button no-border" onClick={_ => setTab(3)}>Atras</button>
-                            <button className="button secondary no-border" disabled={password !== passwordSecurity || password === ""} onClick={onSubmitInformation}>Enviar</button>
+                            <button className="button secondary no-border" disabled={!validationButtons.fourth || loader} onClick={onSubmitInformation}>
+                                {
+                                    loader
+                                        ? <ActivityIndicator size="14" />
+                                        : 'Enviar'
+                                }
+                            </button>
                         </div>
                     </div>
                 }

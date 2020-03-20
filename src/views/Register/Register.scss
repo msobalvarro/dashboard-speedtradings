@@ -1,3 +1,5 @@
+@import "../../utils/constants.scss";
+
 div.container-register {
   animation: fadeEffect 1s;
   display: flex;
@@ -7,7 +9,7 @@ div.container-register {
 
   .cover-image {
     background-image: url(../../static/images/cover-login.jpg);
-    background-position-y: 85%;
+    background-position-y: 60%;
     background-position-x: 50%;
     background-attachment: scroll;
     background-repeat: no-repeat;
@@ -20,6 +22,19 @@ div.container-register {
     flex-direction: column;
     justify-content: space-between;
     width: 480px;
+
+    .sponsor-message {
+      padding: 10px;
+      text-align: center;
+
+      &.valid {
+        background-color: $colorSecondary;
+        color: #2d2d2d;
+      }
+      &.invalid {
+        background-color: $colorRed;
+      }
+    }
 
     h2 {
       text-align: center;
@@ -58,6 +73,32 @@ div.container-register {
             content: 'requerido';
             position: absolute;
             padding: 3px;
+          }
+
+          &.comprobate {
+            align-items: center;
+            display: flex;
+            flex-direction: row;
+
+            svg {
+              margin-left: 5px;
+            }
+
+            span {
+              font-size: 12px;
+              margin-left: 15px;
+              padding: 5px;
+              border-radius: 5px;
+
+              &.invalid {
+                background-color: red;
+              }
+
+              &.valid {
+                background-color: $colorYellow;
+                color: #1d1d1d;
+              }
+            }
           }
         }
 

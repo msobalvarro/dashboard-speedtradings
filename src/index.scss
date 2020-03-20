@@ -124,6 +124,7 @@ a {
 
     &:checked::after {
       background-color: $colorYellow;
+      border-color: #000;
     }
 
     &:checked ~ label {
