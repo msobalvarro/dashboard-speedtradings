@@ -17,15 +17,19 @@ import { urlServer, Toast } from "../../utils/constanst"
 
 const Register = (props) => {
 
+    // Params from url
     const { match } = props
 
-    console.log(match.params)
-
+    // Show render loader
     const [loader, setLoader] = useState(true)
 
-    const [tabActive, setTab] = useState(1)
+    // State for show tabs view
+    const [tabActive, setTab] = useState(3)
+
+    // Show modal terms
     const [modal, setModal] = useState(false)
 
+    // Input accept terms check
     const [term, setTerms] = useState(false)
 
     // form control data
@@ -37,21 +41,29 @@ const Register = (props) => {
     const [hash, setHash] = useState('')
     const [username, setUsername] = useState('')
     const [password, setPassword] = useState('')
-    const [wallet, setWallet] = useState('')
+    const [passwordSecurity, setPasswordSecurity] = useState('')
+    const [walletBTC, setWalletBTC] = useState('')
+    const [walletETH, setWalletETH] = useState('')
     const [investmentPlan, setInvestmentPlan] = useState(0)
     const [usernameSponsor, setUsernameSponsor] = useState(Object.keys(match.params).length === 0 ? match.params.username : '')
+
+    // Crypto select
+    const [crypto, setCrypto] = useState('1')
+
+    const [plan, setPlan] = useState([])
 
     useEffect(() => {
         try {
             Axios.get(`${urlServer}/collection/investment-plan`)
-            .then(response => {
-                console.log(response.data)
-            })
-            .catch(reason => {
-                console.log(reason)
+                .then(response => {
+                    console.log(response.data)
+                    setPlan(response.data)
+                })
+                .catch(reason => {
+                    console.log(reason)
 
-                throw reason
-            })
+                    throw reason
+                }).finally(_ => setLoader(false))
         } catch (error) {
             Toast('error', error)
         }
@@ -79,26 +91,28 @@ const Register = (props) => {
                 {
                     tabActive === 1 &&
                     <div className="tab">
+                        <h2>Informacion basica</h2>
+
                         <div className="row">
-                            <span>Nombre</span>
+                            <span className="required">Nombre</span>
 
                             <input value={firstName} onChange={e => setFirstname(e.target.value)} type="text" className="text-input" />
                         </div>
 
                         <div className="row">
-                            <span>Apellido</span>
+                            <span className="required">Apellido</span>
 
                             <input value={lastname} onChange={e => setLastname(e.target.value)} type="text" className="text-input" />
                         </div>
 
                         <div className="row">
-                            <span>Correo Electronico</span>
+                            <span className="required">Correo Electronico</span>
 
                             <input value={email} onChange={e => setEmail(e.target.value)} type="text" className="text-input" />
                         </div>
 
                         <div className="row">
-                            <span>Pais</span>
+                            <span className="required">Pais</span>
 
                             <select className="picker" value={country} onChange={e => setCountry(console.log(e.target.value))}>
                                 {Countries.map(
@@ -108,7 +122,7 @@ const Register = (props) => {
                         </div>
 
                         <div className="row">
-                            <span>Numero telefonico</span>
+                            <span className="required">Numero telefonico</span>
 
                             <input value={phone} onChange={e => setPhone(e.target.value)} type="text" className="text-input" />
                         </div>
@@ -123,6 +137,8 @@ const Register = (props) => {
                 {
                     tabActive === 2 &&
                     <div className="tab">
+                        <h2>Informacion de transaccion</h2>
+
                         {
                             Object.keys(match.params).length === 0 &&
                             <div className="row">
@@ -133,38 +149,111 @@ const Register = (props) => {
                         }
 
                         <div className="row">
-                            <span>Hash de transaccion</span>
+                            <span className="required">Hash de transaccion</span>
 
                             <input value={hash} onChange={e => setHash(e.target.value)} type="text" className="text-input" />
                         </div>
 
                         <div className="row">
-                            <span>Direccion Wallet</span>
+                            <span className="required">Direccion Wallet BTC</span>
 
-                            <input value={wallet} onChange={e => setWallet(e.target.value)} type="text" className="text-input" />
+                            <input value={walletBTC} onChange={e => setWalletBTC(e.target.value)} type="text" className="text-input" />
                         </div>
 
                         <div className="row">
-                            <span>Usuario</span>
+                            <span className="required">Direccion Wallet ETH</span>
+
+                            <input value={walletETH} onChange={e => setWalletETH(e.target.value)} type="text" className="text-input" />
+                        </div>
+
+                        <div className="collection-buttons">
+                            <button className="button no-border" onClick={_ => setTab(1)}>Atras</button>
+                            <button className="button no-border" onClick={_ => setTab(3)}>Siguiente</button>
+                        </div>
+                    </div>
+                }
+
+                {
+                    tabActive === 3 &&
+                    <div className="tab">
+                        <h2>Plan de inversion</h2>
+
+
+                        <div className="row">
+                            <span className="required">Moneda</span>
+
+                            <select className="picker" value={crypto} onChange={e => setCrypto(e.target.value)}>
+                                <option value={1}>Bitcoin (BTC)</option>
+                                <option value={2}>Ethereum (ETH)</option>
+                            </select>
+                        </div>
+
+                        <div className="row investment-plan">
+                            <span className="required">Plan de inversion</span>
+
+                            <div className="plan">
+                                {
+                                    (loader && plan.length === 0) &&
+
+                                    <ActivityIndicator />
+                                }
+
+                                {plan.map((item, index) => {
+                                    if (item.id_currency === Number(crypto)) {
+                                        return (
+                                            <div className="element" key={index}>
+                                                <input onChange={e => console.log(e.target.value)} value={item.id} type="radio" id={`plan-${index}`} className="check" name="plan" />
+                                                <label htmlFor={`plan-${index}`}>
+                                                    {item.amount}
+                                                    {item.id_currency === 1 && ' BTC'}
+                                                    {item.id_currency === 2 && ' ETH'}
+                                                </label>
+                                            </div>
+                                        )
+                                    }
+                                })}
+                            </div>
+                        </div>
+
+                        <div className="collection-buttons">
+                            <button className="button no-border" onClick={_ => setTab(2)}>Atras</button>
+                            <button className="button no-border" onClick={_ => setTab(4)}>Siguiente</button>
+                        </div>
+                    </div>
+                }
+
+                {
+                    tabActive === 4 &&
+                    <div className="tab">
+                        <h2>Seguridad</h2>
+
+                        <div className="row">
+                            <span className="required">Usuario</span>
 
                             <input value={username} onChange={e => setUsername(e.target.value)} type="text" className="text-input" />
                         </div>
 
                         <div className="row">
-                            <span>Contraseña</span>
+                            <span className="required">Contraseña</span>
 
                             <input value={password} onChange={e => setPassword(e.target.value)} type="password" className="text-input" />
                         </div>
 
-                        <div className="terms">
-                            <span>He leído términos y condiciones</span>
+                        <div className="row">
+                            <span className="required">Confirmar Contraseña</span>
 
-                            <input type="checkbox" value={term} onChange={e => setTerms(e.target.value)} />
+                            <input value={passwordSecurity} onChange={e => setPasswordSecurity(e.target.value)} type="password" className="text-input" />
+                        </div>
+
+                        <div className="terms">
+                            <label htmlFor="terms-input">He leído términos y condiciones</label>
+
+                            <input type="checkbox" value={term} id="terms-input" onChange={e => setTerms(e.target.value)} />
                         </div>
 
                         <div className="collection-buttons">
-                            <button className="button no-border" onClick={_ => setTab(1)}>Atras</button>
-                            <button className="button secondary no-border" onClick={onSubmitInformation}>Enviar</button>
+                            <button className="button no-border" onClick={_ => setTab(3)}>Atras</button>
+                            <button className="button secondary no-border" disabled={password !== passwordSecurity || password === ""} onClick={onSubmitInformation}>Enviar</button>
                         </div>
                     </div>
                 }
