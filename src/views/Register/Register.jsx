@@ -14,7 +14,8 @@ import Countries from "../../utils/countries.json"
 import ModalTerms from "../../components/Modal/ModalTerms"
 import ActivityIndicator from "../../components/ActivityIndicator/Activityindicator"
 
-import { urlServer, Toast } from "../../utils/constanst"
+import { urlServer } from "../../utils/constanst"
+import Swal from "sweetalert2"
 
 const Register = (props) => {
     // Params from url
@@ -25,6 +26,9 @@ const Register = (props) => {
     // Show render loader
     const [loader, setLoader] = useState(true)
 
+    // Show render loader senData
+    const [loaderData, setLoaderData] = useState(false)
+
     // Valida si el usuario ya existe
     const [validateUser, setValidateUser] = useState(null)
 
@@ -32,7 +36,7 @@ const Register = (props) => {
     const [validateUserSponsor, setValidateUserSponsor] = useState(null)
 
     // State for show tabs view
-    const [tabActive, setTab] = useState(4)
+    const [tabActive, setTab] = useState(1)
 
     // Show modal terms
     const [modal, setModal] = useState(false)
@@ -87,29 +91,51 @@ const Register = (props) => {
                     throw reason
                 }).finally(_ => setLoader(false))
         } catch (error) {
-            Toast('error', error)
+            Swal.fire('error', error.toString(), 'error')
         }
     }, [])
 
     /**Function handled submit form */
-    const onSubmitInformation = () => {
-        const data = {
-            firstname: firstName,
-            lastname: lastname,
-            email,
-            phone: `${Countries[Number(country)].phoneCode} ${phone}`,
-            country: Countries[Number(country)].name,
-            hash,
-            username,
-            password,
-            walletBTC,
-            walletETH,
-            id_investment_plan: Number(investmentPlan),
-            username_sponsor: usernameSponsor
+    const onSubmitInformation = async () => {
+        setLoaderData(true)
+        try {
+            const data = {
+                firstname: firstName,
+                lastname: lastname,
+                email,
+                phone: `${Countries[Number(country)].phoneCode} ${phone}`,
+                country: Countries[Number(country)].name,
+                hash,
+                username,
+                password,
+                walletBTC,
+                walletETH,
+                id_investment_plan: Number(investmentPlan),
+                username_sponsor: usernameSponsor
+            }
+
+            await Axios.post(`${urlServer}/register`, data)
+                .then(response => {
+                    if (response.data.response.toLowerCase() === "success") {
+                        Swal.fire(
+                            'Registro creado',
+                            'Su registro se esta procesando, inicie sesion para continuar',
+                            'success').then(() => window.location.hash = '/')
+                    } else {
+                        Swal.fire(
+                            'Error al registrar',
+                            'Su registro no se ha podido realizar, contacte a soporte o intentelo mas tarde',
+                            'error').then(() => window.location.hash = '/')
+                    }
+                })
+                .catch(err => {
+                    throw err
+                })
+        } catch (error) {
+            Swal.fire('error', error.toString(), 'error')
+        } finally {
+            setLoaderData(false)
         }
-
-
-        console.log(data)
     }
 
 
@@ -130,7 +156,7 @@ const Register = (props) => {
                 setValidateUser(false)
             }
         } catch (error) {
-            Toast('error', error)
+            Swal.fire('error', error.toString(), 'error')
         } finally {
             setLoader(false)
         }
@@ -150,7 +176,7 @@ const Register = (props) => {
                         } else {
                             setRedirect(true)
                             setValidateUserSponsor(false)
-                            
+
                             setTimeout(() => {
                                 setValidateUserSponsor(null)
                                 setUsernameSponsor('')
@@ -163,7 +189,7 @@ const Register = (props) => {
             }
         } catch (error) {
             console.log(error)
-            Toast('error', error)
+            Swal.fire('error', error.toString(), 'error')
         } finally {
             setLoader(false)
         }
@@ -228,7 +254,7 @@ const Register = (props) => {
                         </div>
 
                         <div className="row">
-                            <span className="required">Numero telefonico</span>
+                            <span className="required">Numero telefonico ({Countries[Number(country)].phoneCode})</span>
 
                             <input value={phone} onChange={e => setPhone(e.target.value)} type="text" className="text-input" />
                         </div>
@@ -368,10 +394,10 @@ const Register = (props) => {
 
                         <div className="collection-buttons">
                             <button className="button no-border" onClick={_ => setTab(3)}>Atras</button>
-                            <button className="button secondary no-border" disabled={!validationButtons.fourth || loader} onClick={onSubmitInformation}>
+                            <button className="button secondary no-border" disabled={!validationButtons.fourth || loader || loaderData} onClick={onSubmitInformation}>
                                 {
-                                    loader
-                                        ? <ActivityIndicator size="14" />
+                                    (loader || loaderData)
+                                        ? <><ActivityIndicator size={20} /> Cargando..</>
                                         : 'Enviar'
                                 }
                             </button>

@@ -48,9 +48,13 @@ a {
   }
 
   &.button {
+    align-items: center;
     background-color: #9ed3da;
     border: none;
     border-radius: 25px;
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
     cursor: pointer;
     color: #1a1a1a;
     text-transform: uppercase;

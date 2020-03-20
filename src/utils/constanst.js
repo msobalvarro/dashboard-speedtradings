@@ -1,7 +1,3 @@
-import toastr from 'toastr'
+import Swal from 'sweetalert2'
 
 export const urlServer = "http://localhost:8080"
-
-export const Toast = (type = 'info' | 'success' | 'warning' | 'error', msg = '') => {
-    toastr[type](msg)
-}
