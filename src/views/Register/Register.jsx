@@ -1,4 +1,4 @@
-import React, { useState } from "react"
+import React, { useState, useEffect } from "react"
 import { Link } from "react-router-dom"
 import Axios from 'axios'
 
@@ -12,6 +12,8 @@ import Logo from "../../static/images/logo.png"
 import Countries from "../../utils/countries.json"
 import ModalTerms from "../../components/Modal/ModalTerms"
 import ActivityIndicator from "../../components/ActivityIndicator/Activityindicator"
+
+import { urlServer, Toast } from "../../utils/constanst"
 
 const Register = (props) => {
 
@@ -38,6 +40,22 @@ const Register = (props) => {
     const [wallet, setWallet] = useState('')
     const [investmentPlan, setInvestmentPlan] = useState(0)
     const [usernameSponsor, setUsernameSponsor] = useState(Object.keys(match.params).length === 0 ? match.params.username : '')
+
+    useEffect(() => {
+        try {
+            Axios.get(`${urlServer}/collection/investment-plan`)
+            .then(response => {
+                console.log(response.data)
+            })
+            .catch(reason => {
+                console.log(reason)
+
+                throw reason
+            })
+        } catch (error) {
+            Toast('error', error)
+        }
+    }, [])
 
     const onSubmitInformation = () => {
         const data = {
@@ -159,9 +177,9 @@ const Register = (props) => {
                     }}>
                         Terminos y condiciones
                     </a>
-                </div>                
+                </div>
             </div>
-            
+
             <ModalTerms isVisible={modal} onClose={e => setModal(false)} />
         </div>
     )
