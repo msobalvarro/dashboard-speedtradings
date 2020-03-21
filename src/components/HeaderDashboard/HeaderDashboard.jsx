@@ -22,7 +22,7 @@ const HeaderDashboard = ({ type = "btc", amount = 0.5, amountToday = 2 }) => {
 
             <div className="info">
                 <div className="row">
-                    <h1>{amount} {type}</h1>
+                    <h1>{amount} {type.toUpperCase()}</h1>
 
                     <button className="button large secondary">Upgrade</button>
                 </div>

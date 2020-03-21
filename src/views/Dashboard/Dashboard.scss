@@ -1,55 +1,116 @@
 @import "../../utils/constants.scss";
 
+$colorContainer: rgba(250, 250, 250, 0.3);
+
 div.container-dashboard {
-    animation: fadeEffect 0.5;
-    height: 100%;
-    width: 100%;
+  animation: fadeEffect 0.5;
+  height: 100%;
+  width: 100%;
 
-    .content-dashboard {
-        align-items: stretch;
-        display: flex;
-        justify-content: space-between;
-        margin-top: 25px;
-        padding: 0 25px;
+  .content-dashboard {
+    align-items: stretch;
+    display: flex;
+    justify-content: space-between;
+    margin-top: 25px;
+    padding: 0 25px;
 
-        .content {
-            // background-color: red;
-            flex: 1;
-            width: 45%;
+    .content {
+			// background-color: red;
+			overflow: auto;
+      width: 48%;
 
-            .content-chart {
-                background-color: rgba(250, 250, 250, 0.3);
-                margin-top: 25px;
-                border-radius: 10px;
-                padding: 10px 0;
-                width: 100%;
+      .card {
+        border-radius: 10px;
+        background-color: $colorContainer;
+				margin-top: 25px;
+        padding: 20px;
 
-                svg {
-                    height: 512px;
+        &.chart {
+          width: 100%;
 
-                    .ct-area {
-                        color: $colorSecondary !important;
-                    }
-                    .ct-series-a .ct-bar, .ct-series-a .ct-line, .ct-series-a .ct-point, .ct-series-a .ct-slice-donut {
-                        stroke: $colorYellow;
-                    }
-                    .ct-series-b .ct-bar, .ct-series-b .ct-line, .ct-series-b .ct-point, .ct-series-b .ct-slice-donut {
-                        stroke: rgb(216, 52, 52);
-                    }
-
-                    span.ct-label {
-                        color: #FFF;
-                    }
-                }
-
-            }
-        }
-
-        .line {
-            background-color: #CCC;
-            margin: 0 25px;
+          svg {
             height: 512px;
-            width: 1px;
+
+            .ct-area {
+              color: $colorSecondary !important;
+            }
+            .ct-series-a .ct-bar,
+            .ct-series-a .ct-line,
+            .ct-series-a .ct-point,
+            .ct-series-a .ct-slice-donut {
+              stroke: $colorYellow;
+            }
+            .ct-series-b .ct-bar,
+            .ct-series-b .ct-line,
+            .ct-series-b .ct-point,
+            .ct-series-b .ct-slice-donut {
+              stroke: rgb(216, 52, 52);
+            }
+
+            span.ct-label {
+              color: #fff;
+            }
+          }
         }
+
+        &.details {
+          display: flex;
+          flex-direction: column;
+
+          .row {
+            display: flex;
+            margin: 20px 0;
+            flex-direction: row;
+            justify-content: space-between;
+
+            .col {
+              h2,
+              span {
+                color: $colorSecondary;
+							}
+							
+							h2.big {
+								font-size: 2em;
+							}
+
+              &.yellow {
+                text-align: right;
+                h2 {
+                  color: $colorYellow;
+                }
+              }
+            }
+          }
+				}
+				
+				&.profit-table {
+					margin-bottom: 25px;
+
+					.table {
+						.header {
+							border-bottom: 2px solid $colorSecondary;
+							padding: 10px 0;
+							display: flex;
+							justify-content: space-between;
+
+							span {
+								color: $colorSecondary;
+								font-weight: bolder;
+								font-size: 1.2em;
+							}
+						}
+
+						.body {
+							.row {
+								border-bottom: 1px solid #FFF;
+								display: flex;
+								justify-content: space-between;
+								padding: 10px 0;
+							}
+						}
+					}
+				}
+      }
     }
+  }
 }
