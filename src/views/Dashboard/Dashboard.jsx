@@ -97,7 +97,7 @@ const Dashboard = () => {
                 </div>
 
                 <div className="content">
-                    <BuyPlan type="eth" />
+                    <BuyPlan idCrypto={2} />
                 </div>
             </div>
         </div>

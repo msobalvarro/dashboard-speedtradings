@@ -1,0 +1,23 @@
+div.container-buy-plan {
+  background-color: rgba(255, 255, 255, 0.2);
+  border-radius: 10px;
+  align-items: center;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding: 25px;
+
+  img.logo-crypto {
+    margin: 25px 0;
+    width: 30%;
+  }
+
+  .container-picker {
+    margin-bottom: 25px;
+    width: 50%;
+    .picker {
+      margin-top: 10px;
+      width: 100%;
+    }
+  }
+}

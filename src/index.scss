@@ -119,7 +119,7 @@ a {
     }
   }
 
-  &.check {
+  &[type="radio"].check {
     position: relative;
 
     &::after {
