@@ -1,5 +1,6 @@
-import React, { useState } from "react"
+import React, { useState, useEffect } from "react"
 import Validator from "validator"
+import { useDispatch } from "react-redux"
 import { Link } from 'react-router-dom'
 
 // import Assets
@@ -7,10 +8,12 @@ import "./Login.scss"
 import Logo from "../../static/images/logo.png"
 import ActivityIndicator from "../../components/ActivityIndicator/Activityindicator"
 import Axios from "axios"
-import { urlServer } from "../../utils/constanst"
+import { urlServer, setStorage } from "../../utils/constanst"
 import Swal from "sweetalert2"
+import { SETSTORAGE } from "../../store/ActionTypes"
 
 const Login = () => {
+  const dispatch = useDispatch()
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
 
@@ -52,11 +55,18 @@ const Login = () => {
     try {
       await Axios.post(`${urlServer}/login`, data)
         .then(response => {
-          console.log(response)
           if (response.data.error) {
             Swal.fire('Error al auntenticar', response.data.message, 'warning')
           } else {
-            console.log(response.data)
+            // Ingresamos los datos en el localstorage
+            setStorage(response.data)
+
+            dispatch({
+              type: SETSTORAGE,
+              payload: response.data
+            })
+
+            window.location.reload()
           }
         })
 
