@@ -2,4 +2,54 @@
 
 div.container-dashboard {
     animation: fadeEffect 0.5;
+    height: 100%;
+    width: 100%;
+
+    .content-dashboard {
+        align-items: stretch;
+        display: flex;
+        justify-content: space-between;
+        margin-top: 25px;
+        padding: 0 25px;
+
+        .content {
+            // background-color: red;
+            flex: 1;
+            width: 45%;
+
+            .content-chart {
+                background-color: rgba(250, 250, 250, 0.3);
+                margin-top: 25px;
+                border-radius: 10px;
+                padding: 10px 0;
+                width: 100%;
+
+                svg {
+                    height: 512px;
+
+                    .ct-area {
+                        color: $colorSecondary !important;
+                    }
+                    .ct-series-a .ct-bar, .ct-series-a .ct-line, .ct-series-a .ct-point, .ct-series-a .ct-slice-donut {
+                        stroke: $colorYellow;
+                    }
+                    .ct-series-b .ct-bar, .ct-series-b .ct-line, .ct-series-b .ct-point, .ct-series-b .ct-slice-donut {
+                        stroke: rgb(216, 52, 52);
+                    }
+
+                    span.ct-label {
+                        color: #FFF;
+                    }
+                }
+
+            }
+        }
+
+        .line {
+            background-color: #CCC;
+            margin: 0 25px;
+            height: 512px;
+            width: 1px;
+        }
+    }
 }

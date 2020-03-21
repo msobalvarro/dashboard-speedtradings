@@ -1,0 +1,29 @@
+@import "../../utils/constants.scss";
+
+div.progress-bar {
+    border: 2px solid $colorSecondary;
+    border-radius: 30px;
+    position: relative;
+    // overflow: hidden;
+    width: 100%;
+    
+    .value {
+        align-items: center;
+        background-color: $colorSecondary;
+        color: $colorMain;
+        display: flex;
+        border-radius: 30px;
+        justify-content: center;
+        overflow: hidden;
+        height: 40px;
+        padding: 0 10px;
+        
+    }
+
+    .value-legend {
+        color: $colorSecondary;
+        position: absolute;
+        top: 120%;
+        left: 5%;
+    }
+}

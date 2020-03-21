@@ -6,6 +6,14 @@ const keyStorage = "@storage"
 
 export const urlServer = "http://localhost:8080"
 
+/**Opciones para grafica diaria de dashboar */
+export const optionsChartDashboard = {
+    low: 0,
+    showArea: true,
+    scaleMinSpace: 20,
+    height: '256px'
+}
+
 export const LogOut = () => {
     deleteStorage()
 

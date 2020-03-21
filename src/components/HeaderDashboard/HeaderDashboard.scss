@@ -1,0 +1,28 @@
+@import "../../utils/constants.scss";
+
+div.container-info-crypto {
+    display: flex;
+    justify-content: center;
+
+    img.crypto {
+        width: 128px;
+        margin-right: 10px;
+    }
+
+    .info {
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+
+        .row {
+            margin: 5px 0;
+            display: flex;
+            justify-content: space-between;
+
+            h1 {
+                color: $colorYellow;
+                font-weight: normal;
+            }
+        }
+    }
+}
