@@ -1,4 +1,6 @@
 import jwt from "jwt-simple"
+import Axios from "axios"
+import { Dispatch } from "redux"
 
 // Constanst
 const keySecret = "testDevelop"
@@ -6,7 +8,21 @@ const keyStorage = "@storage"
 
 export const urlServer = "http://localhost:8080"
 
-/**Opciones para grafica diaria de dashboar */
+export const Petition = Axios.create({
+    baseURL: urlServer,
+    // headers: {
+    //     "content-type": "application/x-www-form-urlencoded"
+    // },
+    validateStatus: (status) => {
+        if (status === 401) {
+            LogOut()
+        }
+
+        return status >= 200 && status < 300;
+    }
+})
+
+/**Opciones para grafica diaria de dashboard */
 export const optionsChartDashboard = {
     low: 0,
     showArea: true,

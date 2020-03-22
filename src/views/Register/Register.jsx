@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from "react"
 import { Link, Redirect } from "react-router-dom"
-import Axios from "axios"
 import Validator from "validator"
 
 // Import styles
@@ -14,7 +13,7 @@ import Countries from "../../utils/countries.json"
 import ModalTerms from "../../components/Modal/ModalTerms"
 import ActivityIndicator from "../../components/ActivityIndicator/Activityindicator"
 
-import { urlServer } from "../../utils/constanst"
+import { Petition } from "../../utils/constanst"
 import Swal from "sweetalert2"
 
 const Register = (props) => {
@@ -61,7 +60,7 @@ const Register = (props) => {
     const [passwordSecurity, setPasswordSecurity] = useState('')
     const [walletBTC, setWalletBTC] = useState('')
     const [walletETH, setWalletETH] = useState('')
-    const [investmentPlan, setInvestmentPlan] = useState(null)
+    const [amountPlan, setAmountPlan] = useState(null)
     const [usernameSponsor, setUsernameSponsor] = useState('')
     // Crypto select
     const [crypto, setCrypto] = useState('1')
@@ -71,7 +70,7 @@ const Register = (props) => {
 
     const validationButtons = {
         first: firstName.length > 0 && lastname.length > 0 && Validator.isEmail(email) && phone.length > 6 && country !== '0',
-        second: investmentPlan !== null,
+        second: amountPlan !== null,
         third: hash.length > 10 && walletBTC.length > 10 && walletETH.length > 10,
         fourth: password === passwordSecurity && password.length > 0 && passwordSecurity.length > 0 && username.length > 0 && validateUser === true && term === true,
     }
@@ -86,7 +85,7 @@ const Register = (props) => {
         }
 
         try {
-            Axios.get(`${urlServer}/collection/investment-plan`)
+            Petition.get(`/collection/investment-plan`)
                 .then(response => {
                     setPlan(response.data)
                 })
@@ -115,11 +114,12 @@ const Register = (props) => {
                 password,
                 walletBTC,
                 walletETH,
-                id_investment_plan: Number(investmentPlan),
+                amount: Number(amountPlan),
+                id_currency: Number(crypto),
                 username_sponsor: usernameSponsor
             }
 
-            await Axios.post(`${urlServer}/register`, data)
+            await Petition.post(`/register`, data)
                 .then(response => {
                     if (response.data.response.toLowerCase() === "success") {
                         Swal.fire(
@@ -143,13 +143,12 @@ const Register = (props) => {
         }
     }
 
-
     /**Validate user register form */
     const validateUsername = async () => {
         setLoader(true)
         try {
             if (username.length > 5) {
-                await Axios.post(`${urlServer}/comprobate/username`, { username })
+                await Petition.post(`/comprobate/username`, { username })
                     .then((response) => {
                         console.log(response)
                         setValidateUser(response.data.length === 0)
@@ -173,7 +172,7 @@ const Register = (props) => {
 
         try {
             if (username.length > 0) {
-                await Axios.post(`${urlServer}/comprobate/username`, { username })
+                await Petition.post(`/comprobate/username`, { username })
                     .then((response) => {
                         console.log(response.data)
                         if (response.data.length > 0) {
@@ -200,6 +199,7 @@ const Register = (props) => {
         }
     }
 
+    /**Copy wallet in clipboard */
     const copyWallet = () => {
         if (crypto === '1') {
             navigator.clipboard.writeText(wallets.btc).catch(_ => {
@@ -328,7 +328,7 @@ const Register = (props) => {
                                     if (item.id_currency === Number(crypto)) {
                                         return (
                                             <div className="element" key={index}>
-                                                <input onChange={e => setInvestmentPlan(e.target.value)} value={item.id} type="radio" id={`plan-${index}`} className="check" name="plan" />
+                                                <input onChange={e => setAmountPlan(e.target.value)} value={item.amount} type="radio" id={`plan-${index}`} className="check" name="plan" />
                                                 <label htmlFor={`plan-${index}`}>
                                                     {item.amount}
                                                     {item.id_currency === 1 && ' BTC'}

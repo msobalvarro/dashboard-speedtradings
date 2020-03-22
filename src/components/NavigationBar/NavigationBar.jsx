@@ -1,5 +1,6 @@
 import React from "react"
 import { Link } from "react-router-dom"
+import { LogOut } from "../../utils/constanst"
 
 // Import Assets
 import Logo from "../../static/images/logo.png"
@@ -20,6 +21,7 @@ const NavigationBar = () => {
                 <Link to="/" className={(location === '#/') ? 'active' : ''}>Dashboard</Link>
                 <Link to="/#" className={(location === '#/comission') ? 'active' : ''}>Comisiones</Link>
                 <Link to="/profile" className={(location === '#/profile') ? 'active' : ''}>{globalStorage.username}</Link>
+                <a href="#" onClick={LogOut}>Cerrar sesion</a>
             </div>
         </nav>
     )

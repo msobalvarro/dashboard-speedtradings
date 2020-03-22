@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react"
+import React, { useState } from "react"
 import Validator from "validator"
 import { useDispatch } from "react-redux"
 import { Link } from 'react-router-dom'
@@ -7,8 +7,7 @@ import { Link } from 'react-router-dom'
 import "./Login.scss"
 import Logo from "../../static/images/logo.png"
 import ActivityIndicator from "../../components/ActivityIndicator/Activityindicator"
-import Axios from "axios"
-import { urlServer, setStorage } from "../../utils/constanst"
+import { setStorage, Petition } from "../../utils/constanst"
 import Swal from "sweetalert2"
 import { SETSTORAGE } from "../../store/ActionTypes"
 
@@ -53,7 +52,7 @@ const Login = () => {
     }
 
     try {
-      await Axios.post(`${urlServer}/login`, data)
+      await Petition.post(`/login`, data)
         .then(response => {
           if (response.data.error) {
             Swal.fire('Error al auntenticar', response.data.message, 'warning')

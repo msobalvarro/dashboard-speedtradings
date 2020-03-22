@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from "react"
-import Axios from "axios"
 import Swal from "sweetalert2"
 
 // Import Assets
@@ -8,12 +7,13 @@ import LogoBTC from "../../static/icons/bitcoin.svg"
 import LogoETH from "../../static/icons/ether.svg"
 
 // Import info or components
-import { urlServer } from "../../utils/constanst"
+import { Petition } from "../../utils/constanst"
 
 const images = {
     btc: LogoBTC,
     eth: LogoETH,
 }
+
 
 const BuyPlan = ({ idCrypto = 1 }) => {
     const [plans, setPlans] = useState([])
@@ -21,7 +21,7 @@ const BuyPlan = ({ idCrypto = 1 }) => {
     useEffect(() => {
         try {
             // Obtene
-            Axios.get(`${urlServer}/collection/investment-plan/${idCrypto}`)
+            Petition.get(`/collection/investment-plan/${idCrypto}`)
                 .then(({ data }) => {
                     if (data) {
                         setPlans(data)
@@ -66,7 +66,7 @@ const BuyPlan = ({ idCrypto = 1 }) => {
                 <select className="picker">
                     {
                         plans.map((item, key) =>
-                            <option value={item.id}>
+                            <option key={key} value={item.id}>
                                 {item.amount}
 
                                 {

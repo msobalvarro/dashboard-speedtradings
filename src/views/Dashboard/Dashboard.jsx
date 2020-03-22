@@ -1,6 +1,7 @@
 import React from "react"
 import "chartist/dist/scss/chartist.scss"
 import ChartistGraph from 'react-chartist'
+import Moment from "moment"
 
 // Import Assets
 import "./Dashboard.scss"
@@ -9,19 +10,17 @@ import "./Dashboard.scss"
 import NavigationBar from "../../components/NavigationBar/NavigationBar"
 import BuyPlan from "../../components/BuyPlan/BuyPlan"
 import HeaderDashboard from "../../components/HeaderDashboard/HeaderDashboard"
-import { optionsChartDashboard } from "../../utils/constanst"
+import { optionsChartDashboard, Petition } from "../../utils/constanst"
+import { useEffect } from "react"
+import { useSelector } from "react-redux"
+import { useState } from "react"
+import Swal from "sweetalert2"
+import ActivityIndicator from "../../components/ActivityIndicator/Activityindicator"
 
-const Dashboard = () => {
-    /**Ganancias hasta el dia de hoy */
-    const valueToday = 0.0005
+const DashboardDetails = ({ data }) => {
+    // const [dataChart, setDataChart] = useState({})
 
-    // Plan contratado
-    const planAmount = 0.002
-
-    // Ganancias del dia de hoy
-    const gainToday = 0.000024
-
-    const data = {
+    const dataChart = {
         labels: ["Lunes", "Martes", "Miercoles", "Jueves", "Viernes"],
         series: [
             [0.5, 1, 0.8, 0.9, 1.5]
@@ -29,77 +28,195 @@ const Dashboard = () => {
     }
 
     return (
+        <>
+            <HeaderDashboard type="btc" amount={data[0].amount} amountToday={data[0].total_paid} />
+
+            <div className="card chart">
+                <ChartistGraph data={dataChart} options={optionsChartDashboard} type="Line" />
+            </div>
+
+            <div className="card details">
+                <div className="row">
+                    <div className="col">
+                        <h2 className="big">
+                            {
+                                Moment(data[1].start_date).format('MMM. D, YYYY')
+                            }
+                        </h2>
+                        <span>Fecha de inicio</span>
+                    </div>
+
+                    <div className="col yellow">
+                        <h2 className="big">
+                            {
+                                data[1].amount_to_win
+                            }
+                        </h2>
+                        <span>Monto a ganar</span>
+                    </div>
+                </div>
+
+                <div className="row">
+                    <div className="col">
+                        <h2>
+                            {
+                                data[1].last_pay !== null
+                                    ? data[1].last_pay
+                                    : '(Sin reportes)'
+                            }
+                        </h2>
+                        <span>Ganancias del dia</span>
+                    </div>
+
+                    <div className="col yellow">
+                        <h2>
+                            {
+                                data[1].amount_rest !== null
+                                    ? data[1].amount_rest
+                                    : data[1].amount_to_win
+                            }
+                        </h2>
+                        <span>Saldo pendiente</span>
+                    </div>
+                </div>
+            </div>
+
+            <div className="card profit-table">
+                {
+                    data[2] !== null &&
+                    <div className="table">
+                        <div className="header">
+                            <span>Fecha</span>
+                            <span>Pocentaje</span>
+                            <span>Ganancias</span>
+                        </div>
+                        <div className="body">
+                            {
+                                data[2].map((item, index) => {
+                                    return (
+                                        <div className="row" key={index}>
+                                            <span>{Moment(item.date).format('MMM. D, YYYY')}</span>
+                                            <span>{item.percentage}%</span>
+                                            <span>{item.amount}</span>
+                                        </div>
+                                    )
+                                })
+                            }
+                        </div>
+                    </div>
+                }
+
+                {
+                    data[2] === null &&
+                    <h2>Aun no hay historial de ganancias</h2>
+                }
+            </div>
+        </>
+    )
+}
+
+const Dashboard = () => {
+    const storage = useSelector(({ globalStorage }) => globalStorage)
+
+    const [loader, setLoader] = useState(true)
+
+    const [dataDashoardBTC, setDataDashboardBTC] = useState([])
+    const [dataDashoardETH, setDataDashboardETH] = useState([])
+
+    const ConfigurateComponent = async () => {
+        try {
+
+            // Get data BTC
+            await Petition.post(
+                '/data/dashboard',
+                {
+                    user_id: storage.id_user,
+                    currency_id: 1
+                },
+                {
+                    headers: {
+                        "x-auth-token": storage.token
+                    }
+                }
+            ).then(response => {
+                console.log(response.data)
+
+                setDataDashboardBTC(response.data)
+            }).catch(reason => { throw reason })
+
+
+            // Get data ETH
+            await Petition.post(
+                '/data/dashboard',
+                {
+                    user_id: storage.id_user,
+                    currency_id: 2
+                },
+                {
+                    headers: {
+                        "x-auth-token": storage.token
+                    }
+                }
+            ).then(response => {
+                console.log(response.data)
+
+                setDataDashboardETH(response.data)
+            }).catch(reason => { throw reason })
+
+            setLoader(false)
+
+        } catch (error) {
+            console.log(error)
+
+            Swal.fire('Ha ocurrido un error', 'No se ha podido cargar los datos', 'error')
+
+            setLoader(false)
+        }
+    }
+
+
+    useEffect(() => {
+        ConfigurateComponent()
+    }, [])
+
+    return (
         <div className="container-dashboard">
             <NavigationBar />
 
-            <div className="content-dashboard">
-                <div className="content">
-                    <HeaderDashboard type="btc" amount={planAmount} amountToday={valueToday} />
+            {
+                loader &&
+                <ActivityIndicator size={48} />
+            }
 
-                    <div className="card chart">
-                        <ChartistGraph data={data} options={optionsChartDashboard} type="Line" />
+            {
+                !loader &&
+                <div className="content-dashboard">
+                    <div className="content">
+                        {
+                            dataDashoardBTC[0].amount !== null &&
+                            <DashboardDetails data={dataDashoardBTC} />
+                        }
+
+                        {
+                            dataDashoardBTC[0].amount === null &&
+                            <BuyPlan idCrypto={1} />
+                        }
                     </div>
 
-                    <div className="card details">
-                        <div className="row">
-                            <div className="col">
-                                <h2 className="big">Marzo 20 del 2020</h2>
-                                <span>Fecha de inicio</span>
-                            </div>
+                    <div className="content">
 
-                            <div className="col yellow">
-                                <h2 className="big">{planAmount * 2}</h2>
-                                <span>Monto a ganar</span>
-                            </div>
-                        </div>
+                        {
+                            dataDashoardETH[0].amount !== null &&
+                            <DashboardDetails data={dataDashoardETH} />
+                        }
 
-                        <div className="row">
-                            <div className="col">
-                                <h2>{gainToday}</h2>
-                                <span>Ganancias del dia</span>
-                            </div>
-
-                            <div className="col yellow">
-                                <h2>{(planAmount * 2) - valueToday}</h2>
-                                <span>Saldo pendiente</span>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div className="card profit-table">
-                        <div className="table">
-                            <div className="header">
-                                <span>Fecha</span>
-                                <span>Pocentaje</span>
-                                <span>Ganancias</span>
-                            </div>
-                            <div className="body">
-                                <div className="row">
-                                    <span>20/30/2020</span>
-                                    <span>0.5%</span>
-                                    <span>0.0.00024</span>
-                                </div>
-
-                                <div className="row">
-                                    <span>20/30/2020</span>
-                                    <span>0.5%</span>
-                                    <span>0.0.00024</span>
-                                </div>
-
-                                <div className="row">
-                                    <span>20/30/2020</span>
-                                    <span>0.5%</span>
-                                    <span>0.0.00024</span>
-                                </div>
-                            </div>
-                        </div>
+                        {
+                            dataDashoardETH[0].amount === null &&
+                            <BuyPlan idCrypto={2} />
+                        }
                     </div>
                 </div>
-
-                <div className="content">
-                    <BuyPlan idCrypto={2} />
-                </div>
-            </div>
+            }
         </div>
     )
 }
