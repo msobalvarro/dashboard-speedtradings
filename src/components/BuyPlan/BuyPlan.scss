@@ -12,10 +12,11 @@ div.container-buy-plan {
     width: 30%;
   }
 
-  .container-picker {
+  .row {
     margin-bottom: 25px;
     width: 50%;
-    .picker {
+    .picker,
+    .text-input {
       margin-top: 10px;
       width: 100%;
     }

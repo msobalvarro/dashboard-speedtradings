@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react"
 import Swal from "sweetalert2"
+import { useSelector } from "react-redux"
 
 // Import Assets
 import "./BuyPlan.scss"
@@ -8,6 +9,7 @@ import LogoETH from "../../static/icons/ether.svg"
 
 // Import info or components
 import { Petition } from "../../utils/constanst"
+import ActivityIndicator from "../ActivityIndicator/Activityindicator"
 
 const images = {
     btc: LogoBTC,
@@ -15,8 +17,12 @@ const images = {
 }
 
 
-const BuyPlan = ({ idCrypto = 1 }) => {
+const BuyPlan = ({ idCrypto = 1, onBuy = () => { } }) => {
+    const storage = useSelector(({ globalStorage }) => globalStorage)
     const [plans, setPlans] = useState([])
+    const [hash, setHash] = useState('')
+    const [amount, setAmount] = useState('default')
+    const [loader, setLoader] = useState(false)
 
     useEffect(() => {
         try {
@@ -38,10 +44,57 @@ const BuyPlan = ({ idCrypto = 1 }) => {
         }
     }, [])
 
+    const Buy = () => {
+        // Petition
+        setLoader(true)
+
+        try {
+            if (hash.length < 8) {
+                throw 'Hash invalido'
+            }
+
+            if (amount === "default") {
+                throw "Seleccion un Plan de inversion"
+            }
+
+            const data = {
+                id_currency: idCrypto,
+                id_user: storage.id_user,
+                hash,
+                amount: Number(amount),
+            }
+
+            Petition.post('/buy/plan', data, {
+                headers: {
+                    "x-auth-token": storage.token
+                }
+            }).then(({ data }) => {
+                if (data.response === "success") {
+                    onBuy()
+                    Swal.fire(
+                        "Plan solicitado",
+                        "En breves momentos estaremos confirmando tu transaccion",
+                        "success"
+                    )
+                }
+
+
+            }).catch(reason => {
+                throw reason.toString()
+            })
+
+        } catch (error) {
+            Swal.fire(error, "Para continuar, debe de llenar ambos campos", "warning")
+        }
+
+
+        setLoader(false)
+    }
+
     return (
         <div className="container-buy-plan">
             <h2>
-                Espacio para plan de inversion en
+                Adquirir plan de
                 {
                     idCrypto === 1 && ' Bitcoin'
                 }
@@ -61,12 +114,13 @@ const BuyPlan = ({ idCrypto = 1 }) => {
                 <img src={LogoETH} className="logo-crypto" alt="" />
             }
 
-            <div className="container-picker">
+            <div className="row">
                 <span>Selecciona tu plan</span>
-                <select className="picker">
+                <select className="picker" value={amount} onChange={e => setAmount(e.target.value)}>
+                    <option value="default" disabled>Selecciona un plan</option>
                     {
                         plans.map((item, key) =>
-                            <option key={key} value={item.id}>
+                            <option key={key} value={item.amount}>
                                 {item.amount}
 
                                 {
@@ -82,7 +136,23 @@ const BuyPlan = ({ idCrypto = 1 }) => {
                 </select>
             </div>
 
-            <button className="button secondary large">Comprar</button>
+            <div className="row">
+                <span>Escribe el hash de transaccion</span>
+                <input
+                    value={hash}
+                    onChange={e => setHash(e.target.value)}
+                    type="text"
+                    className="text-input"
+                    placeholder="ejem.. as4d6as4d65a4sd8" />
+            </div>
+
+            <button disabled={loader} className="button secondary large" onClick={Buy}>
+                {
+                    loader
+                        ? <ActivityIndicator size={24} />
+                        : 'Comprar'
+                }
+            </button>
         </div>
     )
 }

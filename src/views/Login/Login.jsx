@@ -23,7 +23,9 @@ const Login = () => {
   // Loading state
   const [loading, setLoading] = useState(false)
 
-  const submitLogin = () => {
+  const submitLogin = (e) => {
+    e.preventDefault()
+
     // Validamos el correo electronico
     if (Validator.isEmail(email)) {
       // Si el correo es correcto
@@ -57,6 +59,8 @@ const Login = () => {
           if (response.data.error) {
             Swal.fire('Error al auntenticar', response.data.message, 'warning')
           } else {
+            console.log(response.data)
+
             // Ingresamos los datos en el localstorage
             setStorage(response.data)
 
@@ -83,39 +87,42 @@ const Login = () => {
 
         <h2>Inicio de Sesion - Dashboard</h2>
 
-        <div className="row">
-          {
-            errEmail
-              ? <span className="error">Email no es Correcto</span>
-              : <span>Correo Electronico</span>
-          }
-          <input onChange={e => setEmail(e.target.value)} autoFocus value={email} type="text" className="text-input" />
-        </div>
-
-        <div className="row">
-          {
-            errPassword
-              ? <span className="error">Contraseña es requerida</span>
-              : <span>Contraseña</span>
-          }
-          <input value={password} onChange={e => setPassword(e.target.value)} type="password" className="text-input" />
-
-          <a className="password-forgot link">¿Olvido su contraseña?</a>
-        </div>
-
-        <div className="row">
-          <button className="button" disabled={loading} onClick={submitLogin}>
+        <form action="#" onSubmit={submitLogin}>
+          <div className="row">
             {
-              loading
-                ? <><ActivityIndicator size={20} /> Cargando..</>
-                : 'Login'
+              errEmail
+                ? <span className="error">Email no es Correcto</span>
+                : <span>Correo Electronico</span>
             }
-          </button>
-        </div>
+            <input required onChange={e => setEmail(e.target.value)} autoFocus value={email} type="text" className="text-input" />
+          </div>
 
-        <div className="row">
-          <Link className="link register" to="/register">Registarse</Link>
-        </div>
+          <div className="row">
+            {
+              errPassword
+                ? <span className="error">Contraseña es requerida</span>
+                : <span>Contraseña</span>
+            }
+            <input required value={password} onChange={e => setPassword(e.target.value)} type="password" className="text-input" />
+
+            <a className="password-forgot link">¿Olvido su contraseña?</a>
+          </div>
+
+          <div className="row">
+            <button className="button" type="submit" disabled={loading}>
+              {
+                loading
+                  ? <><ActivityIndicator size={20} /> Cargando..</>
+                  : 'Login'
+              }
+            </button>
+          </div>
+
+          <div className="row">
+            <Link className="link register" to="/register">Registarse</Link>
+          </div>
+        </form>
+
       </div>
     </div>
   )

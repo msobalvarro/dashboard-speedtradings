@@ -10,26 +10,42 @@ import "./Dashboard.scss"
 import NavigationBar from "../../components/NavigationBar/NavigationBar"
 import BuyPlan from "../../components/BuyPlan/BuyPlan"
 import HeaderDashboard from "../../components/HeaderDashboard/HeaderDashboard"
-import { optionsChartDashboard, Petition } from "../../utils/constanst"
+import { optionsChartDashboard, Petition, Round } from "../../utils/constanst"
 import { useEffect } from "react"
 import { useSelector } from "react-redux"
 import { useState } from "react"
 import Swal from "sweetalert2"
 import ActivityIndicator from "../../components/ActivityIndicator/Activityindicator"
 
-const DashboardDetails = ({ data }) => {
+const DashboardDetails = ({ data, type = "" }) => {
+    const labels = []
+    const series = []
+
+
+    if (data[2] !== null) {
+
+        // Cortamos el historial hasta que tenga acomulado 10 depositos
+        // Cortamos para que muestre los ultimos 5 dias
+        const lastData = data[2].length > 10 ? data[2].slice(data[2].length - 6, data[2].length - 1) : data[2]
+
+        lastData.map(item => {
+            labels.push(Moment(item.date).format('dddd'))
+            series.push(item.amount)
+        })
+    }
+
     // const [dataChart, setDataChart] = useState({})
 
     const dataChart = {
-        labels: ["Lunes", "Martes", "Miercoles", "Jueves", "Viernes"],
-        series: [
-            [0.5, 1, 0.8, 0.9, 1.5]
-        ]
+        labels,
+        series: [series]
     }
+
+    const amountSumArr = []
 
     return (
         <>
-            <HeaderDashboard type="btc" amount={data[0].amount} amountToday={data[0].total_paid} />
+            <HeaderDashboard type={type} amount={(data[0].amount)} amountToday={data[0].total_paid} />
 
             <div className="card chart">
                 <ChartistGraph data={dataChart} options={optionsChartDashboard} type="Line" />
@@ -49,7 +65,7 @@ const DashboardDetails = ({ data }) => {
                     <div className="col yellow">
                         <h2 className="big">
                             {
-                                data[1].amount_to_win
+                                (data[1].amount_to_win).toFixed(8) + ' ' + type.toUpperCase()
                             }
                         </h2>
                         <span>Monto a ganar</span>
@@ -61,19 +77,19 @@ const DashboardDetails = ({ data }) => {
                         <h2>
                             {
                                 data[1].last_pay !== null
-                                    ? data[1].last_pay
+                                    ? (data[1].last_pay).toFixed(8) + ' ' + type.toUpperCase()
                                     : '(Sin reportes)'
                             }
                         </h2>
-                        <span>Ganancias del dia</span>
+                        <span>Ultimo reporte de ganancia</span>
                     </div>
 
                     <div className="col yellow">
                         <h2>
                             {
                                 data[1].amount_rest !== null
-                                    ? data[1].amount_rest
-                                    : data[1].amount_to_win
+                                    ? (data[1].amount_rest).toFixed(8) + ' ' + type.toUpperCase()
+                                    : (data[1].amount_to_win).toFixed(8) + ' ' + type.toUpperCase()
                             }
                         </h2>
                         <span>Saldo pendiente</span>
@@ -93,6 +109,8 @@ const DashboardDetails = ({ data }) => {
                         <div className="body">
                             {
                                 data[2].map((item, index) => {
+                                    amountSumArr.push(item.amount)
+
                                     return (
                                         <div className="row" key={index}>
                                             <span>{Moment(item.date).format('MMM. D, YYYY')}</span>
@@ -103,12 +121,16 @@ const DashboardDetails = ({ data }) => {
                                 })
                             }
                         </div>
+                        <div className="footer">
+                            <span className="total">Total</span>
+                            <span className="amount">{amountSumArr.reduce((a, b) => a + b, 0)}</span>
+                        </div>
                     </div>
                 }
 
                 {
                     data[2] === null &&
-                    <h2>Aun no hay historial de ganancias</h2>
+                    <h2 className="empty">Aun no hay historial de ganancias</h2>
                 }
             </div>
         </>
@@ -139,8 +161,6 @@ const Dashboard = () => {
                     }
                 }
             ).then(response => {
-                console.log(response.data)
-
                 setDataDashboardBTC(response.data)
             }).catch(reason => { throw reason })
 
@@ -158,8 +178,6 @@ const Dashboard = () => {
                     }
                 }
             ).then(response => {
-                console.log(response.data)
-
                 setDataDashboardETH(response.data)
             }).catch(reason => { throw reason })
 
@@ -193,27 +211,40 @@ const Dashboard = () => {
                 <div className="content-dashboard">
                     <div className="content">
                         {
-                            dataDashoardBTC[0].amount !== null &&
-                            <DashboardDetails data={dataDashoardBTC} />
+                            (dataDashoardBTC.length > 0) &&
+                            <>
+                                {
+                                    (dataDashoardBTC[0].amount !== null) &&
+                                    < DashboardDetails type="btc" data={dataDashoardBTC} />
+                                }
+
+
+                                {
+                                    dataDashoardBTC[0].amount === null &&
+                                    <BuyPlan onBuy={ConfigurateComponent} idCrypto={1} />
+                                }
+                            </>
                         }
 
-                        {
-                            dataDashoardBTC[0].amount === null &&
-                            <BuyPlan idCrypto={1} />
-                        }
                     </div>
 
                     <div className="content">
 
                         {
-                            dataDashoardETH[0].amount !== null &&
-                            <DashboardDetails data={dataDashoardETH} />
+                            dataDashoardETH.length > 0 &&
+                            <>
+                                {
+                                    (dataDashoardETH[0]?.amount !== null) &&
+                                    <DashboardDetails type="eth" data={dataDashoardETH} />
+                                }
+
+                                {
+                                    dataDashoardETH[0]?.amount === null &&
+                                    <BuyPlan onBuy={ConfigurateComponent} idCrypto={2} />
+                                }
+                            </>
                         }
 
-                        {
-                            dataDashoardETH[0].amount === null &&
-                            <BuyPlan idCrypto={2} />
-                        }
                     </div>
                 </div>
             }

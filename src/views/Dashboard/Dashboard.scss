@@ -15,14 +15,14 @@ div.container-dashboard {
     padding: 0 25px;
 
     .content {
-			// background-color: red;
-			overflow: auto;
+      // background-color: red;
+      overflow: auto;
       width: 48%;
 
       .card {
         border-radius: 10px;
         background-color: $colorContainer;
-				margin-top: 25px;
+        margin-top: 25px;
         padding: 20px;
 
         &.chart {
@@ -67,11 +67,11 @@ div.container-dashboard {
               h2,
               span {
                 color: $colorSecondary;
-							}
-							
-							h2.big {
-								font-size: 2em;
-							}
+              }
+
+              h2.big {
+                font-size: 2em;
+              }
 
               &.yellow {
                 text-align: right;
@@ -81,35 +81,55 @@ div.container-dashboard {
               }
             }
           }
-				}
-				
-				&.profit-table {
-					margin-bottom: 25px;
+        }
 
-					.table {
-						.header {
-							border-bottom: 2px solid $colorSecondary;
-							padding: 10px 0;
-							display: flex;
-							justify-content: space-between;
+        &.profit-table {
+          margin-bottom: 25px;
 
-							span {
-								color: $colorSecondary;
-								font-weight: bolder;
-								font-size: 1.2em;
-							}
-						}
+          .table {
+            .header {
+              border-bottom: 2px solid $colorSecondary;
+              padding: 10px 0;
+              display: flex;
+              justify-content: space-between;
 
-						.body {
-							.row {
-								border-bottom: 1px solid #FFF;
-								display: flex;
-								justify-content: space-between;
-								padding: 10px 0;
-							}
-						}
-					}
-				}
+              span {
+                color: $colorSecondary;
+                font-weight: bolder;
+                font-size: 1.2em;
+              }
+            }
+
+            .body {
+              .row {
+                border-bottom: 1px solid #fff;
+                display: flex;
+                justify-content: space-between;
+                padding: 10px 0;
+              }
+            }
+
+            .footer {
+              align-items: center;
+              display: flex;
+              font-size: 1.5em;
+              margin-top: 25px;
+              justify-content: flex-end;
+
+              .total {
+                color: $colorSecondary;
+                font-weight: bolder;
+                margin-right: 10px;
+              }
+            }
+          }
+
+          h2.empty {
+            font-weight: normal;
+            margin: 25px 0;
+            text-align: center;
+          }
+        }
       }
     }
   }
