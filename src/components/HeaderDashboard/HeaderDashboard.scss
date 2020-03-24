@@ -1,28 +1,80 @@
 @import "../../utils/constants.scss";
 
 div.container-info-crypto {
+  display: flex;
+  justify-content: center;
+
+  img.crypto {
+    width: 128px;
+    margin-right: 10px;
+  }
+
+  .info {
+    flex: 1;
     display: flex;
-    justify-content: center;
+    flex-direction: column;
 
-    img.crypto {
-        width: 128px;
-        margin-right: 10px;
+    .row {
+      margin: 5px 0;
+      display: flex;
+      justify-content: space-between;
+
+      h1 {
+        color: $colorYellow;
+        font-weight: normal;
+      }
+    }
+  }
+}
+
+.modal-upgrade {
+  align-items: center;
+  animation: fadeEffect 0.5s;
+  position: fixed;
+  display: flex;
+  justify-content: center;
+  background-color: rgba(0, 0, 0, 0.8);
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 100;
+
+  .content {
+    background-color: $colorMain;
+    box-shadow: $animationShadow;
+    border-radius: 10px;
+    width: 512px;
+    padding: 20px;
+
+    h2 {
+      color: $colorYellow;
     }
 
-    .info {
-        flex: 1;
-        display: flex;
-        flex-direction: column;
+    .row {
+      display: flex;
+      justify-content: space-between;
+      margin: 25px 0;
+      width: 100%;
 
-        .row {
-            margin: 5px 0;
-            display: flex;
-            justify-content: space-between;
+      .col {
+        width: 45%;
 
-            h1 {
-                color: $colorYellow;
-                font-weight: normal;
-            }
+        .picker,
+        .text-input {
+          margin-top: 10px;
+          width: 100%;
         }
+      }
     }
+
+    .buttons {
+      display: flex;
+      justify-content: flex-end;
+
+      button {
+        margin-left: 10px;
+      }
+    }
+  }
 }

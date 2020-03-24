@@ -41,11 +41,12 @@ const DashboardDetails = ({ data, type = "" }) => {
         series: [series]
     }
 
+    /**Costante que almacena el total de las ganancias */
     const amountSumArr = []
 
     return (
         <>
-            <HeaderDashboard type={type} amount={(data[0].amount)} amountToday={data[0].total_paid} />
+            <HeaderDashboard type={type} idInvestment={data[0].id_investment} amount={(data[0].amount)} amountToday={data[0].total_paid} />
 
             <div className="card chart">
                 <ChartistGraph data={dataChart} options={optionsChartDashboard} type="Line" />
@@ -161,6 +162,7 @@ const Dashboard = () => {
                     }
                 }
             ).then(response => {
+                console.log(response.data)
                 setDataDashboardBTC(response.data)
             }).catch(reason => { throw reason })
 

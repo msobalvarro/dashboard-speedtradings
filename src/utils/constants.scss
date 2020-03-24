@@ -22,19 +22,3 @@ $animationShadow: rgba(250, 250, 250, 0.3) 0px 0px 0px 3px;
     opacity: 1;
   }
 }
-
-@keyframes click-wave {
-  0% {
-    height: 40px;
-    width: 40px;
-    opacity: 0.35;
-    position: relative;
-  }
-  100% {
-    height: 200px;
-    width: 200px;
-    margin-left: -80px;
-    margin-top: -80px;
-    opacity: 0;
-  }
-}
