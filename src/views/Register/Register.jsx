@@ -120,24 +120,28 @@ const Register = (props) => {
             }
 
             await Petition.post(`/register`, data)
-                .then(response => {
-                    if (response.data.response.toLowerCase() === "success") {
+                .then(({ data, status }) => {
+                    console.log(data)
+
+                    if (status === 200) {
                         Swal.fire(
                             'Registro creado',
                             'Su registro se esta procesando, inicie sesion para continuar',
                             'success').then(() => window.location.hash = '/')
+                        // if (data.response === "success") {
+                        // } else {
+                        //     throw 'Su registro no se ha podido realizar, contacte a soporte o intentelo mas tarde'
+                        // }
                     } else {
-                        Swal.fire(
-                            'Error al registrar',
-                            'Su registro no se ha podido realizar, contacte a soporte o intentelo mas tarde',
-                            'error').then(() => window.location.hash = '/')
+                        throw 'Su registro no se ha podido procesar, contacte a soporte o intentelo mas tarde'
                     }
+
                 })
                 .catch(err => {
                     throw err
                 })
         } catch (error) {
-            Swal.fire('error', error.toString(), 'error')
+            Swal.fire('Error al registrar', error.toString(), 'error')
         } finally {
             setLoaderData(false)
         }

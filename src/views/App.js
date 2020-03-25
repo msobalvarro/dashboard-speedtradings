@@ -13,6 +13,7 @@ import { DELETESTORAGE, SETSTORAGE } from '../store/ActionTypes'
 import Login from './Login/Login'
 import Register from './Register/Register'
 import Dashboard from './Dashboard/Dashboard'
+import Sponsors from './Sponsors/Sponsors'
 
 const App = () => {
   const dispatch = useDispatch()
@@ -45,7 +46,11 @@ const App = () => {
       <Switch>
         {
           loged
-            ? <Route path="/" exact component={Dashboard} />
+            ?
+            <>
+              <Route path="/" exact component={Dashboard} />
+              <Route path="/sponsors" component={Sponsors} />
+            </>
             : <Route path="/" exact component={Login} />
         }
 

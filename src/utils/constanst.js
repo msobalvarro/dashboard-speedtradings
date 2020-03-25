@@ -45,6 +45,8 @@ export const optionsChartDashboard = {
 export const LogOut = () => {
     deleteStorage()
 
+    window.location.hash = '/'
+
     window.location.reload()
 }
 
