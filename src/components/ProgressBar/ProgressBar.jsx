@@ -10,12 +10,6 @@ const ProgressBar = ({ value = 100, legend = "cargando.." }) => {
                     <span>{legend}</span>
                 }
             </div>
-
-            {
-                value < 40 &&
-                <span className="value-legend">{legend}</span>
-            }
-
         </div>
     )
 }

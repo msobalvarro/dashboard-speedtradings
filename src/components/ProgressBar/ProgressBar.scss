@@ -4,7 +4,8 @@ div.progress-bar {
     border: 2px solid $colorSecondary;
     border-radius: 30px;
     position: relative;
-    // overflow: hidden;
+    overflow: hidden;
+    white-space: nowrap;
     width: 100%;
     
     .value {
@@ -17,12 +18,5 @@ div.progress-bar {
         overflow: hidden;
         height: 40px;
         
-    }
-
-    .value-legend {
-        color: $colorSecondary;
-        position: absolute;
-        top: 120%;
-        left: 5%;
-    }
+    }    
 }

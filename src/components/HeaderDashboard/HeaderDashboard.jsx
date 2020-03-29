@@ -16,7 +16,7 @@ const images = {
     eth: LogoETH,
 }
 
-const HeaderDashboard = ({ type = "btc", amount = 0.5, amountToday = 2, idInvestment = 0 }) => {
+const HeaderDashboard = ({ type = "btc", amount = 0.5, amountToday = 2, idInvestment = 0, disabled = false }) => {
     const { token } = useSelector(({ globalStorage }) => globalStorage)
 
 
@@ -93,7 +93,7 @@ const HeaderDashboard = ({ type = "btc", amount = 0.5, amountToday = 2, idInvest
                         'En breves momentos, estaremos atendiendo su peticion de UPGRADE',
                         'success'
                     )
-                }                
+                }
             }).catch(reason => {
                 throw reason.toString()
             })
@@ -114,15 +114,20 @@ const HeaderDashboard = ({ type = "btc", amount = 0.5, amountToday = 2, idInvest
                 <img src={images[type]} className="crypto" alt="crypto" />
 
                 <div className="info">
-                    <div className="row">
+                    <div className="row-header">
                         <h1>{amount} {type.toUpperCase()}</h1>
 
-                        <button className="button large secondary" onClick={onUpgrade}>Upgrade</button>
+                        <button className="button large secondary" onClick={onUpgrade} disabled={disabled}>Upgrade</button>
                     </div>
 
-                    <div className="row progress">
+                    <div className="row-header progress">
                         {/* Progress bar */}
                         <ProgressBar value={valuePorcent} legend={`Ganado (${valuePorcent.toFixed(1)}%)`} />
+
+                        {
+                            valuePorcent < 40 &&
+                            <span className="value-legend">{`Ganado (${valuePorcent.toFixed(1)}%)`}</span>
+                        }
                     </div>
                 </div>
             </div>

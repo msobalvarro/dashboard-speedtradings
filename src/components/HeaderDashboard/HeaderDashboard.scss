@@ -1,6 +1,8 @@
 @import "../../utils/constants.scss";
 
 div.container-info-crypto {
+  align-items: center;
+  margin-bottom: 25px;
   display: flex;
   justify-content: center;
 
@@ -14,14 +16,27 @@ div.container-info-crypto {
     display: flex;
     flex-direction: column;
 
-    .row {
-      margin: 5px 0;
+    .row-header {
+      align-items: center;
+      // margin: 5px 0;
       display: flex;
       justify-content: space-between;
 
       h1 {
         color: $colorYellow;
         font-weight: normal;
+      }
+
+      &.progress {
+        position: relative;
+
+        .value-legend {
+          color: $colorSecondary;
+          position: absolute;
+          z-index: 50;
+          bottom: 120%;
+          left: 40%;
+        }
       }
     }
   }

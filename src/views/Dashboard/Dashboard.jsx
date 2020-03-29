@@ -46,93 +46,100 @@ const DashboardDetails = ({ data, type = "" }) => {
 
     return (
         <>
-            <HeaderDashboard type={type} idInvestment={data[0].id_investment} amount={(data[0].amount)} amountToday={data[0].total_paid} />
+            {
+                data[1].approved === 0 &&
+                <h1 className="message-disabled">Tu plan se activara cuando sea verificado</h1>
+            }
 
-            <div className="card chart">
-                <ChartistGraph data={dataChart} options={optionsChartDashboard} type="Line" />
-            </div>
+            <div className={data[1].approved === 0 ? 'disabled' : ''}>
+                <HeaderDashboard type={type} disabled={data[1].approved === 0} idInvestment={data[0].id_investment} amount={(data[0].amount)} amountToday={data[0].total_paid} />
 
-            <div className="card details">
-                <div className="row">
-                    <div className="col">
-                        <h2 className="big">
-                            {
-                                Moment(data[1].start_date).format('MMM. D, YYYY')
-                            }
-                        </h2>
-                        <span>Fecha de inicio</span>
+                <div className="card chart">
+                    <ChartistGraph data={dataChart} options={optionsChartDashboard} type="Line" />
+                </div>
+
+                <div className="card details">
+                    <div className="row">
+                        <div className="col">
+                            <h2 className="big">
+                                {
+                                    Moment(data[1].start_date).format('MMM. D, YYYY')
+                                }
+                            </h2>
+                            <span>Fecha de inicio</span>
+                        </div>
+
+                        <div className="col yellow">
+                            <h2 className="big">
+                                {
+                                    (data[1].amount_to_win).toFixed(8) + ' ' + type.toUpperCase()
+                                }
+                            </h2>
+                            <span>Monto a ganar</span>
+                        </div>
                     </div>
 
-                    <div className="col yellow">
-                        <h2 className="big">
-                            {
-                                (data[1].amount_to_win).toFixed(8) + ' ' + type.toUpperCase()
-                            }
-                        </h2>
-                        <span>Monto a ganar</span>
+                    <div className="row">
+                        <div className="col">
+                            <h2>
+                                {
+                                    data[1].last_pay !== null
+                                        ? (data[1].last_pay).toFixed(8) + ' ' + type.toUpperCase()
+                                        : '(Sin reportes)'
+                                }
+                            </h2>
+                            <span>Ultimo reporte de ganancia</span>
+                        </div>
+
+                        <div className="col yellow">
+                            <h2>
+                                {
+                                    data[1].amount_rest !== null
+                                        ? (data[1].amount_rest).toFixed(8) + ' ' + type.toUpperCase()
+                                        : (data[1].amount_to_win).toFixed(8) + ' ' + type.toUpperCase()
+                                }
+                            </h2>
+                            <span>Saldo pendiente</span>
+                        </div>
                     </div>
                 </div>
 
-                <div className="row">
-                    <div className="col">
-                        <h2>
-                            {
-                                data[1].last_pay !== null
-                                    ? (data[1].last_pay).toFixed(8) + ' ' + type.toUpperCase()
-                                    : '(Sin reportes)'
-                            }
-                        </h2>
-                        <span>Ultimo reporte de ganancia</span>
-                    </div>
+                <div className="card profit-table">
+                    {
+                        data[2] !== null &&
+                        <div className="table">
+                            <div className="header">
+                                <span>Fecha</span>
+                                <span>Pocentaje</span>
+                                <span>Ganancias</span>
+                            </div>
+                            <div className="body">
+                                {
+                                    data[2].map((item, index) => {
+                                        amountSumArr.push(item.amount)
 
-                    <div className="col yellow">
-                        <h2>
-                            {
-                                data[1].amount_rest !== null
-                                    ? (data[1].amount_rest).toFixed(8) + ' ' + type.toUpperCase()
-                                    : (data[1].amount_to_win).toFixed(8) + ' ' + type.toUpperCase()
-                            }
-                        </h2>
-                        <span>Saldo pendiente</span>
-                    </div>
+                                        return (
+                                            <div className="row" key={index}>
+                                                <span>{Moment(item.date).format('MMM. D, YYYY')}</span>
+                                                <span>{item.percentage}%</span>
+                                                <span>{item.amount}</span>
+                                            </div>
+                                        )
+                                    })
+                                }
+                            </div>
+                            <div className="footer">
+                                <span className="total">Total</span>
+                                <span className="amount">{amountSumArr.reduce((a, b) => a + b, 0)} {type.toUpperCase()}</span>
+                            </div>
+                        </div>
+                    }
+
+                    {
+                        data[2] === null &&
+                        <h2 className="empty">Aun no hay historial de ganancias</h2>
+                    }
                 </div>
-            </div>
-
-            <div className="card profit-table">
-                {
-                    data[2] !== null &&
-                    <div className="table">
-                        <div className="header">
-                            <span>Fecha</span>
-                            <span>Pocentaje</span>
-                            <span>Ganancias</span>
-                        </div>
-                        <div className="body">
-                            {
-                                data[2].map((item, index) => {
-                                    amountSumArr.push(item.amount)
-
-                                    return (
-                                        <div className="row" key={index}>
-                                            <span>{Moment(item.date).format('MMM. D, YYYY')}</span>
-                                            <span>{item.percentage}%</span>
-                                            <span>{item.amount}</span>
-                                        </div>
-                                    )
-                                })
-                            }
-                        </div>
-                        <div className="footer">
-                            <span className="total">Total</span>
-                            <span className="amount">{amountSumArr.reduce((a, b) => a + b, 0)}</span>
-                        </div>
-                    </div>
-                }
-
-                {
-                    data[2] === null &&
-                    <h2 className="empty">Aun no hay historial de ganancias</h2>
-                }
             </div>
         </>
     )
@@ -162,7 +169,6 @@ const Dashboard = () => {
                     }
                 }
             ).then(response => {
-                console.log(response.data)
                 setDataDashboardBTC(response.data)
             }).catch(reason => { throw reason })
 
@@ -186,8 +192,6 @@ const Dashboard = () => {
             setLoader(false)
 
         } catch (error) {
-            console.log(error)
-
             Swal.fire('Ha ocurrido un error', 'No se ha podido cargar los datos', 'error')
 
             setLoader(false)

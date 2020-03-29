@@ -14,11 +14,21 @@ div.container-dashboard {
     margin-top: 25px;
     padding: 0 25px;
 
+    
     .content {
       // background-color: red;
       overflow: auto;
       width: 48%;
 
+      h1 {
+        margin: 25px 0;
+        text-align: center;
+      }
+      
+      .disabled {
+        opacity: 0.2;
+      }
+      
       .card {
         border-radius: 10px;
         background-color: $colorContainer;
