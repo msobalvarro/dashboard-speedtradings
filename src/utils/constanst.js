@@ -6,7 +6,8 @@ import { Dispatch } from "redux"
 const keySecret = "testDevelop"
 const keyStorage = "@storage"
 
-export const urlServer = "http://localhost:8080"
+export const urlServer = "https://backend-speedtradings.herokuapp.com"
+// export const urlServer = "http://localhost:8080"
 
 /**
  * Format number with decimal miles separator
