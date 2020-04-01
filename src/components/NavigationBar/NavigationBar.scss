@@ -18,7 +18,9 @@ nav.navigation-bar {
 
         a {
             text-decoration: none;
+            position: relative;
             margin: 0 15px;
+            cursor: pointer;
             color: #FFF;
             font-size: 16px;
 
@@ -31,6 +33,17 @@ nav.navigation-bar {
             &.active {
                 color: $colorSecondary;
             }
+
+            &.comming-soon::before {
+                border-radius: 3px;
+                content: 'Proximamente';
+                font-size: 10px;
+                background: #c53c1a;
+                bottom: -25px;
+                /* left: 50%; */
+                position: absolute;
+                padding: 5px;
+              }
         }
     }
 }

@@ -20,7 +20,7 @@ const NavigationBar = () => {
             <div className="content-links">
                 <Link to="/" className={(location === '#/') ? 'active' : ''}>Dashboard</Link>
                 <Link to="/sponsors" className={(location === '#/sponsors') ? 'active' : ''}>Comisiones</Link>
-                <Link to="/profile" className={(location === '#/profile') ? 'active' : ''}>{globalStorage.username}</Link>
+                <a to="#" className="comming-soon">{globalStorage.username}</a>
                 <a href="#" onClick={LogOut}>Cerrar sesion</a>
             </div>
         </nav>
