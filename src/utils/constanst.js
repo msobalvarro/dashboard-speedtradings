@@ -6,7 +6,7 @@ import { Dispatch } from "redux"
 const keySecret = "testDevelop"
 const keyStorage = "@storage"
 
-export const urlServer = "https://ardent-medley-272823.appspot.com/"
+export const urlServer = "https://ardent-medley-272823.appspot.com"
 // export const urlServer = "http://localhost:8080"
 
 /**
@@ -23,7 +23,7 @@ export const Round = (number = 0) => Math.round(number * 100) / 100
 export const Petition = Axios.create({
     baseURL: urlServer,
     // headers: {
-    //     "content-type": "application/x-www-form-urlencoded"
+    //     "Content-Type": "application/json"
     // },
     validateStatus: (status) => {
         if (status === 401) {
