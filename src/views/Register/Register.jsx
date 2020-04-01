@@ -65,6 +65,8 @@ const Register = (props) => {
     // Crypto select
     const [crypto, setCrypto] = useState('1')
 
+    const [codeNumber, setCode] = useState(Countries[0].phoneCode)
+
     // Plan selection
     const [plan, setPlan] = useState([])
 
@@ -221,6 +223,12 @@ const Register = (props) => {
         Swal.fire('Direccion Wallet copiada', '', 'success')
     }
 
+    const changeCountry = (e) => {
+        setCountry(e.target.value)
+
+        setCode(Countries[Number(e.target.value)].phoneCode)
+    }
+
     return (
         <div className="container-register">
             <div className="cover-image">
@@ -272,7 +280,7 @@ const Register = (props) => {
                         <div className="row">
                             <span className="required">Pais</span>
 
-                            <select className="picker" value={country} onChange={e => setCountry(e.target.value)}>
+                            <select className="picker" value={country} onChange={changeCountry}>
                                 {Countries.map(
                                     ({ name }, index) => <option value={index} key={index}>{name}</option>
                                 )}
@@ -280,7 +288,7 @@ const Register = (props) => {
                         </div>
 
                         <div className="row">
-                            <span className="required">Numero telefonico ({Countries[Number(country)].phoneCode})</span>
+                            <span className="required">Numero telefonico <span>({codeNumber.toString()})</span></span>
 
                             <input value={phone} onChange={e => setPhone(e.target.value)} type="text" className="text-input" />
                         </div>
@@ -308,14 +316,37 @@ const Register = (props) => {
                         </div>
 
                         <div className="row">
-                            <span className="required">
-                                Direccion Wallet ({crypto === '1' && 'BTC'} {crypto === '2' && 'ETH'})
+                            {
+                                crypto === '1' &&
+                                <span className="required">
+                                    Direccion Wallet (BTC)
                             </span>
+                            }
 
-                            <div className="wallet-direction" onClick={copyWallet} title="toca para copiar">
-                                {crypto === '1' && wallets.btc}
-                                {crypto === '2' && wallets.eth}
-                            </div>
+                            {
+                                crypto === '2' &&
+                                <span className="required">
+                                    Direccion Wallet (ETH)
+                            </span>
+                            }
+
+                            {/* <span className="required">
+                                Direccion Wallet ({crypto === '1' && 'BTC'} {crypto === '2' && 'ETH'})
+                            </span> */}
+
+                            {
+                                crypto === '1' &&
+                                <span className="wallet-direction" onClick={copyWallet} title="toca para copiar">
+                                    {wallets.btc}
+                                </span>
+                            }
+
+                            {
+                                crypto === '2' &&
+                                <span className="wallet-direction" onClick={copyWallet} title="toca para copiar">
+                                    {wallets.eth}
+                                </span>
+                            }
                         </div>
 
                         <div className="row investment-plan">
