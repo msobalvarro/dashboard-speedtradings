@@ -12,8 +12,8 @@ export const wallets = {
     eth: '0x166be843864bcba7235bcb62aa33aa4eadfef4ea'
 }
 
-// export const urlServer = "https://ardent-medley-272823.appspot.com"
-export const urlServer = "http://localhost:8080"
+export const urlServer = "https://ardent-medley-272823.appspot.com"
+// export const urlServer = "http://localhost:8080"
 
 /**
  * Format number with decimal miles separator
