@@ -40,7 +40,7 @@ const Register = (props) => {
     const [validateUserSponsor, setValidateUserSponsor] = useState(null)
 
     // State for show tabs view
-    const [tabActive, setTab] = useState(2)
+    const [tabActive, setTab] = useState(1)
 
     // Show modal terms
     const [modal, setModal] = useState(false)
