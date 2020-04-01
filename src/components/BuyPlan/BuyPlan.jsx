@@ -8,13 +8,13 @@ import LogoBTC from "../../static/icons/bitcoin.svg"
 import LogoETH from "../../static/icons/ether.svg"
 
 // Import info or components
-import { Petition } from "../../utils/constanst"
+import { Petition, wallets } from "../../utils/constanst"
 import ActivityIndicator from "../ActivityIndicator/Activityindicator"
 
-const images = {
-    btc: LogoBTC,
-    eth: LogoETH,
-}
+// const images = {
+//     btc: LogoBTC,
+//     eth: LogoETH,
+// }
 
 
 const BuyPlan = ({ idCrypto = 1, onBuy = () => { } }) => {
@@ -91,6 +91,23 @@ const BuyPlan = ({ idCrypto = 1, onBuy = () => { } }) => {
         setLoader(false)
     }
 
+    const copywallet = () => {
+        if (idCrypto === 1) {
+            navigator.clipboard.writeText(wallets.btc).catch(_ => {
+                return false
+            })
+        }
+
+        if (idCrypto === 2) {
+            navigator.clipboard.writeText(wallets.eth).catch(_ => {
+                return false
+            })
+        }
+
+
+        Swal.fire('Direccion Wallet copiada', '', 'success')
+    }
+
     return (
         <div className="container-buy-plan">
             <h2>
@@ -113,6 +130,20 @@ const BuyPlan = ({ idCrypto = 1, onBuy = () => { } }) => {
                 idCrypto === 2 &&
                 <img src={LogoETH} className="logo-crypto" alt="" />
             }
+
+            <div className="row wallets">
+                <span>Toca para copiar wallet</span>
+
+                {
+                    idCrypto === 1 &&
+                    <span className="wallet" onClick={copywallet}>{wallets.btc}</span>
+                }
+
+                {
+                    idCrypto === 2 &&
+                    <span className="wallet" onClick={copywallet}>{wallets.eth}</span>
+                }
+            </div>
 
             <div className="row">
                 <span>Selecciona tu plan</span>

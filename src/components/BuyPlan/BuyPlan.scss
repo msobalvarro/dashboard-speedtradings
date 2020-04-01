@@ -1,3 +1,5 @@
+@import "../../utils/constants.scss";
+
 div.container-buy-plan {
   background-color: rgba(255, 255, 255, 0.2);
   border-radius: 10px;
@@ -14,11 +16,28 @@ div.container-buy-plan {
 
   .row {
     margin-bottom: 25px;
-    width: 50%;
+    width: 60%;
     .picker,
     .text-input {
       margin-top: 10px;
       width: 100%;
+    }
+
+    &.wallets {
+      display: flex;
+      flex-direction: column;
+
+
+      span.wallet {
+        background-color: $colorYellow;
+        border-radius: 3px;
+        color: #2d2d2d;
+        cursor: pointer;
+        text-align: center;
+        margin-top: 10px;
+        padding: 5px;
+        width: 100%;
+      }
     }
   }
 }
