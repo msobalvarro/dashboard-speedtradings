@@ -22,9 +22,8 @@ const Sponsors = () => {
     const [dataBTC, setDataBTC] = useState([])
     const [dataETH, setDataETH] = useState([])
 
-    // sum all 
-    const sumBTC = []
-    const sumETH = []
+    const [SumBTC, setSumBTC] = useState(0)
+    const [SumETH, setSumETH] = useState(0)
 
     useEffect(() => {
         try {
@@ -36,7 +35,6 @@ const Sponsors = () => {
                 }
             })
                 .then((response) => {
-                    console.log(response.data)
                     configurateData(response.data)
 
                     setLoader(false)
@@ -59,19 +57,23 @@ const Sponsors = () => {
         const btc = []
         const eth = []
 
+        // sum all 
+        const _sumBTC = []
+        const _sumETH = []
+
         for (let index = 0; index < allData.length; index++) {
             const item = allData[index]
 
 
             // Si es bitoin
             if (item.id_currency === 1) {
-                sumBTC.push(item.amount * 0.05)
+                _sumBTC.push(item.amount * 0.05)
 
                 btc.push(item)
             }
 
             if (item.id_currency === 2) {
-                sumETH.push(item.amount * 0.05)
+                _sumETH.push(item.amount * 0.05)
 
                 eth.push(item)
             }
@@ -79,6 +81,9 @@ const Sponsors = () => {
 
         setDataBTC(btc)
         setDataETH(eth)
+
+        setSumBTC(_sumBTC.reduce((a, b) => a + b, 0))
+        setSumETH(_sumETH.reduce((a, b) => a + b, 0))
     }
 
     const copyLink = () => {
@@ -147,7 +152,7 @@ const Sponsors = () => {
                                         }
                                     </div>
                                     <div className="footer">
-                                        Total {sumBTC.reduce((a, b) => a + b, 0)}
+                                        Total {SumBTC}
                                     </div>
                                 </>
                             }
@@ -191,7 +196,7 @@ const Sponsors = () => {
                                         }
                                     </div>
                                     <div className="footer">
-                                        Total {sumETH.reduce((a, b) => a + b, 0)}
+                                        Total {SumETH}
                                     </div>
                                 </>
                             }

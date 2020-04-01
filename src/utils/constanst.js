@@ -30,10 +30,7 @@ export const Round = (number = 0) => Math.round(number * 100) / 100
 export const copyData = (str = "") => {
     navigator.clipboard.writeText(str).catch(_ => {
         return false
-    })
-
-
-    Swal.fire('Direccion Wallet copiada', '', 'success')
+    }).then(e => Swal.fire('Direccion Wallet copiada', '', 'success'))    
 }
 
 export const Petition = Axios.create({
