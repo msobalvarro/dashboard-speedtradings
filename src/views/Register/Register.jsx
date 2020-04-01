@@ -40,7 +40,7 @@ const Register = (props) => {
     const [validateUserSponsor, setValidateUserSponsor] = useState(null)
 
     // State for show tabs view
-    const [tabActive, setTab] = useState(1)
+    const [tabActive, setTab] = useState(2)
 
     // Show modal terms
     const [modal, setModal] = useState(false)
@@ -312,10 +312,10 @@ const Register = (props) => {
                                 Direccion Wallet ({crypto === '1' && 'BTC'} {crypto === '2' && 'ETH'})
                             </span>
 
-                            <span className="wallet-direction" onClick={copyWallet} title="toca para copiar">
+                            <div className="wallet-direction" onClick={copyWallet} title="toca para copiar">
                                 {crypto === '1' && wallets.btc}
                                 {crypto === '2' && wallets.eth}
-                            </span>
+                            </div>
                         </div>
 
                         <div className="row investment-plan">
