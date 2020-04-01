@@ -16,7 +16,7 @@ import ActivityIndicator from "../../components/ActivityIndicator/Activityindica
 import { Petition, wallets } from "../../utils/constanst"
 import Swal from "sweetalert2"
 
-const Register = (props) => {   
+const Register = (props) => {
 
     // Params from url
     const { match } = props
@@ -152,8 +152,12 @@ const Register = (props) => {
             if (username.length > 5) {
                 await Petition.post(`/comprobate/username`, { username })
                     .then((response) => {
-                        console.log(response)
-                        setValidateUser(response.data.length === 0)
+                        if (response.data.error) {
+                            throw response.data.message
+                        }
+                        else if (response.status === 200) {
+                            setValidateUser(response.data.length === 0)
+                        }
                     })
                     .catch(reason => {
                         throw reason
@@ -459,12 +463,9 @@ const Register = (props) => {
 
                         <div className="collection-buttons">
                             <button className="button no-border" onClick={_ => setTab(3)}>Atras</button>
+
                             <button className="button secondary no-border" disabled={!validationButtons.fourth || loader || loaderData} onClick={onSubmitInformation}>
-                                {
-                                    (loader || loaderData)
-                                        ? <><ActivityIndicator size={20} /> Cargando..</>
-                                        : 'Enviar'
-                                }
+                                Enviar
                             </button>
                         </div>
                     </div>

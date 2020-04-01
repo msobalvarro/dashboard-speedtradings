@@ -85,7 +85,7 @@ const DashboardDetails = ({ data, type = "" }) => {
                                 {
                                     data[1].last_pay !== null
                                         ? (data[1].last_pay).toFixed(8) + ' ' + type.toUpperCase()
-                                        : '(Sin reportes)'
+                                        : <span>(Sin reportes)</span>
                                 }
                             </h2>
                             <span>Ultimo reporte de ganancia</span>

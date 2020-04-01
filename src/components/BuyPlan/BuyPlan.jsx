@@ -178,11 +178,7 @@ const BuyPlan = ({ idCrypto = 1, onBuy = () => { } }) => {
             </div>
 
             <button disabled={loader} className="button secondary large" onClick={Buy}>
-                {
-                    loader
-                        ? <ActivityIndicator size={24} />
-                        : 'Comprar'
-                }
+                Comprar
             </button>
         </div>
     )

@@ -110,11 +110,7 @@ const Login = () => {
 
           <div className="row">
             <button className="button" type="submit" disabled={loading}>
-              {
-                loading
-                  ? <><ActivityIndicator size={20} /> Cargando..</>
-                  : 'Login'
-              }
+              Login
             </button>
           </div>
 
