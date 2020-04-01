@@ -117,7 +117,8 @@ const Register = (props) => {
                 walletETH,
                 amount: Number(amountPlan),
                 id_currency: Number(crypto),
-                username_sponsor: usernameSponsor
+                username_sponsor: usernameSponsor,
+                info
             }
 
             await Petition.post(`/register`, data)
