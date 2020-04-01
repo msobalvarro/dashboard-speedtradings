@@ -13,14 +13,10 @@ import Countries from "../../utils/countries.json"
 import ModalTerms from "../../components/Modal/ModalTerms"
 import ActivityIndicator from "../../components/ActivityIndicator/Activityindicator"
 
-import { Petition } from "../../utils/constanst"
+import { Petition, wallets } from "../../utils/constanst"
 import Swal from "sweetalert2"
 
-const Register = (props) => {
-    const wallets = {
-        btc: '3FALsBdWnBLTm6EC5DMyTntZBpAR9AhvmM',
-        eth: '0x166be843864bcba7235bcb62aa33aa4eadfef4ea'
-    }
+const Register = (props) => {   
 
     // Params from url
     const { match } = props
