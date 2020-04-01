@@ -72,7 +72,7 @@ const DashboardDetails = ({ data, type = "" }) => {
                         <div className="col yellow">
                             <h2 className="big">
                                 {
-                                    (data[1].amount_to_win).toFixed(8) + ' ' + type.toUpperCase()
+                                    (data[1].amount_to_win) + ' ' + type.toUpperCase()
                                 }
                             </h2>
                             <span>Monto a ganar</span>
@@ -84,7 +84,7 @@ const DashboardDetails = ({ data, type = "" }) => {
                             <h2>
                                 {
                                     data[1].last_pay !== null
-                                        ? (data[1].last_pay).toFixed(8) + ' ' + type.toUpperCase()
+                                        ? (data[1].last_pay) + ' ' + type.toUpperCase()
                                         : <span>(Sin reportes)</span>
                                 }
                             </h2>
@@ -95,8 +95,8 @@ const DashboardDetails = ({ data, type = "" }) => {
                             <h2>
                                 {
                                     data[1].amount_rest !== null
-                                        ? (data[1].amount_rest).toFixed(8) + ' ' + type.toUpperCase()
-                                        : (data[1].amount_to_win).toFixed(8) + ' ' + type.toUpperCase()
+                                        ? (data[1].amount_rest) + ' ' + type.toUpperCase()
+                                        : (data[1].amount_to_win) + ' ' + type.toUpperCase()
                                 }
                             </h2>
                             <span>Saldo pendiente</span>
