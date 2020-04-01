@@ -32,6 +32,9 @@ const Register = (props) => {
     // Valida si el usuario ya existe
     const [validateUser, setValidateUser] = useState(null)
 
+    // Valida si el correo ya existe
+    const [validateEmail, setValidateEmail] = useState(null)
+
     // Valida si el usuario sponsor existe
     const [validateUserSponsor, setValidateUserSponsor] = useState(null)
 
@@ -67,7 +70,7 @@ const Register = (props) => {
     const [plan, setPlan] = useState([])
 
     const validationButtons = {
-        first: firstName.length > 0 && lastname.length > 0 && Validator.isEmail(email) && phone.length > 6 && country !== '0',
+        first: firstName.length > 0 && lastname.length > 0 && Validator.isEmail(email) && phone.length > 6 && country !== '0' && validateEmail === true && !loader,
         second: amountPlan !== null,
         third: hash.length > 10 && walletBTC.length > 10 && walletETH.length > 10,
         fourth: password === passwordSecurity && password.length > 0 && passwordSecurity.length > 0 && username.length > 0 && validateUser === true && term === true,
@@ -172,6 +175,33 @@ const Register = (props) => {
         }
     }
 
+    /**Validate email register form */
+    const validateEmailFunction = async () => {
+        setLoader(true)
+        try {
+            if (Validator.isEmail(email)) {
+                await Petition.post(`/comprobate/email`, { email })
+                    .then((response) => {
+                        if (response.data.error) {
+                            throw response.data.message
+                        }
+                        else if (response.status === 200) {
+                            setValidateEmail(response.data.length === 0)
+                        }
+                    })
+                    .catch(reason => {
+                        throw reason
+                    })
+            } else {
+                validateEmail(false)
+            }
+        } catch (error) {
+            Swal.fire('error', error.toString(), 'error')
+        } finally {
+            setLoader(false)
+        }
+    }
+
     /**Function validate user sponsor */
     const validateUsernameSponsor = async (username = '') => {
         setLoader(true)
@@ -262,7 +292,7 @@ const Register = (props) => {
                         <div className="row">
                             <span className="required">Nombre</span>
 
-                            <input value={firstName} onChange={e => setFirstname(e.target.value)} type="text" className="text-input" />
+                            <input value={firstName} autoFocus onChange={e => setFirstname(e.target.value)} type="text" className="text-input" />
                         </div>
 
                         <div className="row">
@@ -272,11 +302,28 @@ const Register = (props) => {
                         </div>
 
                         <div className="row">
-                            <span className="required">Correo Electronico</span>
+                            <span className="required comprobate">
+                                Correo Electronico
 
-                            <input value={email} onChange={e => setEmail(e.target.value)} type="text" className="text-input" />
+                                {
+                                    loader &&
+                                    <ActivityIndicator size={24} />
+                                }
+
+                                {
+                                    (validateEmail !== null) &&
+                                    <>
+                                        {
+                                            validateEmail
+                                                ? <span className="valid">Correo valido</span>
+                                                : <span className="invalid">El correo ya existe</span>
+                                        }
+                                    </>
+                                }
+                            </span>
+
+                            <input value={email} onBlur={validateEmailFunction} onChange={e => setEmail(e.target.value)} type="text" className="text-input" />
                         </div>
-
                         <div className="row">
                             <span className="required">Pais</span>
 

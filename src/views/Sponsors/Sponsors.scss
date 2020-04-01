@@ -79,10 +79,26 @@ div.container-sponsors {
 
         .body {
           .row {
-            border-bottom: 1px solid #FFF;
+            border-bottom: 1px solid #fff;
             padding: 15px 0;
             display: flex;
             justify-content: space-between;
+
+            span {
+              overflow: hidden;
+              white-space: nowrap;
+              text-overflow: ellipsis;
+              text-align: center;
+              width: 25%;
+
+              &:first-child {
+                text-align: left;
+              }
+
+              &:last-child {
+                text-align: right;
+              }
+            }
           }
         }
 

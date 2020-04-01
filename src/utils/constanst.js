@@ -1,6 +1,7 @@
 import jwt from "jwt-simple"
 import Axios from "axios"
 import { Dispatch } from "redux"
+import Swal from "sweetalert2"
 
 // Constanst
 const keySecret = "testDevelop"
@@ -11,8 +12,8 @@ export const wallets = {
     eth: '0x166be843864bcba7235bcb62aa33aa4eadfef4ea'
 }
 
-export const urlServer = "https://ardent-medley-272823.appspot.com"
-// export const urlServer = "http://localhost:8080"
+// export const urlServer = "https://ardent-medley-272823.appspot.com"
+export const urlServer = "http://localhost:8080"
 
 /**
  * Format number with decimal miles separator
@@ -24,6 +25,16 @@ export const urlServer = "https://ardent-medley-272823.appspot.com"
 export const WithDecimals = (number = 0) => number.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")
 
 export const Round = (number = 0) => Math.round(number * 100) / 100
+
+/**Copy string */
+export const copyData = (str = "") => {
+    navigator.clipboard.writeText(str).catch(_ => {
+        return false
+    })
+
+
+    Swal.fire('Direccion Wallet copiada', '', 'success')
+}
 
 export const Petition = Axios.create({
     baseURL: urlServer,

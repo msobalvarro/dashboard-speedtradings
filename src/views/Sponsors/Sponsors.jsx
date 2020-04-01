@@ -62,6 +62,7 @@ const Sponsors = () => {
         for (let index = 0; index < allData.length; index++) {
             const item = allData[index]
 
+
             // Si es bitoin
             if (item.id_currency === 1) {
                 sumBTC.push(item.amount * 0.05)
@@ -76,10 +77,7 @@ const Sponsors = () => {
             }
         }
 
-        console.log(sumBTC, sumETH)
-
         setDataBTC(btc)
-
         setDataETH(eth)
     }
 
