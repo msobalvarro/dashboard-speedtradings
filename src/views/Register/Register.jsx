@@ -15,6 +15,7 @@ import ActivityIndicator from "../../components/ActivityIndicator/Activityindica
 
 import { Petition, wallets } from "../../utils/constanst"
 import Swal from "sweetalert2"
+import Axios from "axios"
 
 const Register = (props) => {   
 
@@ -64,6 +65,8 @@ const Register = (props) => {
     // Plan selection
     const [plan, setPlan] = useState([])
 
+    const [info, setInfo] = useState('')
+
     const validationButtons = {
         first: firstName.length > 0 && lastname.length > 0 && Validator.isEmail(email) && phone.length > 6 && country !== '0',
         second: amountPlan !== null,
@@ -81,13 +84,15 @@ const Register = (props) => {
         }
 
         try {
+            Axios.get('https://www.cloudflare.com/cdn-cgi/trace').then(({ data }) => {
+                setInfo(data)
+            })
+
             Petition.get(`/collection/investment-plan`)
                 .then(response => {
                     setPlan(response.data)
                 })
                 .catch(reason => {
-                    console.log(reason)
-
                     throw reason
                 }).finally(_ => setLoader(false))
         } catch (error) {
