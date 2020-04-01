@@ -318,16 +318,12 @@ const Register = (props) => {
                         <div className="row">
                             {
                                 crypto === '1' &&
-                                <span className="required">
-                                    Direccion Wallet (BTC)
-                            </span>
+                                <span className="required">Direccion Wallet (BTC)</span>
                             }
 
                             {
                                 crypto === '2' &&
-                                <span className="required">
-                                    Direccion Wallet (ETH)
-                            </span>
+                                <span className="required">Direccion Wallet (ETH)</span>
                             }
 
                             {/* <span className="required">
@@ -365,9 +361,8 @@ const Register = (props) => {
                                             <div className="element" key={index}>
                                                 <input onChange={e => setAmountPlan(e.target.value)} value={item.amount} type="radio" id={`plan-${index}`} className="check" name="plan" />
                                                 <label htmlFor={`plan-${index}`}>
-                                                    {item.amount}
-                                                    {item.id_currency === 1 && ' BTC'}
-                                                    {item.id_currency === 2 && ' ETH'}
+                                                    {item.id_currency === 1 && item.amount + ' BTC'}
+                                                    {item.id_currency === 2 && item.amount + ' ETH'}
                                                 </label>
                                             </div>
                                         )

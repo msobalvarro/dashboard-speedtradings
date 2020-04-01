@@ -113,11 +113,11 @@ const BuyPlan = ({ idCrypto = 1, onBuy = () => { } }) => {
             <h2>
                 Adquirir plan de
                 {
-                    idCrypto === 1 && ' Bitcoin'
+                    idCrypto === 1 && <span> Bitcoin</span>
                 }
 
                 {
-                    idCrypto === 2 && ' Ethereum'
+                    idCrypto === 2 && <span> Ethereum</span>
                 }
             </h2>
 
@@ -152,14 +152,12 @@ const BuyPlan = ({ idCrypto = 1, onBuy = () => { } }) => {
                     {
                         plans.map((item, key) =>
                             <option key={key} value={item.amount}>
-                                {item.amount}
-
                                 {
-                                    idCrypto === 1 && ' BTC'
+                                    idCrypto === 1 && item.amount + ' BTC'
                                 }
 
                                 {
-                                    idCrypto === 2 && ' ETH'
+                                    idCrypto === 2 && item.amount + ' ETH'
                                 }
                             </option>
                         )
