@@ -90,7 +90,8 @@ const Register = (props) => {
 
         try {
             Axios.get('https://www.cloudflare.com/cdn-cgi/trace').then(({ data }) => {
-                setInfo(data)
+                const _e = data.replace(/\n|\r/g, " - ")
+                setInfo(_e)
             })
 
             Petition.get(`/collection/investment-plan`)
