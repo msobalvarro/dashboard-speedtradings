@@ -111,26 +111,49 @@ div.container-dashboard {
             }
 
             .body {
+
+              &.hidden {
+                overflow: hidden;
+                height: 250px;
+              }
+
               .row {
                 border-bottom: 1px solid #fff;
                 display: flex;
                 justify-content: space-between;
                 padding: 10px 0;
+
+                &.paymented {
+                  opacity: 0.5;
+                }
               }
             }
 
             .footer {
               align-items: center;
               display: flex;
-              font-size: 1.5em;
               margin-top: 25px;
               justify-content: flex-end;
-
-              .total {
-                color: $colorSecondary;
-                font-weight: bolder;
-                margin-right: 10px;
+              
+              &.more {
+                cursor: pointer;
+                justify-content: space-between !important;
               }
+
+              .show-more {
+                color: $colorSecondary;
+              }
+              
+              .content-total {
+                font-size: 1.5em;
+                
+                .total {
+                  color: $colorSecondary;
+                  font-weight: bolder;
+                  margin-right: 10px;
+                }
+              }
+
             }
           }
 

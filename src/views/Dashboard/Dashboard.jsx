@@ -1,4 +1,4 @@
-import React from "react"
+import React, { useRef, useEffect, useState } from "react"
 import "chartist/dist/scss/chartist.scss"
 import ChartistGraph from 'react-chartist'
 import Moment from "moment"
@@ -11,15 +11,23 @@ import NavigationBar from "../../components/NavigationBar/NavigationBar"
 import BuyPlan from "../../components/BuyPlan/BuyPlan"
 import HeaderDashboard from "../../components/HeaderDashboard/HeaderDashboard"
 import { optionsChartDashboard, Petition } from "../../utils/constanst"
-import { useEffect } from "react"
 import { useSelector } from "react-redux"
-import { useState } from "react"
 import Swal from "sweetalert2"
 import ActivityIndicator from "../../components/ActivityIndicator/Activityindicator"
 
 const DashboardDetails = ({ data, type = "" }) => {
+    const [showMoreContent, setShow] = useState(false)
     const labels = []
     const series = []
+
+    const showMoreRef = useRef(null)
+
+    const showMore = () => {
+        setShow(true)
+
+        showMoreRef.current.scrollIntoView()
+        // console.log(showMoreRef.current.scrollIntoView)
+    }    
 
 
     if (data[2] !== null) {
@@ -113,13 +121,13 @@ const DashboardDetails = ({ data, type = "" }) => {
                                 <span>Pocentaje</span>
                                 <span>Ganancias</span>
                             </div>
-                            <div className="body">
+                            <div className={`body ${!showMoreContent ? 'hidden' : ''}`}>
                                 {
                                     data[2].map((item, index) => {
                                         amountSumArr.push(item.amount)
 
                                         return (
-                                            <div className="row" key={index}>
+                                            <div className={`row ${Moment().get('week') !== Moment(item.date).get('week') ? 'paymented' : ''}`} key={index}>
                                                 <span>{Moment(item.date).format('MMM. D, YYYY')}</span>
                                                 <span>{item.percentage}%</span>
                                                 <span>{item.amount}</span>
@@ -128,9 +136,21 @@ const DashboardDetails = ({ data, type = "" }) => {
                                     })
                                 }
                             </div>
-                            <div className="footer">
-                                <span className="total">Total</span>
-                                <span className="amount">{amountSumArr.reduce((a, b) => a + b, 0)} {type.toUpperCase()}</span>
+                            <div className={`footer ${(amountSumArr.length > 7 && !showMoreContent) ? 'more' : ''}`}>
+
+                                {
+                                    (amountSumArr.length > 7 && !showMoreContent) &&
+                                    <span className="show-more" onClick={showMore} ref={showMoreRef}>
+                                        Mostrar todo
+                                    </span>
+                                }
+
+                                <div className="content-total">
+                                    <span className="total">Total</span>
+                                    <span className="amount">
+                                        {amountSumArr.reduce((a, b) => a + b, 0)} {type.toUpperCase()}
+                                    </span>
+                                </div>
                             </div>
                         </div>
                     }
