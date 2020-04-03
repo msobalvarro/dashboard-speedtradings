@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react'
-import { HashRouter, Route, Switch, Redirect } from "react-router-dom"
+import { HashRouter, Route, Switch, BrowserRouter } from "react-router-dom"
 import { useDispatch, useSelector } from "react-redux"
 
 // Import Assets
@@ -43,30 +43,29 @@ const App = () => {
   }, [])
 
   return (
-    <HashRouter>
-      <Switch>
-        {
-          loged
-            ?
+    <BrowserRouter>
+        <Switch>
+          {
+            loged
+              ?
+              <>
+                <Route path="/" exact component={Dashboard} />
+                <Route path="/sponsors" component={Sponsors} />
+              </>
+              : <Route path="/" exact component={Login} />
+          }
+
+          {
+            !loged &&
             <>
-              <Route path="/" exact component={Dashboard} />
-              <Route path="/sponsors" component={Sponsors} />
-              <Route path="*" component={NotFound} />
+              <Route path="/register" exact component={Register} />
+              <Route path="/register/:username" component={Register} />
             </>
-            : <Route path="/" exact component={Login} />
-        }
+          }
 
-        {
-          !loged &&
-          <>
-            <Route path="/register" exact component={Register} />
-            <Route path="/register/:username" component={Register} />
-            <Route path="*" component={NotFound} />
-          </>
-        }
-
-      </Switch>
-    </HashRouter>
+          <Route component={NotFound} />
+        </Switch>
+    </BrowserRouter>
   )
 }
 
