@@ -12,17 +12,17 @@ nav.navigation-bar {
     .content-logo {
         position: relative;
 
-        &::after {
-            border-radius: 3px;
-            content: 'BETA';
-            color: $colorMain;
-            font-size: 10px;
-            background: $colorYellow;
-            bottom: 50%;
-            right: -36px;
-            position: absolute;
-            padding: 5px;
-          }
+        // &::after {
+        //     border-radius: 3px;
+        //     content: 'BETA';
+        //     color: $colorMain;
+        //     font-size: 10px;
+        //     background: $colorYellow;
+        //     bottom: 50%;
+        //     right: -36px;
+        //     position: absolute;
+        //     padding: 5px;
+        //   }
 
         img.brand-logo {
             max-width: 128px;
