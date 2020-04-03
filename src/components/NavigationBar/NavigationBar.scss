@@ -9,9 +9,28 @@ nav.navigation-bar {
     padding: 0 25px;
     width: 100%;
 
-    img.brand-logo {
-        max-width: 128px;
+    .content-logo {
+        position: relative;
+
+        &::after {
+            border-radius: 3px;
+            content: 'BETA';
+            color: $colorMain;
+            font-size: 10px;
+            background: $colorYellow;
+            bottom: 50%;
+            right: -36px;
+            position: absolute;
+            padding: 5px;
+          }
+
+        img.brand-logo {
+            max-width: 128px;
+            position: relative;
+    
+        }
     }
+
 
     div.content-links {
         display: flex;

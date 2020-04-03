@@ -8,7 +8,7 @@ import "./HeaderDashboard.scss"
 import LogoBTC from "../../static/icons/bitcoin.svg"
 import LogoETH from "../../static/icons/ether.svg"
 import ProgressBar from "../ProgressBar/ProgressBar"
-import { Petition } from "../../utils/constanst"
+import { Petition, wallets, copyData } from "../../utils/constanst"
 import Swal from "sweetalert2"
 
 const images = {
@@ -137,7 +137,17 @@ const HeaderDashboard = ({ type = "btc", amount = 0.5, amountToday = 2, idInvest
                 showModal &&
                 <div className="modal-upgrade">
                     <div className="content">
-                        <h2>Invierte mas en tu plan - {type.toUpperCase()}</h2>
+
+                        <div className="m-header">
+                            <h2>Invierte mas en tu plan - {type.toUpperCase()}</h2>
+
+                            <span className="wallet" onClick={_ => copyData(wallets[type])}>
+                                {
+                                    wallets[type]
+                                }
+                            </span>
+
+                        </div>
 
                         <div className="row">
                             <div className="col">

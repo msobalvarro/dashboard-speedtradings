@@ -62,9 +62,25 @@ div.container-info-crypto {
     width: 512px;
     padding: 20px;
 
-    h2 {
-      color: $colorYellow;
+    .m-header {
+      align-items: center;
+      display: flex;
+      justify-content: space-between;
+
+      h2 {
+        color: $colorYellow;
+      }
+
+      span.wallet {
+        background-color: $colorYellow;
+        color: $colorMain;
+        font-size: 12px;
+        cursor: pointer;
+        padding: 8px;
+        border-radius: 5px;
+      }
     }
+
 
     .row {
       display: flex;

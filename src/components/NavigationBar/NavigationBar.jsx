@@ -15,7 +15,9 @@ const NavigationBar = () => {
 
     return (
         <nav className="navigation-bar">
-            <img src={Logo} className="brand-logo" alt="logo" />
+            <div className="content-logo">
+                <img src={Logo} className="brand-logo" alt="logo" />
+            </div>
 
             <div className="content-links">
                 <Link to="/" className={(location === '#/') ? 'active' : ''}>Dashboard</Link>
