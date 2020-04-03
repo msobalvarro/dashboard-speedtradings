@@ -11,6 +11,18 @@ nav.navigation-bar {
 
     img.brand-logo {
         max-width: 128px;
+        position: relative;
+
+        // &::after {
+        //     border-radius: 3px;
+        //     content: 'BETA';
+        //     font-size: 10px;
+        //     background: $colorYellow;
+        //     bottom: 0;
+        //     left: 0%;
+        //     // position: absolute;
+        //     padding: 5px;
+        //   }
     }
 
     div.content-links {
