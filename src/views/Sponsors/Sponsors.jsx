@@ -16,7 +16,7 @@ import moment from "moment"
 
 const Sponsors = () => {
     const { globalStorage } = useSelector(storage => storage)
-    const urlSponsor = window.location.host + '/register/' + globalStorage.username
+    const urlSponsor = window.location.host + '/#/register/' + globalStorage.username
     const [loader, setLoader] = useState(true)
 
     const [dataBTC, setDataBTC] = useState([])

@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react'
-import { HashRouter, Route, Switch, BrowserRouter } from "react-router-dom"
+import { HashRouter, Route, Switch } from "react-router-dom"
 import { useDispatch, useSelector } from "react-redux"
 
 // Import Assets
@@ -43,7 +43,7 @@ const App = () => {
   }, [])
 
   return (
-    <BrowserRouter>
+    <HashRouter>
         <Switch>
           {
             loged
@@ -65,7 +65,7 @@ const App = () => {
 
           <Route component={NotFound} />
         </Switch>
-    </BrowserRouter>
+    </HashRouter>
   )
 }
 
