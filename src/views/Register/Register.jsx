@@ -215,7 +215,7 @@ const Register = (props) => {
 
         try {
             if (username.length > 0) {
-                await Petition.post(`/comprobate/username`, { username })
+                await Petition.post(`/comprobate/username/exist`, { username })
                     .then((response) => {
                         console.log(response.data)
                         if (response.data.length > 0) {
