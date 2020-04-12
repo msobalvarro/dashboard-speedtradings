@@ -6,7 +6,6 @@ import { Link } from 'react-router-dom'
 // import Assets
 import "./Login.scss"
 import Logo from "../../static/images/logo.png"
-import ActivityIndicator from "../../components/ActivityIndicator/Activityindicator"
 import { setStorage, Petition } from "../../utils/constanst"
 import Swal from "sweetalert2"
 import { SETSTORAGE } from "../../store/ActionTypes"
@@ -94,7 +93,7 @@ const Login = () => {
                 ? <span className="error">Email no es Correcto</span>
                 : <span>Correo Electronico</span>
             }
-            <input required onChange={e => setEmail(e.target.value)} autoFocus value={email} type="text" className="text-input" />
+            <input required onChange={e => setEmail(e.target.value)} autoFocus value={email} type="email" className="text-input" />
           </div>
 
           <div className="row">

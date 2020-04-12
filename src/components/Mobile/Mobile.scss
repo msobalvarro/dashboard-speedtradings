@@ -1,0 +1,49 @@
+@import "../../utils/constants.scss";
+
+.modal-mobile {
+  align-items: center;
+  background-color: $colorMain;
+  justify-content: center;
+  flex-direction: column;
+  display: flex;
+  height: 100vh;
+  position: fixed;
+  width: 100vw;
+  z-index: 500;
+
+  img.logo {
+    max-width: 60%;
+    margin-bottom: 25px;
+  }
+
+  a.card {
+    align-items: center;
+    background-color: rgba(255, 255, 255, 0.2);
+    border-radius: 5px;
+    color: #fff;
+    display: flex;
+    justify-content: space-between;
+    padding: 10px;
+    margin-bottom: 20px;
+    text-decoration: none;
+
+    img {
+      max-width: 64px;
+    }
+
+    .row {
+      margin-left: 10px;
+      display: flex;
+      flex-direction: column;
+
+      span {
+        text-transform: uppercase;
+      }
+
+      span.small {
+        font-size: 12px;
+        text-transform: none;
+      }
+    }
+  }
+}

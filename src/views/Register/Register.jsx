@@ -329,7 +329,7 @@ const Register = (props) => {
                                 }
                             </span>
 
-                            <input value={email} onBlur={validateEmailFunction} onChange={e => setEmail(e.target.value)} type="text" className="text-input" />
+                            <input value={email} onBlur={validateEmailFunction} onChange={e => setEmail(e.target.value)} type="email" className="text-input" />
                         </div>
                         <div className="row">
                             <span className="required">Pais</span>
@@ -344,7 +344,7 @@ const Register = (props) => {
                         <div className="row">
                             <span className="required">Numero telefonico <span>({codeNumber.toString()})</span></span>
 
-                            <input value={phone} onChange={e => setPhone(e.target.value)} type="text" className="text-input" />
+                            <input value={phone} onChange={e => setPhone(e.target.value)} type="phone" className="text-input" />
                         </div>
 
                         <div className="collection-buttons">
