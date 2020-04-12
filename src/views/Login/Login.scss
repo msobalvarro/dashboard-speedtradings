@@ -6,7 +6,7 @@ div.container-login {
   height: 100vh;
   justify-content: center;
   width: 100%;
-  animation: fadeEffect 1s;
+  animation: fadeEffect 1s; 
 
   div.form-control {
     align-items: center;
@@ -44,6 +44,12 @@ div.container-login {
             color: $colorRed;
           }
         }
+        
+        img.from {
+          opacity: 0.5;
+          align-self: center;
+          max-width: 128px;
+        }
 
         .password-forgot {
           align-self: flex-end;
@@ -53,7 +59,7 @@ div.container-login {
 
         .register {
           align-self: center;
-        }
+        }        
       }
     }
   }

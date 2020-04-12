@@ -36,7 +36,7 @@ const DashboardDetails = ({ data, type = "" }) => {
         // Cortamos para que muestre los ultimos 5 dias
         const lastData = data[2].length > 10 ? data[2].slice(data[2].length - 6, data[2].length - 1) : data[2]
 
-        lastData.map(item => {
+        lastData.reverse().map(item => {
             labels.push(Moment(item.date).format('dddd'))
             series.push(item.amount)
         })
