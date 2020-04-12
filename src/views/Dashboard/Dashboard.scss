@@ -14,7 +14,6 @@ div.container-dashboard {
     margin-top: 25px;
     padding: 0 25px;
 
-    
     .content {
       // background-color: red;
       overflow: auto;
@@ -24,11 +23,11 @@ div.container-dashboard {
         margin: 25px 0;
         text-align: center;
       }
-      
+
       .disabled {
         opacity: 0.2;
       }
-      
+
       .card {
         border-radius: 10px;
         background-color: $colorContainer;
@@ -111,7 +110,6 @@ div.container-dashboard {
             }
 
             .body {
-
               &.hidden {
                 overflow: hidden;
                 height: 250px;
@@ -134,7 +132,7 @@ div.container-dashboard {
               display: flex;
               margin-top: 25px;
               justify-content: flex-end;
-              
+
               &.more {
                 cursor: pointer;
                 justify-content: space-between !important;
@@ -143,17 +141,16 @@ div.container-dashboard {
               .show-more {
                 color: $colorSecondary;
               }
-              
+
               .content-total {
                 font-size: 1.5em;
-                
+
                 .total {
                   color: $colorSecondary;
                   font-weight: bolder;
                   margin-right: 10px;
                 }
               }
-
             }
           }
 

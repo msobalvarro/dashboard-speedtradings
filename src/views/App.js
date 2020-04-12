@@ -18,7 +18,6 @@ import NotFound from './404/404'
 
 const App = () => {
   const dispatch = useDispatch()
-  useSelector(({ globalStorage }) => console.log(globalStorage))
   const [loged, setLogin] = useState(false)
 
   useEffect(() => {

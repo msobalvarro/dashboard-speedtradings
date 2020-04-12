@@ -7,13 +7,15 @@ import Moment from "moment"
 import "./Dashboard.scss"
 
 // Import Components
-import NavigationBar from "../../components/NavigationBar/NavigationBar"
+import ActivityIndicator from "../../components/ActivityIndicator/Activityindicator"
 import BuyPlan from "../../components/BuyPlan/BuyPlan"
 import HeaderDashboard from "../../components/HeaderDashboard/HeaderDashboard"
-import { optionsChartDashboard, Petition } from "../../utils/constanst"
-import { useSelector } from "react-redux"
+import NavigationBar from "../../components/NavigationBar/NavigationBar"
+import MobileMessage from "../../components/Mobile/Mobile"
 import Swal from "sweetalert2"
-import ActivityIndicator from "../../components/ActivityIndicator/Activityindicator"
+import { optionsChartDashboard, Petition, getMobileOperatingSystem } from "../../utils/constanst"
+import { useSelector } from "react-redux"
+
 
 const DashboardDetails = ({ data, type = "" }) => {
     const [showMoreContent, setShow] = useState(false)
@@ -26,9 +28,7 @@ const DashboardDetails = ({ data, type = "" }) => {
         setShow(true)
 
         showMoreRef.current.scrollIntoView()
-        // console.log(showMoreRef.current.scrollIntoView)
-    }    
-
+    }
 
     if (data[2] !== null) {
 
@@ -225,6 +225,9 @@ const Dashboard = () => {
 
     return (
         <div className="container-dashboard">
+            <MobileMessage />
+
+
             <NavigationBar />
 
             {

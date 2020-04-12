@@ -4,6 +4,7 @@ import { LogOut } from "../../utils/constanst"
 
 // Import Assets
 import Logo from "../../static/images/logo.png"
+import logoPlayStore from "../../static/images/play-store.png"
 import "./NavigationBar.scss"
 import { useSelector } from "react-redux"
 
@@ -21,8 +22,16 @@ const NavigationBar = () => {
 
             <div className="content-links">
                 <Link to="/" className={(location === '#/') ? 'active' : ''}>Dashboard</Link>
+
                 <Link to="/sponsors" className={(location === '#/sponsors') ? 'active' : ''}>Comisiones</Link>
+
+                <a to="#" className="comming-soon app">
+                    <span>App</span>
+                    <img src={logoPlayStore} className="play-store" alt="logo" />
+                </a>
+
                 <a to="#" className="comming-soon">{globalStorage.username}</a>
+
                 <a href="#" onClick={LogOut}>Cerrar sesion</a>
             </div>
         </nav>

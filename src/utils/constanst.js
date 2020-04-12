@@ -15,6 +15,26 @@ export const wallets = {
 export const urlServer = "https://ardent-medley-272823.appspot.com"
 // export const urlServer = "http://localhost:8080"
 
+export const getMobileOperatingSystem = () => {
+    const userAgent = navigator.userAgent || navigator.vendor || window.opera
+
+    // Windows Phone must come first because its UA also contains "Android"
+    if (/windows phone/i.test(userAgent)) {
+        return "Windows Phone"
+    }
+
+    if (/android/i.test(userAgent)) {
+        return "Android"
+    }
+
+    // iOS detection from: http://stackoverflow.com/a/9039885/177710
+    if (/iPad|iPhone|iPod/.test(userAgent) && !window.MSStream) {
+        return "iOS"
+    }
+
+    return "unknown"
+}
+
 /**
  * Format number with decimal miles separator
  * example: 
@@ -30,7 +50,7 @@ export const Round = (number = 0) => Math.round(number * 100) / 100
 export const copyData = (str = "") => {
     navigator.clipboard.writeText(str).catch(_ => {
         return false
-    }).then(e => Swal.fire('Direccion Wallet copiada', '', 'success'))    
+    }).then(e => Swal.fire('Direccion Wallet copiada', '', 'success'))
 }
 
 export const Petition = Axios.create({
@@ -56,8 +76,10 @@ export const optionsChartDashboard = {
 }
 
 /**Funcion que ejecuta el LOGOUT de sesion */
-export const LogOut = () => {
-    deleteStorage()
+export const LogOut = async () => {
+    await deleteStorage()
+
+    await localStorage.removeItem("desktopMode")
 
     window.location.hash = '/'
 

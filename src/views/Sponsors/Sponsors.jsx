@@ -16,7 +16,7 @@ import moment from "moment"
 
 const Sponsors = () => {
     const { globalStorage } = useSelector(storage => storage)
-    const urlSponsor = window.location.host + '/#/register/' + globalStorage.username
+    const urlSponsor = 'https://' + window.location.host + '/#/register/' + globalStorage.username
     const [loader, setLoader] = useState(true)
 
     const [dataBTC, setDataBTC] = useState([])
@@ -34,8 +34,15 @@ const Sponsors = () => {
                     "x-auth-token": globalStorage.token
                 }
             })
-                .then((response) => {
-                    configurateData(response.data)
+                .then(({ data, status }) => {
+                    if (data.error) {
+                        throw data.message
+                    }
+
+                    if (data && status === 200) {
+                        configurateData(data)
+
+                    }
 
                     setLoader(false)
                 })
@@ -101,7 +108,9 @@ const Sponsors = () => {
             {/* <h2>{urlSponsor}</h2> */}
 
             <div className="row-header">
-                <span className="label">Comparte tu link de referencia</span>
+                <span className="label">
+                    Comparte tu link de referencia <b>(Funciona si tienes planes activos)</b>
+                </span>
                 <div className="content-info">
                     <div className="col">
                         <input type="text" disabled value={urlSponsor} className="text-input large" />

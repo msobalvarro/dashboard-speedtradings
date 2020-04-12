@@ -34,6 +34,7 @@ nav.navigation-bar {
 
     div.content-links {
         display: flex;
+        align-items: center;
 
         a {
             text-decoration: none;
@@ -52,6 +53,24 @@ nav.navigation-bar {
             &.active {
                 color: $colorSecondary;
             }
+
+            &.app {
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+
+                &::before {
+                    content: 'En breve' !important;
+                    background-color: $colorYellow !important;
+                    color: $colorMain;
+                }
+
+                img.play-store {
+                    max-height: 16px;
+                    margin-left: 10px;
+                }
+            }
+
 
             &.comming-soon::before {
                 border-radius: 3px;
