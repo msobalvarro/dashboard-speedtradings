@@ -1,14 +1,17 @@
 import React, { useState } from "react"
 import Validator from "validator"
-import { useDispatch } from "react-redux"
 import { Link } from 'react-router-dom'
+import Swal from "sweetalert2"
+import { setStorage, Petition } from "../../utils/constanst"
+
+// redux storage
+import { useDispatch } from "react-redux"
+import { SETSTORAGE } from "../../store/ActionTypes"
 
 // import Assets
 import "./Login.scss"
 import Logo from "../../static/images/logo.png"
-import { setStorage, Petition } from "../../utils/constanst"
-import Swal from "sweetalert2"
-import { SETSTORAGE } from "../../store/ActionTypes"
+import alysystem from "../../static/images/alysystem.png"
 
 const Login = () => {
   const dispatch = useDispatch()
@@ -84,7 +87,7 @@ const Login = () => {
       <div className="form-control">
         <img className="img-logo" src={Logo} alt="logo" />
 
-        <h2>Inicio de Sesion - Dashboard</h2>
+        {/* <h2>Inicio de Sesion - Dashboard</h2> */}
 
         <form action="#" onSubmit={submitLogin}>
           <div className="row">
@@ -115,6 +118,10 @@ const Login = () => {
 
           <div className="row">
             <Link className="link register" to="/register">Registarse</Link>
+          </div>
+
+          <div className="row">
+            <img src={alysystem} alt="alysystem" className="from" />
           </div>
         </form>
 
