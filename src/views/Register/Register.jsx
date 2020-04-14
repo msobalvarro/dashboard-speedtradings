@@ -129,9 +129,11 @@ const Register = (props) => {
 
             await Petition.post(`/register`, data)
                 .then(({ data, status }) => {
-                    console.log(data)
+                    if (data.error) {
+                        throw data.message
+                    }
 
-                    if (status === 200) {
+                    if (data && status === 200) {
                         Swal.fire(
                             'Registro creado',
                             'Su registro se esta procesando, inicie sesion para continuar',
