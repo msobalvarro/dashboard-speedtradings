@@ -25,7 +25,7 @@ const NavigationBar = () => {
 
                 <Link to="/sponsors" className={(location === '#/sponsors') ? 'active' : ''}>Comisiones</Link>
 
-                <a to="#" className="comming-soon app">
+                <a to="https://play.google.com/store/apps/details?id=com.speedtradingsapp" className="comming-soon app">
                     <span>App</span>
                     <img src={logoPlayStore} className="play-store" alt="logo" />
                 </a>

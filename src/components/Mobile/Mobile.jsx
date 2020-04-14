@@ -44,11 +44,11 @@ const MobileMessage = () => {
             <div className="modal-mobile">
                 <img src={logo} className="logo" alt="play store" />
 
-                <a className="card" href="#">
+                <a className="card" href="https://play.google.com/store/apps/details?id=com.speedtradingsapp">
                     <img src={logoPlayStore} alt="play store" />
 
                     <div className="row">
-                        <span>Proximamente</span>
+                        <span>Ya disponible</span>
                         <span className="small">Speed Tradings en Play Store</span>
                     </div>
                 </a>
