@@ -60,7 +60,7 @@ nav.navigation-bar {
                 align-items: center;
 
                 &::before {
-                    content: 'En breve' !important;
+                    content: 'Disponible' !important;
                     background-color: $colorYellow !important;
                     color: $colorMain;
                 }
