@@ -136,7 +136,7 @@ const Register = (props) => {
                     if (data && status === 200) {
                         Swal.fire(
                             'Registro creado',
-                            'Su registro se esta procesando, inicie sesion para continuar',
+                            'Revisa tu correo, hemos enviado un correo para activar tu cuenta',
                             'success').then(() => window.location.hash = '/')
                         // if (data.response === "success") {
                         // } else {
