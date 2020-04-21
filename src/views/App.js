@@ -9,6 +9,9 @@ import "@sweetalert2/theme-dark"
 import { getStorage } from '../utils/constanst'
 import { DELETESTORAGE, SETSTORAGE } from '../store/ActionTypes'
 
+// Import Components
+import ButtonSupport from '../components/ButtonSupport/ButtonSupport'
+
 // Import Views
 import Login from './Login/Login'
 import Register from './Register/Register'
@@ -42,7 +45,8 @@ const App = () => {
   }, [])
 
   return (
-    <HashRouter>
+    <>
+      <HashRouter>
         <Switch>
           {
             loged
@@ -64,7 +68,10 @@ const App = () => {
 
           <Route component={NotFound} />
         </Switch>
-    </HashRouter>
+      </HashRouter>
+
+      <ButtonSupport />
+    </>
   )
 }
 
