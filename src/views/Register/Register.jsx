@@ -80,12 +80,16 @@ const Register = (props) => {
     }
 
     useEffect(() => {
+        
         if (Object.keys(match.params).length) {
             setUsernameSponsor(match.params.username)
-
+            
+            window.location = `speedtradings://sponsor/${match.params.username}`
             validateUsernameSponsor(match.params.username)
         } else {
             setUsernameSponsor('')
+
+            window.location = "speedtradings://sponsor/"
         }
 
         try {
