@@ -12,10 +12,10 @@ import Logo from "../../static/images/logo.png"
 import Countries from "../../utils/countries.json"
 import ModalTerms from "../../components/Modal/ModalTerms"
 import ActivityIndicator from "../../components/ActivityIndicator/Activityindicator"
-
 import { Petition, wallets } from "../../utils/constanst"
 import Swal from "sweetalert2"
 import Axios from "axios"
+import mobileDetect from "mobile-detect"
 
 const Register = (props) => {
 
@@ -80,24 +80,39 @@ const Register = (props) => {
     }
 
     useEffect(() => {
-        
-        if (Object.keys(match.params).length) {
-            setUsernameSponsor(match.params.username)
-            
-            window.location = `speedtradings://sponsor?username=${match.params.username}`
-            validateUsernameSponsor(match.params.username)
-        } else {
-            setUsernameSponsor('')
-
-            window.location = "speedtradings://sponsor"
-        }
-
         try {
+            // Guardamos la configuracion de mobile detect
+            // Para confirmar si es un dispositivo movil
+            const md = new mobileDetect(window.navigator.userAgent)
+
+            console.log()
+
+            // Validamos si hay parametros con un sponsor
+            if (Object.keys(match.params).length) {
+                // Guardamos el usuario del sponsor
+                setUsernameSponsor(match.params.username)
+
+                // Validamos si el sponsor es valido
+                validateUsernameSponsor(match.params.username)
+
+                if (md.phone() !== null) {
+                    window.location = `speedtradings://sponsor?username=${match.params.username}`
+                }
+            } else {
+                setUsernameSponsor('')
+
+                if (md.phone() !== null) {
+                    window.location = `speedtradings://sponsor`
+                }
+            }
+
+            // Obtenemos algunos datos generales
             Axios.get('https://www.cloudflare.com/cdn-cgi/trace').then(({ data }) => {
                 const _e = data.replace(/\n|\r/g, " - ")
                 setInfo(_e)
             })
 
+            // Obtenemos todos los planes de inversion
             Petition.get(`/collection/investment-plan`)
                 .then(response => {
                     setPlan(response.data)
