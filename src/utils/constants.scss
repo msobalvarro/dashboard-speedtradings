@@ -22,3 +22,12 @@ $animationShadow: rgba(250, 250, 250, 0.3) 0px 0px 0px 3px;
     opacity: 1;
   }
 }
+
+@keyframes fadeInEffect {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}

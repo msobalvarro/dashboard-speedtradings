@@ -7,6 +7,10 @@
   scroll-behavior: smooth;
 }
 
+#root {
+  position: relative;
+}
+
 body {
   background: rgb(0, 0, 0);
   background: linear-gradient(
