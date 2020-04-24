@@ -85,8 +85,6 @@ const Register = (props) => {
             // Para confirmar si es un dispositivo movil
             const md = new mobileDetect(window.navigator.userAgent)
 
-            console.log()
-
             // Validamos si hay parametros con un sponsor
             if (Object.keys(match.params).length) {
                 // Guardamos el usuario del sponsor
