@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react'
 import { HashRouter, Route, Switch } from "react-router-dom"
-import { useDispatch, useSelector } from "react-redux"
+import { useDispatch } from "react-redux"
 
 // Import Assets
 import "@sweetalert2/theme-dark"
@@ -47,27 +47,25 @@ const App = () => {
   return (
     <>
       <HashRouter>
-        <Switch>
-          {
-            loged
-              ?
-              <>
-                <Route path="/" exact component={Dashboard} />
-                <Route path="/sponsors" component={Sponsors} />
-              </>
-              : <Route path="/" exact component={Login} />
-          }
+        {
+          loged &&
+          <Switch>
+            <Route path="/" exact component={Dashboard} />
+            <Route path="/sponsors" component={Sponsors} />
+            <Route path="*" component={NotFound} />
+          </Switch>
 
-          {
-            !loged &&
-            <>
-              <Route path="/register" exact component={Register} />
-              <Route path="/register/:username" component={Register} />
-            </>
-          }
+        }
 
-          <Route component={NotFound} />
-        </Switch>
+        {
+          !loged &&
+          <Switch>
+            <Route path="/" exact component={Login} />
+            <Route path="/register" exact component={Register} />
+            <Route path="/register/:username" component={Register} />
+            <Route path="*" component={NotFound} />
+          </Switch>
+        }
       </HashRouter>
 
       <ButtonSupport />

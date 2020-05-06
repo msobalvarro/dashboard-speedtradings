@@ -18,7 +18,6 @@ import Axios from "axios"
 import mobileDetect from "mobile-detect"
 
 const Register = (props) => {
-
     // Params from url
     const { match } = props
 
