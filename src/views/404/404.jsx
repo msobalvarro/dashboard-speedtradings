@@ -29,8 +29,8 @@ const NotFound = () => {
 
                 {
                     isRegisterView
-                        ? <p className="info">Contenido no encontrado</p>
-                        : <p className="info">Para continuar deberas cerrar sesion</p>
+                        ? <p className="info">Para continuar deberas cerrar sesion</p>
+                        : <p className="info">Contenido no encontrado</p>
                 }
 
                 <div className="buttons">
