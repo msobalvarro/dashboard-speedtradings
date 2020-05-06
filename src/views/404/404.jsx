@@ -1,5 +1,11 @@
 import React from "react"
+import { useLocation } from "react-router-dom"
+
+// Import styles
 import "./404.scss"
+
+// Import constants
+import { LogOut } from "../../utils/constanst"
 
 // Import Assets 
 import astronaut from "../../static/images/not-found/astronaut.svg"
@@ -8,40 +14,52 @@ import moon from "../../static/images/not-found/moon.svg"
 import rocket from "../../static/images/not-found/rocket.svg"
 
 const NotFound = () => {
+    const { pathname } = useLocation()
+
     const goHome = () => {
         window.location.href = window.location.origin
     }
 
+    const isRegisterView = pathname.toLocaleLowerCase().search("/register") !== -1
 
     return (
         <div className="container-404">
             <div className="content-info">
                 <h1>404</h1>
 
-                <p className="info">Contenido no encontrado</p>
+                {
+                    isRegisterView
+                        ? <p className="info">Contenido no encontrado</p>
+                        : <p className="info">Para continuar deberas cerrar sesion</p>
+                }
 
                 <div className="buttons">
                     <button className="button secondary" onClick={window.history.back}>Atras</button>
-                    <button className="button secondary" onClick={goHome}>Ir a Inicio</button>
+
+                    {
+                        isRegisterView
+                            ? <button className="button secondary" onClick={_ => LogOut(pathname)}>Cerrar sesion</button>
+                            : <button className="button secondary" onClick={goHome}>Ir a Inicio</button>
+                    }
                 </div>
 
             </div>
 
             <div className="content-astronaut">
-                <div class="earth-moon">
-                    <img class="object_earth" src={earth} width="100px" />
-                    <img class="object_moon" src={moon} width="80px" />
+                <div className="earth-moon">
+                    <img className="object_earth" src={earth} width="100px" />
+                    <img className="object_moon" src={moon} width="80px" />
                 </div>
 
-                <img class="object_rocket" src={rocket} width="40px" />
-                <img class="object_astronaut" src={astronaut} width="140px" />
+                <img className="object_rocket" src={rocket} width="40px" />
+                <img className="object_astronaut" src={astronaut} width="140px" />
 
-                <div class="glowing_stars">
-                    <div class="star"></div>
-                    <div class="star"></div>
-                    <div class="star"></div>
-                    <div class="star"></div>
-                    <div class="star"></div>
+                <div className="glowing_stars">
+                    <div className="star"></div>
+                    <div className="star"></div>
+                    <div className="star"></div>
+                    <div className="star"></div>
+                    <div className="star"></div>
                 </div>
             </div>
 
