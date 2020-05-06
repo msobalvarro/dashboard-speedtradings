@@ -32,7 +32,7 @@ const NavigationBar = () => {
 
                 <a to="#" className="comming-soon">{globalStorage.username}</a>
 
-                <a href="#" onClick={LogOut}>Cerrar sesion</a>
+                <a href="#" onClick={_ => LogOut("/")}>Cerrar sesion</a>
             </div>
         </nav>
     )
