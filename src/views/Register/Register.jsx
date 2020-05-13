@@ -59,6 +59,7 @@ const Register = (props) => {
     const [passwordSecurity, setPasswordSecurity] = useState('')
     const [walletBTC, setWalletBTC] = useState('')
     const [walletETH, setWalletETH] = useState('')
+    const [coinbaseUsername, setusernameCoinbase] = useState('')
     const [amountPlan, setAmountPlan] = useState(null)
     const [usernameSponsor, setUsernameSponsor] = useState('')
     // Crypto select
@@ -140,6 +141,7 @@ const Register = (props) => {
                 amount: Number(amountPlan),
                 id_currency: Number(crypto),
                 username_sponsor: usernameSponsor,
+                userCoinbase: coinbaseUsername,
                 info
             }
 
@@ -261,19 +263,24 @@ const Register = (props) => {
     }
 
     /**Copy wallet in clipboard */
-    const copyWallet = () => {
-        if (crypto === '1') {
-            navigator.clipboard.writeText(wallets.btc).catch(_ => {
+    const copyWallet = (coinbase = false) => {
+        if (coinbase) {
+            navigator.clipboard.writeText(wallets.userCoinbase).catch(_ => {
                 return false
             })
+        } else {
+            if (crypto === '1') {
+                navigator.clipboard.writeText(wallets.btc).catch(_ => {
+                    return false
+                })
+            }
+    
+            if (crypto === '2') {
+                navigator.clipboard.writeText(wallets.eth).catch(_ => {
+                    return false
+                })
+            }
         }
-
-        if (crypto === '2') {
-            navigator.clipboard.writeText(wallets.eth).catch(_ => {
-                return false
-            })
-        }
-
 
         Swal.fire('Direccion Wallet copiada', '', 'success')
     }
@@ -388,6 +395,15 @@ const Register = (props) => {
                         </div>
 
                         <div className="row">
+                            <span>Usuario Coinbase</span>
+
+                            <span className="wallet-direction" onClick={_ => copyWallet(true)} title="toca para copiar">
+                                {wallets.userCoinbase}
+                            </span>
+                        </div>
+
+
+                        <div className="row">
                             {
                                 crypto === '1' &&
                                 <span className="required">Direccion Wallet (BTC)</span>
@@ -471,6 +487,12 @@ const Register = (props) => {
                             <span className="required">Direccion Wallet ETH</span>
 
                             <input value={walletETH} onChange={e => setWalletETH(e.target.value)} type="text" className="text-input" />
+                        </div>
+
+                        <div className="row">
+                            <span>Usuario Coinbase <b>(SIN COSTO DE ENVIO)</b></span>
+
+                            <input value={coinbaseUsername} onChange={e => setusernameCoinbase(e.target.value)} type="text" className="text-input" />
                         </div>
 
                         <div className="collection-buttons">
