@@ -2,6 +2,8 @@
 
 div.container-register {
   animation: fadeEffect 1s;
+  align-items: flex-end;
+  // align-content: center;
   display: flex;
   flex-direction: row;
   height: 100vh;
@@ -15,12 +17,15 @@ div.container-register {
     background-repeat: no-repeat;
     flex: 1;
     opacity: 0.8;
+    height: 100vh;
   }
 
   .form-container {    
     display: flex;
     flex-direction: column;
     justify-content: space-between;
+    height: 100vh;
+    overflow: auto;
     width: 480px;
 
     .sponsor-message {

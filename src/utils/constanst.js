@@ -1,6 +1,6 @@
 import jwt from "jwt-simple"
 import Axios from "axios"
-import { Dispatch } from "redux"
+import copy from "copy-to-clipboard"
 import Swal from "sweetalert2"
 
 // Constanst
@@ -8,8 +8,9 @@ const keySecret = "testDevelop"
 const keyStorage = "@storage"
 
 export const wallets = {
-    btc: '3FALsBdWnBLTm6EC5DMyTntZBpAR9AhvmM',
-    eth: '0x166be843864bcba7235bcb62aa33aa4eadfef4ea'
+    btc: '1GRpuzgd682hjRH37odhxSDysCREJP5Ecj',
+    eth: '0xfc704c539794D2f95cC09C6FEC26C75477c96E25',
+    userCoinbase: '@SpeedTradingsBank'
 }
 
 export const urlServer = "https://ardent-medley-272823.appspot.com"
@@ -48,9 +49,10 @@ export const Round = (number = 0) => Math.round(number * 100) / 100
 
 /**Copy string */
 export const copyData = (str = "") => {
-    navigator.clipboard.writeText(str).catch(_ => {
-        return false
-    }).then(e => Swal.fire('Direccion Wallet copiada', '', 'success'))
+    copy(str, {
+        message: "Dato copiado",
+        onCopy: () => Swal.fire("Listo", "Copiado a portapapeles", "success")
+    })
 }
 
 export const Petition = Axios.create({

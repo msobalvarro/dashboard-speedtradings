@@ -8,14 +8,7 @@ import LogoBTC from "../../static/icons/bitcoin.svg"
 import LogoETH from "../../static/icons/ether.svg"
 
 // Import info or components
-import { Petition, wallets } from "../../utils/constanst"
-import ActivityIndicator from "../ActivityIndicator/Activityindicator"
-
-// const images = {
-//     btc: LogoBTC,
-//     eth: LogoETH,
-// }
-
+import { Petition, wallets, copyData } from "../../utils/constanst"
 
 const BuyPlan = ({ idCrypto = 1, onBuy = () => { } }) => {
     const storage = useSelector(({ globalStorage }) => globalStorage)
@@ -29,14 +22,14 @@ const BuyPlan = ({ idCrypto = 1, onBuy = () => { } }) => {
             // Obtene
             Petition.get(`/collection/investment-plan/${idCrypto}`)
                 .then(({ data }) => {
-                    if (data) {
-                        setPlans(data)
-                    } else {
+                    if (data.error) {
                         Swal.fire(
                             'Ha ocurrido un error',
                             'No se ha podido cargar alguna infomacion, recargue de nuevo o contacte a soporte',
                             'error'
                         )
+                    } else {
+                        setPlans(data)
                     }
                 })
         } catch (error) {
@@ -91,25 +84,28 @@ const BuyPlan = ({ idCrypto = 1, onBuy = () => { } }) => {
         setLoader(false)
     }
 
-    const copywallet = () => {
+    const copywallet = async () => {
         if (idCrypto === 1) {
-            navigator.clipboard.writeText(wallets.btc).catch(_ => {
-                return false
-            })
+            await copyData(wallets.btc)
         }
 
         if (idCrypto === 2) {
-            navigator.clipboard.writeText(wallets.eth).catch(_ => {
-                return false
-            })
+            await copyData(wallets.eth)
         }
-
-
-        Swal.fire('Direccion Wallet copiada', '', 'success')
     }
 
     return (
         <div className="container-buy-plan">
+            {
+                idCrypto === 1 &&
+                <img src={LogoBTC} className="logo-crypto" alt="" />
+            }
+
+            {
+                idCrypto === 2 &&
+                <img src={LogoETH} className="logo-crypto" alt="" />
+            }
+
             <h2>
                 Adquirir plan de
                 {
@@ -121,15 +117,11 @@ const BuyPlan = ({ idCrypto = 1, onBuy = () => { } }) => {
                 }
             </h2>
 
-            {
-                idCrypto === 1 &&
-                <img src={LogoBTC} className="logo-crypto" alt="" />
-            }
+            <div className="row wallets">
+                <span>Toca para copiar usuario coinbase</span>
 
-            {
-                idCrypto === 2 &&
-                <img src={LogoETH} className="logo-crypto" alt="" />
-            }
+                <span className="wallet" onClick={_ => copyData(wallets.userCoinbase)}>{wallets.userCoinbase}</span>
+            </div>
 
             <div className="row wallets">
                 <span>Toca para copiar wallet</span>

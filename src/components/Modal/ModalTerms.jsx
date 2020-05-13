@@ -52,7 +52,11 @@ const ModalTerms = ({ isVisible = false, onClose = () => { } }) => {
                 <p>
                     En Speed Tradings cuenta con el bono de referido directo pero no se hace responsable de la información
                     brindada de terceros de forma erronea.
-            </p>
+                </p>
+
+                <p>
+                    Terminos y condiciones sujetos a modificaciones segun lo requiera la empresa.
+                </p>
             </div>
         )
     } else {

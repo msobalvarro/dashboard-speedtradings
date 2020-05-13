@@ -140,13 +140,28 @@ const HeaderDashboard = ({ type = "btc", amount = 0.5, amountToday = 2, idInvest
 
                         <div className="m-header">
                             <h2>Invierte mas en tu plan - {type.toUpperCase()}</h2>
+                        </div>
 
-                            <span className="wallet" onClick={_ => copyData(wallets[type])}>
-                                {
-                                    wallets[type]
-                                }
-                            </span>
+                        <div className="row">
+                            <div className="col-wallet">
+                                <span className="title">Copia la direccion wallet {type.toUpperCase()}</span>
 
+                                <span className="wallet" onClick={_ => copyData(wallets[type])}>
+                                    {
+                                        wallets[type]
+                                    }
+                                </span>
+                            </div>
+
+                            <div className="col-wallet">
+                                <span className="title">Usuario Coinbase</span>
+
+                                <span className="wallet" onClick={_ => copyData(wallets.userCoinbase)}>
+                                    {
+                                        wallets.userCoinbase
+                                    }
+                                </span>
+                            </div>
                         </div>
 
                         <div className="row">
