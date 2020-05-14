@@ -59,11 +59,11 @@ nav.navigation-bar {
                 justify-content: space-between;
                 align-items: center;
 
-                &::before {
-                    content: 'Disponible' !important;
-                    background-color: $colorYellow !important;
-                    color: $colorMain;
-                }
+                // &::before {
+                //     content: 'Disponible' !important;
+                //     background-color: $colorYellow !important;
+                //     color: $colorMain;
+                // }
 
                 img.play-store {
                     max-height: 16px;

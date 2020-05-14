@@ -17,6 +17,7 @@ import Login from './Login/Login'
 import Register from './Register/Register'
 import Dashboard from './Dashboard/Dashboard'
 import Sponsors from './Sponsors/Sponsors'
+import Profile from './Profile/Profile'
 import NotFound from './404/404'
 
 const App = () => {
@@ -52,6 +53,7 @@ const App = () => {
           <Switch>
             <Route path="/" exact component={Dashboard} />
             <Route path="/sponsors" component={Sponsors} />
+            <Route path="/profile" component={Profile} />
             <Route path="*" component={NotFound} />
           </Switch>
 
