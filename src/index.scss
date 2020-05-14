@@ -50,6 +50,10 @@ a {
     &:focus {
       box-shadow: $animationShadow;
     }
+
+    &:disabled {
+      opacity: 0.7;
+    }
   }
 
   &.button {

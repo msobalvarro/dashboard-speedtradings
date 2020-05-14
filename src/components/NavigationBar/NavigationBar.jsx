@@ -30,7 +30,7 @@ const NavigationBar = () => {
                     <img src={logoPlayStore} className="play-store" alt="logo" />
                 </a>
 
-                <a to="#" className="comming-soon">{globalStorage.username}</a>
+                <Link to="/profile" className={(location === '#/profile') ? 'active' : ''}>{globalStorage.username}</Link>
 
                 <a href="#" onClick={_ => LogOut("/")}>Cerrar sesion</a>
             </div>
