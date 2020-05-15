@@ -28,10 +28,10 @@ const initialState = {
     // Initial state BTC/ETH/Username Coinbase
     intialBTC: "",
     intialETH: "",
-    intialCOINBASE: "",
+    // intialCOINBASE: "",
 
     // Estado que almacena el usuario Coinbase
-    userCoinbase: "",
+    // userCoinbase: "",
 
     // Password confirm
     password: "",
@@ -68,7 +68,7 @@ const Profile = () => {
         // Reseteamos todos los datos por defecto
         dispatch({ type: "walletBTC", payload: state.intialBTC })
         dispatch({ type: "walletETH", payload: state.intialETH })
-        dispatch({ type: "userCoinbase", payload: state.intialCOINBASE })
+        // dispatch({ type: "userCoinbase", payload: state.intialCOINBASE })
     }
 
     /**Metodo que se ejecuta cuando las wallets y user coinbase sean editables */
@@ -92,7 +92,7 @@ const Profile = () => {
                 email: globalStorage.email,
                 btc: state.walletBTC,
                 eth: state.walletETH,
-                username: state.userCoinbase,
+                // username: state.userCoinbase,
                 password: state.password,
             }
 
@@ -155,8 +155,8 @@ const Profile = () => {
             dispatch({ type: "intialETH", payload: updateStorage.wallet_eth })
 
             // Initial State coinbase username
-            dispatch({ type: "intialCOINBASE", payload: updateStorage.user_coinbase !== null ? updateStorage.user_coinbase : "" })
-            dispatch({ type: "userCoinbase", payload: updateStorage.user_coinbase !== null ? updateStorage.user_coinbase : "" })
+            // dispatch({ type: "intialCOINBASE", payload: updateStorage.user_coinbase !== null ? updateStorage.user_coinbase : "" })
+            // dispatch({ type: "userCoinbase", payload: updateStorage.user_coinbase !== null ? updateStorage.user_coinbase : "" })
 
             Petition.get(`/profile/info?id=${globalStorage.id_user}`, {
                 headers: {
@@ -303,7 +303,7 @@ const Profile = () => {
                                 disabled={!state.editWallets} />
                         </div>
 
-                        <div className="row">
+                        {/* <div className="row">
                             <span className="label">
                                 Usuario Coinbase <b>(Recomendado)</b>
                             </span>
@@ -314,7 +314,7 @@ const Profile = () => {
                                 type="text"
                                 className="text-input"
                                 disabled={!state.editWallets} />
-                        </div>
+                        </div> */}
 
                         <div className="buttons">
                             {
