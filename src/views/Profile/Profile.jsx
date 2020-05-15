@@ -48,7 +48,6 @@ const reducer = (state, action) => {
 
 const Profile = () => {
     const { globalStorage } = reduxStorage.getState()
-    console.log(globalStorage)
 
     // Estado que almacena si se muestra la ventana de confirmacion (ingrese password)
     const [showConfirm, setShowConfirm] = useState(false)
@@ -133,7 +132,6 @@ const Profile = () => {
         } finally {
             setLoader(false)
         }
-
     }
 
     /**Metodo que se ejecuta cuando el usuario hace clic atras en confirmacion de password */
@@ -175,7 +173,6 @@ const Profile = () => {
         } catch (error) {
             Swal.fire("Ha ocurrido un error", error, "error")
         }
-
     }
 
     useEffect(() => {
