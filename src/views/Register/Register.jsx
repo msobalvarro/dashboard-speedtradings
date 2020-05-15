@@ -59,7 +59,7 @@ const Register = (props) => {
     const [passwordSecurity, setPasswordSecurity] = useState('')
     const [walletBTC, setWalletBTC] = useState('')
     const [walletETH, setWalletETH] = useState('')
-    const [coinbaseUsername, setusernameCoinbase] = useState('')
+    // const [coinbaseUsername, setusernameCoinbase] = useState('')
     const [amountPlan, setAmountPlan] = useState(null)
     const [usernameSponsor, setUsernameSponsor] = useState('')
     // Crypto select
@@ -141,7 +141,7 @@ const Register = (props) => {
                 amount: Number(amountPlan),
                 id_currency: Number(crypto),
                 username_sponsor: usernameSponsor,
-                userCoinbase: coinbaseUsername,
+                // userCoinbase: coinbaseUsername,
                 info
             }
 
@@ -489,11 +489,11 @@ const Register = (props) => {
                             <input value={walletETH} onChange={e => setWalletETH(e.target.value)} type="text" className="text-input" />
                         </div>
 
-                        <div className="row">
+                        {/* <div className="row">
                             <span>Usuario Coinbase <b>(SIN COSTO DE ENVIO)</b></span>
 
                             <input value={coinbaseUsername} onChange={e => setusernameCoinbase(e.target.value)} type="text" className="text-input" />
-                        </div>
+                        </div> */}
 
                         <div className="collection-buttons">
                             <button className="button no-border" onClick={_ => setTab(2)}>Atras</button>
