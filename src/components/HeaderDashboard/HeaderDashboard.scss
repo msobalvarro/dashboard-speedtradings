@@ -63,18 +63,13 @@ div.container-info-crypto {
     padding: 20px;
 
     .m-header {
+      align-items: center;
+      display: flex;
+      justify-content: space-between;
 
       h2 {
         color: $colorYellow;
       }      
-    }
-
-
-    .row {
-      display: flex;
-      justify-content: space-between;
-      margin: 25px 0;
-      width: 100%;
 
       .col-wallet {
         width: 45%;
@@ -96,6 +91,14 @@ div.container-info-crypto {
           border-radius: 5px;
         }
       }
+    }
+
+
+    .row {
+      display: flex;
+      justify-content: space-between;
+      margin: 25px 0;
+      width: 100%;
 
       .col {
         width: 45%;

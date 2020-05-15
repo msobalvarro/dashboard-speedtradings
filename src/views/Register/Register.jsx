@@ -395,15 +395,6 @@ const Register = (props) => {
                         </div>
 
                         <div className="row">
-                            <span>Usuario Coinbase</span>
-
-                            <span className="wallet-direction" onClick={_ => copyWallet(true)} title="toca para copiar">
-                                {wallets.userCoinbase}
-                            </span>
-                        </div>
-
-
-                        <div className="row">
                             {
                                 crypto === '1' &&
                                 <span className="required">Direccion Wallet (BTC)</span>

@@ -118,12 +118,6 @@ const BuyPlan = ({ idCrypto = 1, onBuy = () => { } }) => {
             </h2>
 
             <div className="row wallets">
-                <span>Toca para copiar usuario coinbase</span>
-
-                <span className="wallet" onClick={_ => copyData(wallets.userCoinbase)}>{wallets.userCoinbase}</span>
-            </div>
-
-            <div className="row wallets">
                 <span>Toca para copiar wallet</span>
 
                 {
