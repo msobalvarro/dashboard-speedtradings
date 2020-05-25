@@ -47,7 +47,7 @@ div.container-register {
     }
 
     img.image-logo {
-      max-width: 80%;
+      max-width: 40%;
       align-self: center;
     }
 
@@ -131,6 +131,20 @@ div.container-register {
                 margin-left: 5px;
               }
             }
+          }
+        }
+
+        .airtm-row {
+          align-items: center;
+          display: flex;
+          flex-direction: row;
+          justify-content: flex-end;
+          margin-top: 5px;
+
+          input {
+            margin-left: 5px;
+            border-radius: 50%;
+            overflow: hidden;
           }
         }
       }

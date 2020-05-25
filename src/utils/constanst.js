@@ -10,11 +10,12 @@ const keyStorage = "@storage"
 export const wallets = {
     btc: '3FALsBdWnBLTm6EC5DMyTntZBpAR9AhvmM',
     eth: '0x166be843864bcba7235bcb62aa33aa4eadfef4ea',
-    userCoinbase: '@SpeedTradingsBank'
+    userCoinbase: '@SpeedTradingsBank',
+    airtm: 'alysilv23@gmail.com',
 }
 
-export const urlServer = "https://ardent-medley-272823.appspot.com"
-// export const urlServer = "http://localhost:8080"
+// export const urlServer = "https://ardent-medley-272823.appspot.com"
+export const urlServer = "http://localhost:8080"
 
 export const getMobileOperatingSystem = () => {
     const userAgent = navigator.userAgent || navigator.vendor || window.opera
@@ -46,6 +47,45 @@ export const getMobileOperatingSystem = () => {
 export const WithDecimals = (number = 0) => number.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")
 
 export const Round = (number = 0) => Math.round(number * 100) / 100
+
+/**
+* Calcula el precio agregando todos los impuestos
+* 
+* -- --
+* 
+* @param {Number} price 
+* @param {Number} amount 
+*/
+export const calculateCryptoPrice = (price = 0, amount = 0) => {
+   const prices = amount * price
+
+   // return prices.toFixed(2)
+
+   // Si el precio es menor o igual a 100 USD
+   // Aumentaremos 2 USD a la cantidad bruta
+   if (prices <= 100) {
+       return WithDecimals(
+           (prices + 2.5).toFixed(2)
+       )
+   }
+
+   // Si el precio es mayor a 100 USD y menor a 1,000 USD
+   // sumamos el 3% de la cantidad bruta
+   if (prices > 100 && prices <= 1000) {
+       return WithDecimals(
+           (prices + (prices * 0.03)).toFixed(2)
+       )
+   }
+
+
+   // Si el precio es mayor a 1,000 USD
+   // Sumamos el 2% de la cantidad bruta
+   if (prices > 1000) {
+       return WithDecimals(
+           (prices + (prices * 0.02)).toFixed(2)
+       )
+   }
+}
 
 /**Copy string */
 export const copyData = (str = "") => {

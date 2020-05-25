@@ -1,5 +1,16 @@
 @import "./utils/constants.scss";
 
+@font-face {
+  font-family: Gotham;
+  src: url("./static/fonts/GothamRounded-Book.otf") format("opentype");
+}
+
+@font-face {
+  font-family: Gotham;
+  font-weight: bold;
+  src: url("./static/fonts/GothamRounded_Bold.ttf") format("truetype");
+}
+
 * {
   box-sizing: border-box;
   margin: 0;
@@ -22,7 +33,7 @@ body {
   background-repeat: no-repeat;
   background-attachment: fixed;
   color: #fff;
-  font-family: "Open Sans";
+  font-family: Gotham;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   font-weight: normal;
