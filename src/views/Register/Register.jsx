@@ -40,7 +40,7 @@ const Register = (props) => {
     const [validateUserSponsor, setValidateUserSponsor] = useState(null)
 
     // State for show tabs view
-    const [tabActive, setTab] = useState(2)
+    const [tabActive, setTab] = useState(1)
 
     // Show modal terms
     const [modal, setModal] = useState(false)
@@ -285,14 +285,15 @@ const Register = (props) => {
     }
 
     useEffect(() => {
-        if (airtm) {
+        if (airtm && tabActive === 2) {
             getAllPrices()
+
+            const priceloop = setInterval(getAllPrices, 5000)
+
+            return () => clearInterval(priceloop)
         }
 
-        const priceloop = setInterval(getAllPrices, 5000)
-
-        return () => clearInterval(priceloop)
-    }, [airtm])
+    }, [tabActive, airtm])
 
     useEffect(() => {
         try {
