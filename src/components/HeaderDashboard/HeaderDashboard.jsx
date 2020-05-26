@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useReducer } from "react"
+import React, { useEffect, useReducer } from "react"
 import { useSelector } from "react-redux"
 
 // Import styles
@@ -135,39 +135,40 @@ const HeaderDashboard = ({ type = "btc", amount = 0.5, amountToday = 2, idInvest
             const data = {
                 airtm: state.airtm,
                 emailAirtm: state.emailAirtm,
-                aproximateAmount: state.aproximateAmount,
+                aproximateAmountAirtm: state.aproximateAmount,
                 amount: state.plan,
                 id: idInvestment,
                 hash: state.hash,
             }
 
-            console.log(data)
+            await Petition.post('/buy/upgrade', data, {
+                headers: {
+                    "x-auth-token": token
+                }
+            }).then(({ data }) => {
+                if (data.error) {
+                    throw data.message
+                } else {
+                    toggleModal()
 
-            // await Petition.post('/buy/upgrade', data, {
-            //     headers: {
-            //         "x-auth-token": token
-            //     }
-            // }).then(({ data }) => {
-            //     if (data.error) {
-            //         throw data.message
-            //     } else {
-            //         toggleModal()
+                    dispatch({ type: "hash", payload: "" })
+                    dispatch({ type: "airtm", payload: false })
+                    dispatch({ type: "emailAirtm", payload: "" })
 
-            //         Swal.fire(
-            //             'Upgrade Completado',
-            //             'En breves momentos, estaremos atendiendo su peticion de UPGRADE',
-            //             'success'
-            //         )
-            //     }
-            // }).catch(reason => {
-            //     throw reason.toString()
-            // })
+                    Swal.fire(
+                        'Upgrade Completado',
+                        'En breves momentos, estaremos atendiendo su peticion de UPGRADE',
+                        'success'
+                    )
+                }
+            }).catch(reason => {
+                throw reason.toString()
+            })
         } catch (error) {
-            console.log(error.error)
 
             Swal.fire(
+                'Ha ocurrido un error',
                 error,
-                '',
                 'warning'
             )
         } finally {
@@ -215,6 +216,8 @@ const HeaderDashboard = ({ type = "btc", amount = 0.5, amountToday = 2, idInvest
     useEffect(() => {
         if (state.showModal && state.airtm) {
             getAllPrices()
+
+            dispatch({ type: "plan", payload: 0 })
         }
     }, [state.showModal, state.airtm])
 
