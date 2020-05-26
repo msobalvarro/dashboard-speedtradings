@@ -287,10 +287,6 @@ const Register = (props) => {
     useEffect(() => {
         if (airtm && tabActive === 2) {
             getAllPrices()
-
-            const priceloop = setInterval(getAllPrices, 5000)
-
-            return () => clearInterval(priceloop)
         }
 
     }, [tabActive, airtm])

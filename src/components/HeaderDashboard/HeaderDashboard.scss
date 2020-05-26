@@ -63,23 +63,21 @@ div.container-info-crypto {
     padding: 20px;
 
     .m-header {
-      align-items: center;
+      align-items: flex-start;
       display: flex;
       justify-content: space-between;
 
       h2 {
         color: $colorYellow;
-      }      
+        font-size: 1.2em;
+      }
 
       .col-wallet {
-        width: 45%;
+        align-items: flex-end;
         display: flex;
         flex-direction: column;
+        width: 45%;
 
-        span.title {
-          font-size: 12px;
-        }
-        
         span.wallet {
           background-color: $colorYellow;
           color: $colorMain;
@@ -93,30 +91,49 @@ div.container-info-crypto {
       }
     }
 
-
     .row {
       display: flex;
       justify-content: space-between;
       margin: 25px 0;
       width: 100%;
 
+      &.flex-end {
+        justify-content: flex-end;
+      }
+
       .col {
         width: 45%;
 
         .picker,
         .text-input {
-          margin-top: 10px;
+          margin-top: 5px;
           width: 100%;
         }
       }
     }
 
-    .buttons {
+    .footer-modal {
+      align-items: center;
       display: flex;
-      justify-content: flex-end;
+      justify-content: space-between;
 
-      button {
-        margin-left: 10px;
+      .airtm-row {
+        align-items: center;
+        display: flex;
+        flex-direction: row;
+
+        input {
+          margin-right: 5px;
+        }
+      }
+
+      .buttons {
+        display: flex;
+        flex-direction: row;
+
+        button {
+          margin-left: 10px;
+        }
       }
     }
   }
