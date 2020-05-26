@@ -11,6 +11,7 @@ import logo from "../../static/images/logo.png"
 const Mobile = ({ children }) => {
     const isMobile = useMediaQuery({ maxWidth: 767 })
 
+    /**Metodo que verifica si es mobile */
     const calculateResponsive = () => {
         if (isMobile) {
             document.body.style.overflow = "hidden"
@@ -46,7 +47,6 @@ const MobileMessage = () => {
         // Guardamos la configuracion de mobile detect
         // Para confirmar si es un dispositivo movil
         const md = new mobileDetect(window.navigator.userAgent)
-        console.log(md.os())
         setType(md.os())
     }, [])
 
