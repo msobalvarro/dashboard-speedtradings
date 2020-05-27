@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react"
+import React, { useEffect, useReducer } from "react"
 import Swal from "sweetalert2"
 import { useSelector } from "react-redux"
 
@@ -10,12 +10,32 @@ import LogoETH from "../../static/icons/ether.svg"
 // Import info or components
 import { Petition, wallets, copyData } from "../../utils/constanst"
 
+const initialState = {
+    // Estado que guardara los planes
+    plans: [],
+
+    // Estado que guarda el hash de transaccion
+    hash: "",
+
+    // Estado que guarda el valor de select (Plan de inversion / monto de inversion)
+    amount: 0,
+
+    // Estado que indica si hay un proceso
+    loader: false,
+}
+
+const reducer = (state, action) => {
+    return {
+        ...state,
+        [action.type]: action.payload
+    }
+}
+
 const BuyPlan = ({ idCrypto = 1, onBuy = () => { } }) => {
+    // Redux store
     const storage = useSelector(({ globalStorage }) => globalStorage)
-    const [plans, setPlans] = useState([])
-    const [hash, setHash] = useState('')
-    const [amount, setAmount] = useState('default')
-    const [loader, setLoader] = useState(false)
+
+    const [state, dispatch] = useReducer(reducer, initialState)
 
     useEffect(() => {
         try {
@@ -29,7 +49,7 @@ const BuyPlan = ({ idCrypto = 1, onBuy = () => { } }) => {
                             'error'
                         )
                     } else {
-                        setPlans(data)
+                        dispatch({ type: "plans", payload: data })
                     }
                 })
         } catch (error) {
@@ -37,27 +57,30 @@ const BuyPlan = ({ idCrypto = 1, onBuy = () => { } }) => {
         }
     }, [])
 
-    const Buy = () => {
-        // Petition
-        setLoader(true)
+    /**Metodo que se ejecuta cuando el usuario compra el plan */
+    const Buy = async () => {
+        dispatch({ type: "loader", payload: true })
 
         try {
-            if (hash.length < 8) {
+            // Validamos el hash
+            if (state.hash.length < 8) {
                 throw 'Hash invalido'
             }
 
-            if (amount === "default") {
+            // Validamos que el monto sea correcto
+            if (state.amount === 0) {
                 throw "Seleccion un Plan de inversion"
             }
 
+            // Armamos los datos a enviar al backend
             const data = {
                 id_currency: idCrypto,
                 id_user: storage.id_user,
-                hash,
-                amount: Number(amount),
+                hash: state.hash,
+                amount: parseFloat(state.amount),
             }
 
-            Petition.post('/buy/plan', data, {
+            await Petition.post('/buy/plan', data, {
                 headers: {
                     "x-auth-token": storage.token
                 }
@@ -70,80 +93,71 @@ const BuyPlan = ({ idCrypto = 1, onBuy = () => { } }) => {
                         "success"
                     )
                 }
-
-
-            }).catch(reason => {
-                throw reason.toString()
             })
 
         } catch (error) {
-            Swal.fire(error, "Para continuar, debe de llenar ambos campos", "warning")
+            Swal.fire("Ha ocurrido un error", error.toString(), "warning")
         }
 
 
-        setLoader(false)
+        dispatch({ type: "loader", payload: false })
     }
 
-    const copywallet = async () => {
-        if (idCrypto === 1) {
-            await copyData(wallets.btc)
-        }
+    /**Metodo que se ejecuta cuando el usuario selecciona el monto de inversion */
+    const onChangeAmount = (e) => {
+        const { value } = e.target
 
-        if (idCrypto === 2) {
-            await copyData(wallets.eth)
-        }
+        dispatch({ type: "amount", payload: parseFloat(value) })
     }
 
     return (
         <div className="container-buy-plan">
+
             {
                 idCrypto === 1 &&
-                <img src={LogoBTC} className="logo-crypto" alt="" />
+                <>
+                    <img src={LogoBTC} className="logo-crypto" alt="bitcoin" />
+                    <h2>Adquirir plan de Bitcoin</h2>
+                </>
             }
 
             {
                 idCrypto === 2 &&
-                <img src={LogoETH} className="logo-crypto" alt="" />
+                <>
+                    <img src={LogoETH} className="logo-crypto" alt="ethereum" />
+                    <h2>Adquirir plan de Ethereum</h2>
+                </>
             }
-
-            <h2>
-                Adquirir plan de
-                {
-                    idCrypto === 1 && <span> Bitcoin</span>
-                }
-
-                {
-                    idCrypto === 2 && <span> Ethereum</span>
-                }
-            </h2>
 
             <div className="row wallets">
                 <span>Toca para copiar wallet</span>
 
                 {
                     idCrypto === 1 &&
-                    <span className="wallet" onClick={copywallet}>{wallets.btc}</span>
+                    <span className="wallet" onClick={_ => copyData(wallets.btc)}>{wallets.btc}</span>
                 }
 
                 {
                     idCrypto === 2 &&
-                    <span className="wallet" onClick={copywallet}>{wallets.eth}</span>
+                    <span className="wallet" onClick={_ => copyData(wallets.eth)}>{wallets.eth}</span>
                 }
             </div>
 
             <div className="row">
                 <span>Selecciona tu plan</span>
-                <select className="picker" value={amount} onChange={e => setAmount(e.target.value)}>
-                    <option value="default" disabled>Selecciona un plan</option>
+                <select className="picker" value={state.amount} onChange={onChangeAmount}>
+                    <option value={0} disabled>Selecciona un plan</option>
                     {
-                        plans.map((item, key) =>
+                        state.plans.map((item, key) =>
                             <option key={key} value={item.amount}>
                                 {
-                                    idCrypto === 1 && item.amount + ' BTC'
+                                    idCrypto === 1 &&
+                                    item.amount + ' BTC'
                                 }
 
                                 {
-                                    idCrypto === 2 && item.amount + ' ETH'
+                                    idCrypto === 2 && 
+                                    item.amount + ' ETH'
                                 }
                             </option>
                         )
@@ -154,14 +168,14 @@ const BuyPlan = ({ idCrypto = 1, onBuy = () => { } }) => {
             <div className="row">
                 <span>Escribe el hash de transaccion</span>
                 <input
-                    value={hash}
-                    onChange={e => setHash(e.target.value)}
+                    value={state.hash}
+                    onChange={e => dispatch({ type: "hash", payload: e.target.value })}
                     type="text"
                     className="text-input"
                     placeholder="ejem.. as4d6as4d65a4sd8" />
             </div>
 
-            <button disabled={loader} className="button secondary large" onClick={Buy}>
+            <button disabled={state.loader} className="button secondary large" onClick={Buy}>
                 Comprar
             </button>
         </div>
