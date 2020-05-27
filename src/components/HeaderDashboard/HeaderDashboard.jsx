@@ -129,7 +129,11 @@ const HeaderDashboard = ({ type = "btc", amount = 0.5, amountToday = 2, idInvest
             }
 
             if (state.hash.length < 8) {
-                dispatch({ type: "loader", payload: true })
+                if (state.airtm) {
+                    throw "Id de manipulacion Airtm Incorrecto"
+                } else {
+                    throw "Hash de transacción Incorrecto"
+                }
             }
 
             const data = {
@@ -217,8 +221,9 @@ const HeaderDashboard = ({ type = "btc", amount = 0.5, amountToday = 2, idInvest
         if (state.showModal && state.airtm) {
             getAllPrices()
 
-            dispatch({ type: "plan", payload: 0 })
         }
+
+        dispatch({ type: "plan", payload: 0 })
     }, [state.showModal, state.airtm])
 
     return (
@@ -311,7 +316,7 @@ const HeaderDashboard = ({ type = "btc", amount = 0.5, amountToday = 2, idInvest
 
                                 {
                                     state.airtm
-                                        ? <span>Numero de transaccion Airtm</span>
+                                        ? <span>Id de manipulacion Airtm</span>
                                         : <span>Ingresa el hash de la transaccion</span>
                                 }
 

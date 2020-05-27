@@ -1,7 +1,7 @@
 @import "../../utils/constants.scss";
 
 div.progress-bar {
-    border: 2px solid $colorSecondary;
+    border: 2px solid $colorYellow;
     border-radius: 30px;
     position: relative;
     overflow: hidden;
@@ -10,7 +10,7 @@ div.progress-bar {
     
     .value {
         align-items: center;
-        background-color: $colorSecondary;
+        background-color: $colorYellow;
         color: $colorMain;
         display: flex;
         border-radius: 30px;

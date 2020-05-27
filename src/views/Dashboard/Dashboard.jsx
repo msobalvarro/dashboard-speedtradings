@@ -232,7 +232,7 @@ const Dashboard = () => {
 
             {
                 loader &&
-                <ActivityIndicator size={48} />
+                <ActivityIndicator size={128} className="loader-dashboard" />
             }
 
             {

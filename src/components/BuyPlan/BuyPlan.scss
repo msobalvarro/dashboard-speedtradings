@@ -1,7 +1,7 @@
 @import "../../utils/constants.scss";
 
 div.container-buy-plan {
-  background-color: rgba(255, 255, 255, 0.2);
+  background-color: rgba(0, 0, 0, 0.5);
   border-radius: 10px;
   align-items: center;
   display: flex;
@@ -21,6 +21,18 @@ div.container-buy-plan {
   .row {
     margin-bottom: 25px;
     width: 60%;
+
+    &.airtm-transaction {
+      align-items: center;
+      display: flex;
+      justify-content: flex-end;
+
+      input {
+        margin-left: 5px;
+      }
+    }
+
+
     .picker,
     .text-input {
       margin-top: 10px;
