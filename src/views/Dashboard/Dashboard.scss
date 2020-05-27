@@ -2,6 +2,12 @@
 
 $colorContainer: rgba(0, 0, 0, 0.5);
 
+svg.loader-dashboard {
+  margin: 5em auto;
+  text-align: center;
+  display: block;
+}
+
 div.container-dashboard {
   animation: fadeEffect 0.5;
   height: 100%;
@@ -58,6 +64,7 @@ div.container-dashboard {
 
             span.ct-label {
               color: #fff;
+              font-size: 0.5em;
             }
           }
         }

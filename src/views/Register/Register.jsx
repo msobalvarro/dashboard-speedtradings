@@ -556,7 +556,7 @@ const Register = (props) => {
                         <div className="row">
                             {
                                 airtm &&
-                                <span className="required">Numero de transaccion Airtm</span>
+                                <span className="required">Id de manipulacion Airtm</span>
                             }
 
                             {

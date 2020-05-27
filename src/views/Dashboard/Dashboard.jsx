@@ -13,7 +13,7 @@ import HeaderDashboard from "../../components/HeaderDashboard/HeaderDashboard"
 import NavigationBar from "../../components/NavigationBar/NavigationBar"
 import MobileMessage from "../../components/Mobile/Mobile"
 import Swal from "sweetalert2"
-import { optionsChartDashboard, Petition, getMobileOperatingSystem } from "../../utils/constanst"
+import { optionsChartDashboard, Petition } from "../../utils/constanst"
 import { useSelector } from "react-redux"
 
 
@@ -232,7 +232,7 @@ const Dashboard = () => {
 
             {
                 loader &&
-                <ActivityIndicator size={48} />
+                <ActivityIndicator size={128} className="loader-dashboard" />
             }
 
             {

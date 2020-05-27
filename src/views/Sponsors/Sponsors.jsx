@@ -125,9 +125,7 @@ const Sponsors = () => {
 
             {
                 loader &&
-                <div className="container-loader">
-                    <ActivityIndicator size={78} />
-                </div>
+                <ActivityIndicator size={128} className="loader-sponsors" />
             }
 
             {

@@ -87,11 +87,15 @@ export const calculateCryptoPrice = (price = 0, amount = 0) => {
    }
 }
 
-/**Copy string */
+/**
+ * Copy string
+ * @param {String} str
+*/
 export const copyData = (str = "") => {
     copy(str, {
         message: "Dato copiado",
-        onCopy: () => Swal.fire("Listo", "Copiado a portapapeles", "success")
+        onCopy: () => Swal.fire("Listo", "Copiado a portapapeles", "success"),
+        debug: true
     })
 }
 
@@ -114,7 +118,8 @@ export const optionsChartDashboard = {
     low: 0,
     showArea: true,
     scaleMinSpace: 20,
-    height: '256px'
+    height: '256px',
+    stretch: false
 }
 
 /**Funcion que ejecuta el LOGOUT de sesion */
