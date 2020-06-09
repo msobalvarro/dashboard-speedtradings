@@ -11,7 +11,7 @@ export const wallets = {
     btc: '3FALsBdWnBLTm6EC5DMyTntZBpAR9AhvmM',
     eth: '0x166be843864bcba7235bcb62aa33aa4eadfef4ea',
     userCoinbase: '@SpeedTradingsBank',
-    airtm: 'alysilv23@gmail.com',
+    airtm: 'tradingspeed4@gmail.com',
 }
 
 // export const urlServer = "https://ardent-medley-272823.appspot.com"
