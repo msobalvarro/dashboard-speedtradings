@@ -300,7 +300,7 @@ const BuyPlan = ({ idCrypto = 1, onBuy = () => { } }) => {
             }
 
             <div className="row airtm-transaction">
-                <label htmlFor="airtm-transaction">transacción con Airtm</label>
+                <label htmlFor="airtm-transaction">Pagar con Airtm</label>
 
                 <input
                     type="checkbox"
