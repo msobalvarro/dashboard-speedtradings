@@ -14,8 +14,8 @@ export const wallets = {
     airtm: 'tradingspeed4@gmail.com',
 }
 
-// export const urlServer = "https://ardent-medley-272823.appspot.com"
-export const urlServer = "http://localhost:8080"
+export const urlServer = "https://ardent-medley-272823.appspot.com"
+// export const urlServer = "http://localhost:8080"
 
 export const getMobileOperatingSystem = () => {
     const userAgent = navigator.userAgent || navigator.vendor || window.opera
