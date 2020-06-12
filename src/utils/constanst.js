@@ -15,7 +15,7 @@ export const wallets = {
 }
 
 export const urlServer = "https://ardent-medley-272823.appspot.com"
-// export const urlServer = "http://localhost:8080"
+// export const urlServer = "http://10.127.1.116:8080"
 
 export const getMobileOperatingSystem = () => {
     const userAgent = navigator.userAgent || navigator.vendor || window.opera
