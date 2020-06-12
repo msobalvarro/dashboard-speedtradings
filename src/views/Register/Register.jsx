@@ -639,7 +639,7 @@ const Register = (props) => {
                         <div className="terms">
                             <label htmlFor="terms-input">He leído términos y condiciones</label>
 
-                            <input type="checkbox" id="terms-input" onChange={e => setTerms(!term)} />
+                            <input type="checkbox" checked={term} id="terms-input" onChange={e => setTerms(!term)} />
                         </div>
 
                         <div className="collection-buttons">
