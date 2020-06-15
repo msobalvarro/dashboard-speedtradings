@@ -91,7 +91,11 @@ export const calculateCryptoPrice = (price = 0, amount = 0) => {
  * Copy string
  * @param {String} str
 */
-export const copyData = (str = "") => {
+export const copyData = async (str = "") => {
+    if(navigator.clipboard) {
+        await navigator.clipboard.writeText(str)
+    }
+
     copy(str, {
         message: "Dato copiado",
         onCopy: () => Swal.fire("Listo", "Copiado a portapapeles", "success"),
