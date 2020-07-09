@@ -1,0 +1,70 @@
+@import "../../utils/constants.scss";
+
+.container-reset {
+    animation: fadeEffect 1s;
+    align-items: center;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    height: 100vh;
+    width: 100vw;
+
+    h1 {
+        color: $colorYellow;
+        font-size: 1.2em;
+        text-align: center;
+        margin: 25px 0;
+        font-weight: lighter;
+        width: 50%;
+    }
+
+
+    .logo {
+        max-width: 256px;
+    }
+
+    .row {
+        display: flex;
+        margin: 1em auto;
+        flex-direction: column;
+        width: 50%;
+
+        .legend {
+            color: $colorYellow;
+        }
+
+        &.captcha {
+            align-items: center;
+            display: flex;
+            justify-content: center;
+        }
+
+        &.buttons {
+            flex-direction: row;
+            justify-content: space-evenly;
+
+            .write {
+                color: $colorSecondary;
+            }
+        }
+
+        &.password {
+            input {
+                margin: 10px auto;
+                width: 512px;
+            }
+        }
+
+
+        &.code {
+            display: flex;
+            flex-direction: row;
+            justify-content: space-between;
+
+            input {
+                text-align: center;
+                width: 15%;
+            }
+        }
+    }
+}

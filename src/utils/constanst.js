@@ -14,8 +14,13 @@ export const wallets = {
     airtm: 'tradingspeed4@gmail.com',
 }
 
-export const urlServer = "https://ardent-medley-272823.appspot.com"
-// export const urlServer = "http://10.127.1.116:8080"
+// export const urlServer = "https://ardent-medley-272823.appspot.com"
+export const urlServer = "http://localhost:8080"
+
+/**
+ * Constante que almacena key secret para recaptcha
+ */
+export const siteKeyreCaptcha = "6LeTe60ZAAAAAOcLmLZ-I_EXmH1PhQwmw4Td6e3D"
 
 export const getMobileOperatingSystem = () => {
     const userAgent = navigator.userAgent || navigator.vendor || window.opera
@@ -57,34 +62,34 @@ export const Round = (number = 0) => Math.round(number * 100) / 100
 * @param {Number} amount 
 */
 export const calculateCryptoPrice = (price = 0, amount = 0) => {
-   const prices = amount * price
+    const prices = amount * price
 
-   // return prices.toFixed(2)
+    // return prices.toFixed(2)
 
-   // Si el precio es menor o igual a 100 USD
-   // Aumentaremos 2 USD a la cantidad bruta
-   if (prices <= 100) {
-       return WithDecimals(
-           (prices + 2.5).toFixed(2)
-       )
-   }
+    // Si el precio es menor o igual a 100 USD
+    // Aumentaremos 2 USD a la cantidad bruta
+    if (prices <= 100) {
+        return WithDecimals(
+            (prices + 2.5).toFixed(2)
+        )
+    }
 
-   // Si el precio es mayor a 100 USD y menor a 1,000 USD
-   // sumamos el 3% de la cantidad bruta
-   if (prices > 100 && prices <= 1000) {
-       return WithDecimals(
-           (prices + (prices * 0.03)).toFixed(2)
-       )
-   }
+    // Si el precio es mayor a 100 USD y menor a 1,000 USD
+    // sumamos el 3% de la cantidad bruta
+    if (prices > 100 && prices <= 1000) {
+        return WithDecimals(
+            (prices + (prices * 0.03)).toFixed(2)
+        )
+    }
 
 
-   // Si el precio es mayor a 1,000 USD
-   // Sumamos el 2% de la cantidad bruta
-   if (prices > 1000) {
-       return WithDecimals(
-           (prices + (prices * 0.02)).toFixed(2)
-       )
-   }
+    // Si el precio es mayor a 1,000 USD
+    // Sumamos el 2% de la cantidad bruta
+    if (prices > 1000) {
+        return WithDecimals(
+            (prices + (prices * 0.02)).toFixed(2)
+        )
+    }
 }
 
 /**
@@ -92,7 +97,7 @@ export const calculateCryptoPrice = (price = 0, amount = 0) => {
  * @param {String} str
 */
 export const copyData = async (str = "") => {
-    if(navigator.clipboard) {
+    if (navigator.clipboard) {
         await navigator.clipboard.writeText(str)
     }
 
