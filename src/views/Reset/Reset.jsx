@@ -86,7 +86,7 @@ const Reset = () => {
             }
 
             if (data.response === "success") {
-                Swal.fire("Pin generado", "Revise su correo para obtener el codigo de seguridad").then(() => setWrite(true))
+                Swal.fire("Pin generado", "Revise su correo para obtener el codigo de seguridad", "success").then(() => setWrite(true))
             } else {
                 throw "El pin no se ha podido generar, contacte a soporte"
             }
@@ -137,7 +137,7 @@ const Reset = () => {
             }
 
             if (data.response === "success") {
-                Swal.fire("Listo", "Tu contraseña se ha actualizado")
+                Swal.fire("Listo", "Tu contraseña se ha actualizado", "success")
                     .then(_ => {
                         window.location.hash = "#/"
                     })
