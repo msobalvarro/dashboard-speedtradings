@@ -45,7 +45,7 @@ const Reset = () => {
     const [state, dispatch] = useReducer(reducer, initialState)
 
     // Estado que indica la vista final
-    const [showPassword, setShowPassword] = useState(false)
+    const [showPassword, setShowPassword] = useState(true)
 
     // Estado que indica que muestra opcion de escribir codigo
     const [writeCode, setWrite] = useState(false)
@@ -86,7 +86,7 @@ const Reset = () => {
             }
 
             if (data.response === "success") {
-                Swal.fire("Pin generado", "Revise su correo para obtener el codigo de seguridad").then(() => setWrite(true))
+                Swal.fire("Pin generado", "Revise su correo para obtener el codigo de seguridad", "success").then(() => setWrite(true))
             } else {
                 throw "El pin no se ha podido generar, contacte a soporte"
             }
@@ -137,7 +137,7 @@ const Reset = () => {
             }
 
             if (data.response === "success") {
-                Swal.fire("Listo", "Tu contraseña se ha actualizado")
+                Swal.fire("Listo", "Tu contraseña se ha actualizado", "success")
                     .then(_ => {
                         window.location.hash = "#/"
                     })
@@ -285,7 +285,7 @@ const Reset = () => {
                         <div className="row buttons">
                             <button onClick={_ => setShowPassword(false)} className="button">Cancelar</button>
 
-                            <button disabled={state.password === "" && state.password !== state.otherPassword} onClick={sendSecurityCode} className="button secondary">Finalizar</button>
+                            <button disabled={state.password === "" || state.password !== state.otherPassword} onClick={sendSecurityCode} className="button secondary">Finalizar</button>
                         </div>
                     }
                 </>
