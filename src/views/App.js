@@ -19,6 +19,7 @@ import Dashboard from './Dashboard/Dashboard'
 import Sponsors from './Sponsors/Sponsors'
 import Profile from './Profile/Profile'
 import NotFound from './404/404'
+import Reset from './Reset/Reset'
 
 const App = () => {
   const dispatch = useDispatch()
@@ -65,6 +66,7 @@ const App = () => {
             <Route path="/" exact component={Login} />
             <Route path="/register" exact component={Register} />
             <Route path="/register/:username" component={Register} />
+            <Route path="/reset/password" component={Reset} />
             <Route path="*" component={NotFound} />
           </Switch>
         }
