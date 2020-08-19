@@ -8,8 +8,8 @@ const keySecret = "testDevelop"
 const keyStorage = "@storage"
 
 export const wallets = {
-    btc: '3FALsBdWnBLTm6EC5DMyTntZBpAR9AhvmM',
-    eth: '0x166be843864bcba7235bcb62aa33aa4eadfef4ea',
+    btc: '188Q7Vw49bhtLY6KEBj21cb7E9nMS3XQAA',
+    eth: '0x86CaC6D24d8666d2A990afa4f3E3dAf7e79c8d2d',
     userCoinbase: '@SpeedTradingsBank',
     airtm: 'tradingspeed4@gmail.com',
 }
