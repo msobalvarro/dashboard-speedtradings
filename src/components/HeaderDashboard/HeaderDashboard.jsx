@@ -117,42 +117,49 @@ const HeaderDashboard = ({ type = "btc", amount = 0.5, amountToday = 2, idInvest
      */
     const UpGradeExecute = async () => {
         try {
-            dispatch({ type: "loader", payload: false })
+            // dispatch({ type: "loader", payload: false })
             dispatch({ type: "loader", payload: true })
 
+            // Validamos que si el usuario ha seleccionado un plan
             if (state.plan === 0) {
-                throw 'Seleccione un plan de inversion'
+                throw String('Seleccione un plan de inversion')
             }
 
+            // Validamos el correo AIRTM 
             if (state.airtm && !validator.isEmail(state.emailAirtm)) {
-                throw "Ingrese un correo de transacción valido"
+                throw String("Ingrese un correo de transacción valido")
             }
 
+
+            // Validamos el hash de transaccion/id de manipulacion
             if (state.hash.length < 8) {
+                // validamos si es Airtmm
                 if (state.airtm) {
-                    throw "Id de manipulacion Airtm Incorrecto"
+                    throw String("Id de manipulacion Airtm Incorrecto")
                 } else {
-                    throw "Hash de transacción Incorrecto"
+                    throw String("Hash de transacción Incorrecto")
                 }
             }
 
-            const data = {
-                airtm: state.airtm,
-                emailAirtm: state.emailAirtm,
-                aproximateAmountAirtm: state.aproximateAmount,
-                amount: state.plan,
-                id: idInvestment,
-                hash: state.hash,
+            const dataSend = {
+                airtm: state.airtm, // true/false
+                // alypay: false, // true/false
+                emailAirtm: state.emailAirtm, // SI Y SOLO SI es AIRTM (Si no esta activo - "") 
+                aproximateAmountAirtm: state.aproximateAmount, // Precio aproximado en USD
+                amount: state.plan, // Monto de plan inversion (0.002 BTC / 0.01 ETH)
+                id: idInvestment, // id del plan de inversion
+                hash: state.hash, // El hash de transaccion/id de manipulacion Airtm
             }
 
-            await Petition.post('/buy/upgrade', data, {
+            await Petition.post('/buy/upgrade', dataSend, {
                 headers: {
                     "x-auth-token": token
                 }
             }).then(({ data }) => {
                 if (data.error) {
-                    throw data.message
+                    throw String(data.message)
                 } else {
+                    // success Upgrade
                     toggleModal()
 
                     dispatch({ type: "hash", payload: "" })
@@ -201,18 +208,15 @@ const HeaderDashboard = ({ type = "btc", amount = 0.5, amountToday = 2, idInvest
     const getAllPrices = async () => {
         dispatch({ type: "loaderCoinmarketCap", payload: true })
 
-        await Petition.get("/collection/prices")
-            .then(
-                ({ data }) => {
-                    if (data.error) {
-                        Swal.fire("Ha ocurrido un error", data.message, "error")
-                    } else {
-                        const { BTC, ETH } = data
+        const { data } = await Petition.get("/collection/prices")
 
-                        dispatch({ type: "cryptoPrices", payload: { BTC, ETH } })
-                    }
-                }
-            )
+        if (data.error) {
+            Swal.fire("Ha ocurrido un error", data.message, "error")
+        } else {
+            const { BTC, ETH } = data
+
+            dispatch({ type: "cryptoPrices", payload: { BTC, ETH } })
+        }
 
         dispatch({ type: "loaderCoinmarketCap", payload: false })
     }
