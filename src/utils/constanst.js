@@ -15,7 +15,7 @@ export const wallets = {
 }
 
 // export const urlServer = "https://ardent-medley-272823.appspot.com"
-export const urlServer = "http://localhost:8080"
+export const urlServer = "http://10.70.12.18:8080"
 
 /**
  * Constante que almacena key secret para recaptcha
@@ -69,26 +69,20 @@ export const calculateCryptoPrice = (price = 0, amount = 0) => {
     // Si el precio es menor o igual a 100 USD
     // Aumentaremos 2 USD a la cantidad bruta
     if (prices <= 100) {
-        return WithDecimals(
-            (prices + 2.5).toFixed(2)
-        )
+        return (prices + 2.5).toFixed(2)
     }
 
     // Si el precio es mayor a 100 USD y menor a 1,000 USD
     // sumamos el 3% de la cantidad bruta
     if (prices > 100 && prices <= 1000) {
-        return WithDecimals(
-            (prices + (prices * 0.03)).toFixed(2)
-        )
+        return (prices + (prices * 0.03)).toFixed(2)
     }
 
 
     // Si el precio es mayor a 1,000 USD
     // Sumamos el 2% de la cantidad bruta
     if (prices > 1000) {
-        return WithDecimals(
-            (prices + (prices * 0.02)).toFixed(2)
-        )
+        return (prices + (prices * 0.02)).toFixed(2)
     }
 }
 

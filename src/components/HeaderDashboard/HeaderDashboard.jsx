@@ -12,7 +12,7 @@ import LogoETH from "../../static/icons/ether.svg"
 import ProgressBar from "../ProgressBar/ProgressBar"
 import Swal from "sweetalert2"
 import validator from "validator"
-import { Petition, wallets, copyData, calculateCryptoPrice } from "../../utils/constanst"
+import { Petition, wallets, copyData, calculateCryptoPrice, WithDecimals } from "../../utils/constanst"
 
 const images = {
     btc: LogoBTC,
@@ -22,6 +22,9 @@ const images = {
 const initialState = {
     // Estado que indica si el usuario hara su transaccion con airtm
     airtm: false,
+
+    // Estado que indica si el usuario hara su transaccion con alypay
+    alypay: false,
 
     // Estado que inica el proceso de traer precios de la coinmarketcao
     loaderCoinmarketCap: false,
@@ -41,6 +44,9 @@ const initialState = {
 
     // Estado que guarda el monto seleccionado por el usuario
     plan: 0,
+
+    // Estado que captura la entrada del usuario en el campo del monto de inversión
+    userInput: '',
 
     // Estado que guarda los montos servidos del backend
     list: [],
@@ -117,27 +123,27 @@ const HeaderDashboard = ({ type = "btc", amount = 0.5, amountToday = 2, idInvest
      */
     const UpGradeExecute = async () => {
         try {
-            dispatch({ type: "loader", payload: false })
             dispatch({ type: "loader", payload: true })
 
             if (state.plan === 0) {
-                throw 'Seleccione un plan de inversion'
+                throw String('Seleccione un plan de inversion')
             }
 
             if (state.airtm && !validator.isEmail(state.emailAirtm)) {
-                throw "Ingrese un correo de transacción valido"
+                throw String("Ingrese un correo de transacción valido")
             }
 
             if (state.hash.length < 8) {
                 if (state.airtm) {
-                    throw "Id de manipulacion Airtm Incorrecto"
+                    throw String("Id de manipulacion Airtm Incorrecto")
                 } else {
-                    throw "Hash de transacción Incorrecto"
+                    throw String("Hash de transacción Incorrecto")
                 }
             }
 
             const data = {
                 airtm: state.airtm,
+                alypay: state.alypay,
                 emailAirtm: state.emailAirtm,
                 aproximateAmountAirtm: state.aproximateAmount,
                 amount: state.plan,
@@ -151,12 +157,13 @@ const HeaderDashboard = ({ type = "btc", amount = 0.5, amountToday = 2, idInvest
                 }
             }).then(({ data }) => {
                 if (data.error) {
-                    throw data.message
+                    throw String(data.message)
                 } else {
                     toggleModal()
 
                     dispatch({ type: "hash", payload: "" })
                     dispatch({ type: "airtm", payload: false })
+                    dispatch({ type: "alypay", payload: false })
                     dispatch({ type: "emailAirtm", payload: "" })
 
                     Swal.fire(
@@ -166,7 +173,7 @@ const HeaderDashboard = ({ type = "btc", amount = 0.5, amountToday = 2, idInvest
                     )
                 }
             }).catch(reason => {
-                throw reason.toString()
+                throw String(reason.toString())
             })
         } catch (error) {
 
@@ -182,16 +189,48 @@ const HeaderDashboard = ({ type = "btc", amount = 0.5, amountToday = 2, idInvest
 
     /**Metodo que se ejecuta cuando el usuario cambia el plan de inversion */
     const onChangePrice = (e) => {
-        const { value } = e.target
+        let { value } = e.target
 
-        dispatch({ type: "plan", payload: parseFloat(value) })
+        value = (value.length) ? value : '0';
 
-        // Verificamos si el usuario pagara con transaccion Airtm
-        if (state.airtm) {
-            // Sacamos el monto (USD) aproximado en el momento
-            const amount = calculateCryptoPrice(cryptoPrice, parseFloat(value))
+        // Expresiones regulares para comprobar que la entrada del monto sea válida
+        const floatRegex = /^(?:\d{1,})(?:\.\d{1,})?$/
+        const floatRegexStart = /^(?:\d{1,})(?:\.)?$/
 
-            dispatch({ type: "aproximateAmount", payload: parseFloat(amount) })
+        // Verificamos si valor ingresado no contiene letras o símbolos no permitidos
+        if(floatRegex.test(value) || floatRegexStart.test(value)){
+            dispatch({ type: "userInput", payload: value })
+            dispatch({ type: "plan", payload: parseFloat(value) })
+
+            // Verificamos si el usuario pagara con transaccion Airtm
+            if (state.airtm) {
+                // Sacamos el monto (USD) aproximado en el momento
+                const amount = calculateCryptoPrice(cryptoPrice, parseFloat(value))
+
+                dispatch({ type: "aproximateAmount", payload: parseFloat(amount) })
+            }
+        }
+    }
+
+    /**Metodo que se ejecuta cuando el usuario cambia el método de pago */
+    const onChangePaidMethod = (e) => {
+        const {value} = e.target;
+
+        switch(value) {
+            case "0":
+                dispatch({type: "airtm", payload: false})
+                dispatch({type: "alypay", payload: false})
+                break
+
+            case "1": 
+                dispatch({type: "airtm", payload: true})
+                dispatch({type: "alypay", payload: false})
+                break
+
+            case "2":
+                dispatch({type: "airtm", payload: false})
+                dispatch({type: "alypay", payload: true})
+                break
         }
     }
 
@@ -224,6 +263,8 @@ const HeaderDashboard = ({ type = "btc", amount = 0.5, amountToday = 2, idInvest
         }
 
         dispatch({ type: "plan", payload: 0 })
+        dispatch({ type: "userInput", payload: '' })
+        dispatch({ type: "aproximateAmount", payload: 0 })
     }, [state.showModal, state.airtm])
 
     return (
@@ -282,36 +323,25 @@ const HeaderDashboard = ({ type = "btc", amount = 0.5, amountToday = 2, idInvest
 
                         <div className="row">
                             <div className="col">
-                                <span>Selecciona un plan de inversion</span>
+                                <span>Ingresa el monto de inversion</span>
+                                <input
+                                    disabled={state.loaderCoinmarketCap}
+                                    value={state.userInput}
+                                    type="text"
+                                    onChange={onChangePrice}
+                                    className="text-input"/>
 
-                                <select disabled={state.loaderCoinmarketCap} className="picker" value={state.plan} onChange={onChangePrice}>
-                                    <option value={0} disabled>Seleccion tu plan</option>
-                                    {
-                                        !state.airtm &&
-                                        <>
-                                            {
-                                                state.list.map((item, index) => <option value={item.amount} key={index}>{item.amount} {type.toUpperCase()}</option>)
-                                            }
-                                        </>
-                                    }
 
                                     {
                                         (state.airtm && state.cryptoPrices.BTC !== null) &&
-                                        <>
-                                            {
-                                                state.list.map((item, index) => {
-                                                    return (
-                                                        <option value={item.amount} key={index}>
-                                                            $ {calculateCryptoPrice(cryptoPrice, item.amount)}
-                                                        </option>
-                                                    )
-                                                })
-                                            }
-                                        </>
+                                        <div className="aproximateAmount-legend">
+                                            <p>Monto apróximado (USD):</p>
+                                            <span>{WithDecimals(state.aproximateAmount)}</span>
+                                        </div>
                                     }
-                                </select>
 
                             </div>
+                            
                             <div className="col">
 
                                 {
@@ -346,9 +376,12 @@ const HeaderDashboard = ({ type = "btc", amount = 0.5, amountToday = 2, idInvest
 
                         <div className="footer-modal">
                             <div className="airtm-row">
-                                <input type="checkbox" checked={state.airtm} onChange={_ => dispatch({ type: "airtm", payload: !state.airtm })} name="airtm" id="check-airtm" />
-
-                                <label htmlFor="check-airtm">Pagar con Airtm</label>
+                                <span htmlFor="check-airtm">Seleccione su método de pago</span>
+                                <select className="picker" onChange={onChangePaidMethod}>
+                                    <option value={0}>Depósito</option>
+                                    <option value={1}>Airtm</option>
+                                    <option value={2}>AlyPay</option>
+                                </select>
                             </div>
 
                             <div className="buttons">
