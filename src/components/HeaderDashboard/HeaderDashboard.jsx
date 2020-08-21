@@ -1,4 +1,4 @@
-import React, { useEffect, useReducer } from "react"
+import React, { useEffect, useReducer, useState } from "react"
 import { useSelector } from "react-redux"
 
 // Import styles
@@ -12,7 +12,7 @@ import LogoETH from "../../static/icons/ether.svg"
 import ProgressBar from "../ProgressBar/ProgressBar"
 import Swal from "sweetalert2"
 import validator from "validator"
-import { Petition, wallets, copyData, calculateCryptoPrice, WithDecimals } from "../../utils/constanst"
+import { Petition, getWallets, copyData, calculateCryptoPrice, WithDecimals } from "../../utils/constanst"
 
 const images = {
     btc: LogoBTC,
@@ -71,6 +71,7 @@ const HeaderDashboard = ({ type = "btc", amount = 0.5, amountToday = 2, idInvest
     const { token } = useSelector(({ globalStorage }) => globalStorage)
 
     const [state, dispatch] = useReducer(reducer, initialState)
+    const [wallets, setWallets] = useState({})
 
     /**Constante que define el precio de moneda seleccionada */
     const cryptoPrice = state.cryptoPrices.BTC !== null
@@ -257,6 +258,10 @@ const HeaderDashboard = ({ type = "btc", amount = 0.5, amountToday = 2, idInvest
     }
 
     useEffect(() => {
+        getWallets(setWallets)
+    }, [])
+
+    useEffect(() => {
         if (state.showModal && state.airtm) {
             getAllPrices()
 
@@ -303,9 +308,15 @@ const HeaderDashboard = ({ type = "btc", amount = 0.5, amountToday = 2, idInvest
                             <div className="col-wallet">
                                 {
                                     !state.airtm &&
-                                    <span className="wallet" onClick={_ => copyData(wallets[type])}>
+                                    <span
+                                        className="wallet" 
+                                        onClick={_ => copyData(!state.alypay ? wallets[type] : wallets.alypay[type])}>
                                         {
-                                            wallets[type]
+                                            !state.alypay
+
+                                            ? wallets[type]
+
+                                            : wallets.alypay[type]
                                         }
                                     </span>
                                 }

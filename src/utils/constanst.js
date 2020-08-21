@@ -2,6 +2,7 @@ import jwt from "jwt-simple"
 import Axios from "axios"
 import copy from "copy-to-clipboard"
 import Swal from "sweetalert2"
+import { useSelector } from "react-redux"
 
 // Constanst
 const keySecret = "testDevelop"
@@ -14,8 +15,58 @@ export const wallets = {
     airtm: 'tradingspeed4@gmail.com',
 }
 
-// export const urlServer = "https://ardent-medley-272823.appspot.com"
-export const urlServer = "http://10.70.12.18:8080"
+/**
+* Método que obtiene los hash de las wallets desde la API,
+* recibe el callback de un React.State y almacena dentro del State el objeto con la información
+* de las wallets
+*/
+export const getWallets = async (walletState) => {
+    const {data} = await Petition.get('/collection/directions')
+console.log('wallets', data)
+    // Se recorren los pares de llave:valor de la data obtenida y se construye el objeto final de las wallets
+    let walletsData = Object.fromEntries(Object.entries(data).map(entrie => {
+        let [coinName, wallet_hash] = entrie
+
+        // Si la entrada contiene subentradas, también se recorren
+        if(coinName.toLowerCase() === 'alypay') {
+            wallet_hash = Object.fromEntries(Object.entries(wallet_hash).map(subentrie => {
+                const [subCoinName, subWallet_hash] = subentrie;
+
+                return [ getCoinSymbol(subCoinName), subWallet_hash ]
+            }))
+        }
+
+        return [ getCoinSymbol(coinName), wallet_hash ]
+    }))
+console.log(walletsData)
+    walletState(walletsData);
+}
+
+/**
+* Método que retorna el simbolo de una moneda según su nombre
+* @param {String} coinName
+*/
+const getCoinSymbol = (coinName) => {
+    switch(coinName.toUpperCase()) {
+        case 'BITCOIN':
+            return 'btc'
+
+        case 'ETHEREUM':
+            return 'eth'
+
+        case 'AIRTM':
+            return 'airtm'
+
+        case 'ALYPAY':
+            return 'alypay'
+
+        default:
+            return coinName;
+    }
+}
+
+export const urlServer = "https://ardent-medley-272823.appspot.com"
+//export const urlServer = "http://10.70.12.18:8080"
 
 /**
  * Constante que almacena key secret para recaptcha
@@ -84,6 +135,18 @@ export const calculateCryptoPrice = (price = 0, amount = 0) => {
     if (prices > 1000) {
         return (prices + (prices * 0.02)).toFixed(2)
     }
+}
+
+/**
+* Calcula el precio sin añadir los impuestos
+* 
+* -- --
+* 
+* @param {Number} price 
+* @param {Number} amount
+*/
+export const calculateCryptoPriceWithoutFee = (price = 0, amount = 0) => {
+    return amount * price 
 }
 
 /**
