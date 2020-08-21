@@ -79,14 +79,19 @@ div.container-info-crypto {
         width: 45%;
 
         span.wallet {
+          display: inline-block;
           background-color: $colorYellow;
           color: $colorMain;
           font-size: 12px;
           cursor: pointer;
           padding: 8px;
           text-align: center;
-          overflow: hidden;
+          max-width: 250px;
           border-radius: 5px;
+          text-overflow: ellipsis;
+          /* Needed to make it work */
+          overflow: hidden;
+          white-space: nowrap;
         }
       }
     }
@@ -109,6 +114,10 @@ div.container-info-crypto {
           margin-top: 5px;
           width: 100%;
         }
+
+        .aproximateAmount-legend {
+          margin-top: 5px;
+        }
       }
     }
 
@@ -118,12 +127,12 @@ div.container-info-crypto {
       justify-content: space-between;
 
       .airtm-row {
-        align-items: center;
+        align-items: flex-start;
         display: flex;
-        flex-direction: row;
+        flex-direction: column;
 
-        input {
-          margin-right: 5px;
+        select {
+          margin-top: 5px;
         }
       }
 

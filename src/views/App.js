@@ -6,7 +6,7 @@ import { useDispatch } from "react-redux"
 import "@sweetalert2/theme-dark"
 
 // Redux configurations
-import { getStorage } from '../utils/constanst'
+import { getStorage} from '../utils/constanst'
 import { DELETESTORAGE, SETSTORAGE } from '../store/ActionTypes'
 
 // Import Components
