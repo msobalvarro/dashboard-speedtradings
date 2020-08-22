@@ -189,9 +189,9 @@ export const optionsChartDashboard = {
 
 /**Funcion que ejecuta el LOGOUT de sesion */
 export const LogOut = async (location = "/") => {
-    await deleteStorage()
+    deleteStorage()
 
-    await localStorage.removeItem("desktopMode")
+    localStorage.removeItem("desktopMode")
 
     window.location.hash = location
 
