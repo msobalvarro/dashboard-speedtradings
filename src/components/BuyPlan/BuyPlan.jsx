@@ -92,7 +92,7 @@ const BuyPlan = ({ idCrypto = 1, onBuy = () => { } }) => {
             }
 
             // Armamos los datos a enviar al backend
-            const data = {
+            const dataSend = {
                 airtm: state.airtm,
                 emailAirtm: state.emailAirtm,
                 aproximateAmountAirtm: state.aproximateAmount,
@@ -102,21 +102,21 @@ const BuyPlan = ({ idCrypto = 1, onBuy = () => { } }) => {
                 amount: parseFloat(state.amount),
             }
 
-            await Petition.post('/buy/plan', data, {
-                headers: {
-                    "x-auth-token": storage.token
-                }
-            }).then(({ data }) => {
-                if (data.response === "success") {
-                    onBuy()
+            const { data } = await Petition.post('/buy/plan', dataSend, { headers: { "x-auth-token": storage.token } })
 
-                    Swal.fire(
-                        "Plan solicitado",
-                        "En breves momentos estaremos confirmando tu transacción",
-                        "success"
-                    )
-                }
-            })
+            if (data.error) {
+                throw String(data.message)
+            }
+
+            if (data.response === "success") {
+                onBuy()
+
+                Swal.fire(
+                    "Plan solicitado",
+                    "En breves momentos estaremos confirmando tu transacción",
+                    "success"
+                )
+            }
 
         } catch (error) {
             Swal.fire("Ha ocurrido un error", error.toString(), "warning")
