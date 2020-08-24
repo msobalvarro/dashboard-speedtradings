@@ -30,7 +30,7 @@ const ButtonSupport = () => {
         <>
             <a
                 target="_blank"
-                href="mailto:tradingspeed4@gmail.com?subject=Soporte en el dashboard"
+                href="mailto:soporte@alysystem.com?subject=Soporte Dashboard"
                 className="button-support"
                 onMouseOver={onMouseHover}
                 onMouseLeave={onMouseLeave}>
