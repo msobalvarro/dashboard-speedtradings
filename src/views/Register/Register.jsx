@@ -121,7 +121,7 @@ const Register = (props) => {
                 throw String(data.message)
             }
 
-            if (data.success === "success") {
+            if (data.response === "success") {
                 Swal.fire(
                     'Registro creado',
                     'Revisa tu correo, hemos enviado un correo para activar tu cuenta',
