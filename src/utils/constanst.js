@@ -65,6 +65,14 @@ const getCoinSymbol = (coinName) => {
     }
 }
 
+/**
+* Montos mínimos de inversión tanto para BTC como ETH
+*/
+export const amountMin = {
+    btc: 0.001,
+    eth: 0.1
+}
+
 export const urlServer = "https://ardent-medley-272823.appspot.com"
 //export const urlServer = "http://localhost:8080"
 

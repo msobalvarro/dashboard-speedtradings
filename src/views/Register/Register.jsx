@@ -12,7 +12,7 @@ import Logo from "../../static/images/logo.png"
 import Countries from "../../utils/countries.json"
 import ModalTerms from "../../components/Modal/ModalTerms"
 import ActivityIndicator from "../../components/ActivityIndicator/Activityindicator"
-import { Petition, getWallets, WithDecimals, copyData, calculateCryptoPrice, calculateCryptoPriceWithoutFee } from "../../utils/constanst"
+import { Petition, getWallets, WithDecimals, copyData, calculateCryptoPrice, calculateCryptoPriceWithoutFee, amountMin } from "../../utils/constanst"
 import Swal from "sweetalert2"
 import Axios from "axios"
 import mobileDetect from "mobile-detect"
@@ -95,13 +95,24 @@ const Register = (props) => {
     const validationButtons = {
         first: firstName.length > 0 && lastname.length > 0 && Validator.isEmail(email) && phone.length > 6 && country !== '0' && validateEmail === true && !loader && password === passwordSecurity && password.length > 0 && passwordSecurity.length > 0 && username.length > 0 && validateUser === true,
 
-        second: amountPlan !== null && hash.length > 10 && walletBTC.length > 10 && walletETH.length > 10 && (airtm ? Validator.isEmail(emailAirtm) : true) && term === true,
+        second: amountPlan !== null &&
+            ((crypto === 1) ? amountPlan >= amountMin.btc : amountPlan >= amountMin.eth) &&
+            hash.length > 10 &&
+            walletBTC.length > 10 &&
+            walletETH.length > 10 &&
+            (airtm ? Validator.isEmail(emailAirtm) : true) &&
+            term === true,
     }
 
     /**Function handled submit form */
     const onSubmitInformation = async () => {
         setLoaderData(true)
         try {
+
+            if((crypto === 1 && amountPlan < amountMin.btc) || (crypto === 2 && amountPlan < amountMin.eth)) {
+                throw String('Por favor ingrese un plan de inversión mayor o igual al mínimo permitido')
+            }
+
             const dataSend = {
                 firstname: firstName,
                 lastname: lastname,
@@ -612,7 +623,7 @@ const Register = (props) => {
                                 <label htmlFor="check-airtm">Tipo de Pago</label>
 
                                 <select className="picker" name="paidMethod" onChange={onChangePaidMethod}>
-                                    <option value={0}>Depósito</option>
+                                    <option value={0}>Criptomoneda</option>
                                     <option value={1}>Airtm</option>
                                     <option value={2}>AlyPay</option>
                                 </select>
@@ -642,6 +653,17 @@ const Register = (props) => {
                             </div>
                         </div>
 
+                        <div className="row min-amount">
+                            <span>
+                                Monto mínimo de inversion: 
+                                {
+                                    crypto === 1
+                                    ? ` ${amountMin.btc} BTC`
+                                    : ` ${amountMin.eth} ETH`
+                                }
+                            </span>
+                        </div>
+
                         <div className="row">
                             {
                                 airtm &&
@@ -665,13 +687,25 @@ const Register = (props) => {
                         }
 
                         <div className="row">
-                            <span className="required">Direccion Wallet BTC</span>
+                            <span className="required">
+                                {
+                                    !alypay
+                                    ? "Direccion Wallet Externa BTC"
+                                    : "Direccion Wallet AlyPay BTC" 
+                                }
+                            </span>
 
                             <input value={walletBTC} onChange={e => setWalletBTC(e.target.value)} type="text" className="text-input" />
                         </div>
 
                         <div className="row">
-                            <span className="required">Direccion Wallet ETH</span>
+                            <span className="required">
+                                {
+                                    !alypay
+                                    ? "Direccion Wallet Externa ETH"
+                                    : "Direccion Wallet AlyPay ETH"
+                                }
+                            </span>
 
                             <input value={walletETH} onChange={e => setWalletETH(e.target.value)} type="text" className="text-input" />
                         </div>

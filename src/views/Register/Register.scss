@@ -83,6 +83,18 @@ div.container-register {
         flex-direction: column;
         margin: 15px 0;
 
+        &.min-amount {
+          margin: 0;
+          padding: 0;
+          font-size: .75rem;
+
+          span {
+            margin: 0;
+            padding: 0;
+            transform: translateY(-5px); 
+          }
+        }
+
         span {
           // background-color: yellow;
           margin-bottom: 5px;
