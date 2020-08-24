@@ -126,15 +126,20 @@ const HeaderDashboard = ({ type = "btc", amount = 0.5, amountToday = 2, idInvest
         try {
             dispatch({ type: "loader", payload: true })
 
+            // Validamos que si el usuario ha seleccionado un plan
             if (state.plan === 0) {
                 throw String('Seleccione un plan de inversion')
             }
 
+            // Validamos el correo AIRTM 
             if (state.airtm && !validator.isEmail(state.emailAirtm)) {
                 throw String("Ingrese un correo de transacción valido")
             }
 
+
+            // Validamos el hash de transaccion/id de manipulacion
             if (state.hash.length < 8) {
+                // validamos si es Airtmm
                 if (state.airtm) {
                     throw String("Id de manipulacion Airtm Incorrecto")
                 } else {
@@ -142,7 +147,7 @@ const HeaderDashboard = ({ type = "btc", amount = 0.5, amountToday = 2, idInvest
                 }
             }
 
-            const data = {
+            const dataSend = {
                 airtm: state.airtm,
                 alypay: state.alypay,
                 emailAirtm: state.emailAirtm,
@@ -152,7 +157,9 @@ const HeaderDashboard = ({ type = "btc", amount = 0.5, amountToday = 2, idInvest
                 hash: state.hash,
             }
 
-            await Petition.post('/buy/upgrade', data, {
+            console.log(dataSend)
+
+            await Petition.post('/buy/upgrade', dataSend, {
                 headers: {
                     "x-auth-token": token
                 }
@@ -160,6 +167,7 @@ const HeaderDashboard = ({ type = "btc", amount = 0.5, amountToday = 2, idInvest
                 if (data.error) {
                     throw String(data.message)
                 } else {
+                    // success Upgrade
                     toggleModal()
 
                     dispatch({ type: "hash", payload: "" })
@@ -190,16 +198,14 @@ const HeaderDashboard = ({ type = "btc", amount = 0.5, amountToday = 2, idInvest
 
     /**Metodo que se ejecuta cuando el usuario cambia el plan de inversion */
     const onChangePrice = (e) => {
-        let { value } = e.target
-
-        value = (value.length) ? value : '0';
+        const { value } = e.target
 
         // Expresiones regulares para comprobar que la entrada del monto sea válida
-        const floatRegex = /^(?:\d{1,})(?:\.\d{1,})?$/
-        const floatRegexStart = /^(?:\d{1,})(?:\.)?$/
+        // const floatRegex = /^(?:\d{1,})(?:\.\d{1,})?$/
+        // const floatRegexStart = /^(?:\d{1,})(?:\.)?$/
 
         // Verificamos si valor ingresado no contiene letras o símbolos no permitidos
-        if(floatRegex.test(value) || floatRegexStart.test(value)){
+        if (!isNaN(value)) {
             dispatch({ type: "userInput", payload: value })
             dispatch({ type: "plan", payload: parseFloat(value) })
 
@@ -215,22 +221,22 @@ const HeaderDashboard = ({ type = "btc", amount = 0.5, amountToday = 2, idInvest
 
     /**Metodo que se ejecuta cuando el usuario cambia el método de pago */
     const onChangePaidMethod = (e) => {
-        const {value} = e.target;
+        const { value } = e.target;
 
-        switch(value) {
+        switch (value) {
             case "0":
-                dispatch({type: "airtm", payload: false})
-                dispatch({type: "alypay", payload: false})
+                dispatch({ type: "airtm", payload: false })
+                dispatch({ type: "alypay", payload: false })
                 break
 
-            case "1": 
-                dispatch({type: "airtm", payload: true})
-                dispatch({type: "alypay", payload: false})
+            case "1":
+                dispatch({ type: "airtm", payload: true })
+                dispatch({ type: "alypay", payload: false })
                 break
 
             case "2":
-                dispatch({type: "airtm", payload: false})
-                dispatch({type: "alypay", payload: true})
+                dispatch({ type: "airtm", payload: false })
+                dispatch({ type: "alypay", payload: true })
                 break
         }
     }
@@ -241,18 +247,15 @@ const HeaderDashboard = ({ type = "btc", amount = 0.5, amountToday = 2, idInvest
     const getAllPrices = async () => {
         dispatch({ type: "loaderCoinmarketCap", payload: true })
 
-        await Petition.get("/collection/prices")
-            .then(
-                ({ data }) => {
-                    if (data.error) {
-                        Swal.fire("Ha ocurrido un error", data.message, "error")
-                    } else {
-                        const { BTC, ETH } = data
+        const { data } = await Petition.get("/collection/prices")
 
-                        dispatch({ type: "cryptoPrices", payload: { BTC, ETH } })
-                    }
-                }
-            )
+        if (data.error) {
+            Swal.fire("Ha ocurrido un error", data.message, "error")
+        } else {
+            const { BTC, ETH } = data
+
+            dispatch({ type: "cryptoPrices", payload: { BTC, ETH } })
+        }
 
         dispatch({ type: "loaderCoinmarketCap", payload: false })
     }
@@ -309,14 +312,14 @@ const HeaderDashboard = ({ type = "btc", amount = 0.5, amountToday = 2, idInvest
                                 {
                                     !state.airtm &&
                                     <span
-                                        className="wallet" 
+                                        className="wallet"
                                         onClick={_ => copyData(!state.alypay ? wallets[type] : wallets.alypay[type])}>
                                         {
                                             !state.alypay
 
-                                            ? wallets[type]
+                                                ? wallets[type]
 
-                                            : wallets.alypay[type]
+                                                : wallets.alypay[type]
                                         }
                                     </span>
                                 }
@@ -340,19 +343,25 @@ const HeaderDashboard = ({ type = "btc", amount = 0.5, amountToday = 2, idInvest
                                     value={state.userInput}
                                     type="text"
                                     onChange={onChangePrice}
-                                    className="text-input"/>
+                                    className="text-input" />
 
 
-                                    {
-                                        (state.airtm && state.cryptoPrices.BTC !== null) &&
-                                        <div className="aproximateAmount-legend">
-                                            <p>Monto apróximado (USD):</p>
-                                            <span>{WithDecimals(state.aproximateAmount)}</span>
-                                        </div>
-                                    }
+                                {
+                                    (state.airtm && state.cryptoPrices.BTC !== null) &&
+                                    <div className="aproximateAmount-legend">
+                                        <p>Monto apróximado (USD):</p>
+                                        <span>
+                                            {
+                                                isNaN(state.aproximateAmount)
+                                                ? "$ 0"
+                                                : `$ ${WithDecimals(state.aproximateAmount)}`                                                
+                                            }
+                                        </span>
+                                    </div>
+                                }
 
                             </div>
-                            
+
                             <div className="col">
 
                                 {

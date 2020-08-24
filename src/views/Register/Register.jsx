@@ -102,7 +102,7 @@ const Register = (props) => {
     const onSubmitInformation = async () => {
         setLoaderData(true)
         try {
-            const data = {
+            const dataSend = {
                 firstname: firstName,
                 lastname: lastname,
                 email,
@@ -122,31 +122,23 @@ const Register = (props) => {
                 info
             }
 
-            await Petition.post(`/register`, data)
-                .then(({ data, status }) => {
-                    if (data.error) {
-                        throw data.message
-                    }
+            const { data } = await Petition.post(`/register`, dataSend)
 
-                    if (data && status === 200) {
-                        Swal.fire(
-                            'Registro creado',
-                            'Revisa tu correo, hemos enviado un correo para activar tu cuenta',
-                            'success').then(() => window.location.hash = '/')
-                        // if (data.response === "success") {
-                        // } else {
-                        //     throw 'Su registro no se ha podido realizar, contacte a soporte o intentelo mas tarde'
-                        // }
-                    } else {
-                        throw 'Su registro no se ha podido procesar, contacte a soporte o intentelo mas tarde'
-                    }
+            if (data.error) {
+                throw String(data.message)
+            }
 
-                })
-                .catch(err => {
-                    throw err
-                })
+            if (data.success === "success") {
+                Swal.fire(
+                    'Registro creado',
+                    'Revisa tu correo, hemos enviado un correo para activar tu cuenta',
+                    'success').then(() => window.location.hash = '/')
+            } else {
+                throw String('Su registro no se ha podido procesar, contacte a soporte o intentelo mas tarde')
+            }
+
         } catch (error) {
-            Swal.fire('Error al registrar', error.toString(), 'error')
+            Swal.fire("", error.toString(), "warning")
         } finally {
             setLoaderData(false)
         }
@@ -316,7 +308,7 @@ const Register = (props) => {
     }
 
     /**Metodo que se ejecuta cuando el usuario selecciona un plan */
-    const onSelectAmount = (e, ) => {
+    const onSelectAmount = (e,) => {
         setAmountPlan(e.target.value)
 
         // Si el usuario quiere ejecutar el pago con Airtm

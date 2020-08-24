@@ -21,22 +21,22 @@ export const wallets = {
 * de las wallets
 */
 export const getWallets = async (walletState) => {
-    const {data} = await Petition.get('/collection/directions')
+    const { data } = await Petition.get('/collection/directions')
 
     // Se recorren los pares de llave:valor de la data obtenida y se construye el objeto final de las wallets
     let walletsData = Object.fromEntries(Object.entries(data).map(entrie => {
         let [coinName, wallet_hash] = entrie
 
         // Si la entrada contiene subentradas, también se recorren
-        if(coinName.toLowerCase() === 'alypay') {
+        if (coinName.toLowerCase() === 'alypay') {
             wallet_hash = Object.fromEntries(Object.entries(wallet_hash).map(subentrie => {
                 const [subCoinName, subWallet_hash] = subentrie;
 
-                return [ getCoinSymbol(subCoinName), subWallet_hash ]
+                return [getCoinSymbol(subCoinName), subWallet_hash]
             }))
         }
 
-        return [ getCoinSymbol(coinName), wallet_hash ]
+        return [getCoinSymbol(coinName), wallet_hash]
     }))
 
     walletState(walletsData);
@@ -47,7 +47,7 @@ export const getWallets = async (walletState) => {
 * @param {String} coinName
 */
 const getCoinSymbol = (coinName) => {
-    switch(coinName.toUpperCase()) {
+    switch (coinName.toUpperCase()) {
         case 'BITCOIN':
             return 'btc'
 
@@ -66,7 +66,7 @@ const getCoinSymbol = (coinName) => {
 }
 
 export const urlServer = "https://ardent-medley-272823.appspot.com"
-//export const urlServer = "http://10.70.12.18:8080"
+//export const urlServer = "http://localhost:8080"
 
 /**
  * Constante que almacena key secret para recaptcha
@@ -146,7 +146,7 @@ export const calculateCryptoPrice = (price = 0, amount = 0) => {
 * @param {Number} amount
 */
 export const calculateCryptoPriceWithoutFee = (price = 0, amount = 0) => {
-    return (amount * price).toFixed(2) 
+    return (amount * price).toFixed(2)
 }
 
 /**
@@ -190,9 +190,9 @@ export const optionsChartDashboard = {
 
 /**Funcion que ejecuta el LOGOUT de sesion */
 export const LogOut = async (location = "/") => {
-    await deleteStorage()
+    deleteStorage()
 
-    await localStorage.removeItem("desktopMode")
+    localStorage.removeItem("desktopMode")
 
     window.location.hash = location
 
