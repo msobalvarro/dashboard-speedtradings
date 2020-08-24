@@ -22,6 +22,11 @@ div.container-buy-plan {
     margin-bottom: 25px;
     width: 60%;
 
+    .aproximateAmount-legend {
+      font-size: .75rem;
+      margin-top: 5px;
+    }
+
     &.airtm-transaction {
       align-items: center;
       display: flex;

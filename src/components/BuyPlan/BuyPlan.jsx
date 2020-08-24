@@ -9,11 +9,17 @@ import LogoETH from "../../static/icons/ether.svg"
 
 // Import info or components
 import validator from "validator"
-import { Petition, wallets, copyData, calculateCryptoPrice } from "../../utils/constanst"
+import { Petition, getWallets, copyData, WithDecimals, calculateCryptoPrice, calculateCryptoPriceWithoutFee, amountMin } from "../../utils/constanst"
 
 const initialState = {
     // Estado que indica si la transacción es con airtm
     airtm: false,
+
+    // Estado que indica si la transacción es en con alypay
+    alypay: false,
+
+    // Estado que captura la entrada del usuario en el monto de inversión
+    userInput: '',
 
     // Estado que guarda la informacion de la coinmarketcap
     cryptoPrices: { BTC: null, ETH: null },
@@ -39,6 +45,9 @@ const initialState = {
 
     // Estado que indica el proceso para obtener los precios de coinmarketcap
     loaderCoinmarketCap: false,
+
+    // Estado que almacena los hash de las distintas wallets a usar en  los métodos de pago
+    wallets: {}
 }
 
 const reducer = (state, action) => {
@@ -54,6 +63,9 @@ const BuyPlan = ({ idCrypto = 1, onBuy = () => { } }) => {
 
     // Estados generales del componente
     const [state, dispatch] = useReducer(reducer, initialState)
+
+    // Symbol de la moneda a partir del idCrypto
+    const type = (idCrypto === 1) ? 'btc' : 'eth'
 
     /**Constante que define el precio de moneda seleccionada */
     const cryptoPrice = state.cryptoPrices.BTC !== null
@@ -81,6 +93,10 @@ const BuyPlan = ({ idCrypto = 1, onBuy = () => { } }) => {
                 throw "Seleccion un Plan de inversion"
             }
 
+            if ((type === 'btc' && state.amount < amountMin.btc) || (type === 'eth' && state.amount < amountMin.eth)) {
+                throw String("Por favor ingrese un plan de inversión mayor o igual al mínimo permitido")
+            }
+
             if (state.airtm) {
                 if (!validator.isEmail(state.emailAirtm)) {
                     throw "Correo de transacción Airtm incorrecto"
@@ -94,6 +110,7 @@ const BuyPlan = ({ idCrypto = 1, onBuy = () => { } }) => {
             // Armamos los datos a enviar al backend
             const dataSend = {
                 airtm: state.airtm,
+                alypay: state.alypay,
                 emailAirtm: state.emailAirtm,
                 aproximateAmountAirtm: state.aproximateAmount,
                 id_currency: idCrypto,
@@ -128,16 +145,50 @@ const BuyPlan = ({ idCrypto = 1, onBuy = () => { } }) => {
 
     /**Metodo que se ejecuta cuando el usuario selecciona el monto de inversion */
     const onChangeAmount = (e) => {
-        const { value } = e.target
+        let { value } = e.target
 
-        dispatch({ type: "amount", payload: parseFloat(value) })
+        // Expresiones regulares para comprobar que la entrada del monto sea válida
+        const floatRegex = /^(?:\d{1,})(?:\.\d{1,})?$/
+        const floatRegexStart = /^(?:\d{1,})(?:\.)?$/
 
-        // Verificamos si el usuario pagara con transacción Airtm
-        if (state.airtm) {
-            // Sacamos el monto (USD) aproximado en el momento
-            const amount = calculateCryptoPrice(cryptoPrice, parseFloat(value))
+        // Verificamos si valor ingresado no contiene letras o símbolos no permitidos
+        if (!value.length || floatRegex.test(value) || floatRegexStart.test(value)) {
+            dispatch({ type: "userInput", payload: value })
 
-            dispatch({ type: "aproximateAmount", payload: parseFloat(amount) })
+            value = (value.length) ? value : '0'
+
+            // Verificamos si el usuario pagara con transaccion Airtm
+            if (state.airtm) {
+                // Sacamos el monto (USD) aproximado en el momento
+                const amount = calculateCryptoPrice(cryptoPrice, parseFloat(value))
+                dispatch({ type: "aproximateAmount", payload: parseFloat(amount) })
+            } else {
+                // Se calcula el monto en dolares sin impuestos de la inversión
+                const amount = calculateCryptoPriceWithoutFee(cryptoPrice, parseFloat(value))
+                dispatch({ type: "amount", payload: parseFloat(amount) })
+            }
+        }
+    }
+
+    /**Metodo que se ejecuta cuando el usuario cambia el método de pago */
+    const onChangePaidMethod = (e) => {
+        const { value } = e.target;
+
+        switch (value) {
+            case "0":
+                dispatch({ type: "airtm", payload: false })
+                dispatch({ type: "alypay", payload: false })
+                break
+
+            case "1":
+                dispatch({ type: "airtm", payload: true })
+                dispatch({ type: "alypay", payload: false })
+                break
+
+            case "2":
+                dispatch({ type: "airtm", payload: false })
+                dispatch({ type: "alypay", payload: true })
+                break
         }
     }
 
@@ -164,28 +215,14 @@ const BuyPlan = ({ idCrypto = 1, onBuy = () => { } }) => {
     }
 
     useEffect(() => {
-        if (state.airtm) {
-            getAllPrices()
-        }
+        // Se obtinen lso diferentes precios de las criptomonedas
+        getAllPrices()
+        // Se obtiene los hash de las wallets
+        getWallets((data) => dispatch({ type: 'wallets', payload: data }))
 
         dispatch({ type: "amount", payload: 0 })
-    }, [state.airtm])
-
-    useEffect(() => {
-        try {
-            // Obtenemos todos los planes de inversion
-            Petition.get(`/collection/investment-plan/${idCrypto}`)
-                .then(({ data }) => {
-                    if (data.error) {
-                        throw data.message
-                    } else {
-                        dispatch({ type: "plans", payload: data })
-                    }
-                })
-        } catch (error) {
-            Swal.fire('Ha ocurrido un error', error.toString(), 'error')
-        }
     }, [])
+
 
     return (
         <div className="container-buy-plan">
@@ -211,16 +248,13 @@ const BuyPlan = ({ idCrypto = 1, onBuy = () => { } }) => {
                     !state.airtm &&
                     <>
                         <span>Toca para copiar wallet</span>
-
-                        {
-                            idCrypto === 1 &&
-                            <span className="wallet" onClick={_ => copyData(wallets.btc)}>{wallets.btc}</span>
-                        }
-
-                        {
-                            idCrypto === 2 &&
-                            <span className="wallet" onClick={_ => copyData(wallets.eth)}>{wallets.eth}</span>
-                        }
+                        <span className="wallet" onClick={_ => copyData(!state.alypay ? state.wallets[type] : state.wallets.alypay[type])}>
+                            {
+                                !state.alypay
+                                ? state.wallets[type]
+                                : state.wallets.alypay[type]
+                            }
+                        </span>
                     </>
                 }
 
@@ -228,49 +262,41 @@ const BuyPlan = ({ idCrypto = 1, onBuy = () => { } }) => {
                     state.airtm &&
                     <>
                         <span>Toca para copiar cuenta Airtm</span>
-                        <span className="wallet" onClick={_ => copyData(wallets.airtm)}>{wallets.airtm}</span>
+                        <span className="wallet" onClick={_ => copyData(state.wallets.airtm)}>{state.wallets.airtm}</span>
                     </>
                 }
             </div>
 
             <div className="row">
-                <span>Selecciona tu plan</span>
-                <select className="picker" disabled={state.loaderCoinmarketCap} value={state.amount} onChange={onChangeAmount}>
-                    <option value={0} disabled>Selecciona un plan</option>
-                    {
-                        state.airtm &&
-                        <>
-                            {
-                                state.plans.map((item, key) =>
-                                    <option key={key} value={item.amount}>
-                                        $ {calculateCryptoPrice(cryptoPrice, item.amount)}
-                                    </option>
-                                )
-                            }
-                        </>
-                    }
-
-                    {
-                        !state.airtm &&
-                        <>
-                            {
-                                state.plans.map((item, key) =>
-                                    <option key={key} value={item.amount}>
-                                        {
-                                            idCrypto === 1 &&
-                                            item.amount + ' BTC'
-                                        }
-
-                                        {
-                                            idCrypto === 2 &&
-                                            item.amount + ' ETH'
-                                        }
-                                    </option>
-                                )
-                            }
-                        </>
-                    }
+                <span htmlFor="check-airtm">Seleccione su método de pago</span>
+                <select className="picker" onChange={onChangePaidMethod}>
+                    <option value={0}>Depósito</option>
+                    <option value={1}>Airtm</option>
+                    <option value={2}>AlyPay</option>
                 </select>
+            </div>
+
+            <div className="row">
+                <span>Ingresa el monto de inversion</span>
+                <input
+                    disabled={state.loaderCoinmarketCap}
+                    value={state.userInput}
+                    type="text"
+                    onChange={onChangeAmount}
+                    className="text-input" />
+
+
+                <div className="aproximateAmount-legend">
+                    <p>Monto mínimo de inversión: {amountMin[type]} {type.toUpperCase()}</p>
+                    <p>
+                        Monto inversión (USD):
+                        {
+                            !state.airtm
+                            ? ` $ ${WithDecimals(state.amount)}`
+                            : ` $ ${WithDecimals(state.aproximateAmount)}`                                                
+                        }
+                    </p>
+                </div>
             </div>
 
             <div className="row">
@@ -298,16 +324,6 @@ const BuyPlan = ({ idCrypto = 1, onBuy = () => { } }) => {
                         className="text-input" />
                 </div>
             }
-
-            <div className="row airtm-transaction">
-                <label htmlFor="airtm-transaction">Pagar con Airtm</label>
-
-                <input
-                    type="checkbox"
-                    checked={state.airtm}
-                    onChange={_ => dispatch({ type: "airtm", payload: !state.airtm })}
-                    id="airtm-transaction" />
-            </div>
 
             <button disabled={state.loader} className="button secondary large" onClick={Buy}>
                 Comprar

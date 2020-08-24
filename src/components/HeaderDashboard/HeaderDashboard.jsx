@@ -179,6 +179,8 @@ const HeaderDashboard = ({ type = "btc", amount = 0.5, amountToday = 2, idInvest
                     dispatch({ type: "airtm", payload: false })
                     dispatch({ type: "alypay", payload: false })
                     dispatch({ type: "emailAirtm", payload: "" })
+                    dispatch({ type: "userInput", payload: "" })
+                    dispatch({ type: "plan", payload: 0 })
 
                     Swal.fire(
                         'Upgrade Completado',
