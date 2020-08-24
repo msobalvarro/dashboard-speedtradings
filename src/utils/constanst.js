@@ -22,7 +22,7 @@ export const wallets = {
 */
 export const getWallets = async (walletState) => {
     const {data} = await Petition.get('/collection/directions')
-console.log('wallets', data)
+
     // Se recorren los pares de llave:valor de la data obtenida y se construye el objeto final de las wallets
     let walletsData = Object.fromEntries(Object.entries(data).map(entrie => {
         let [coinName, wallet_hash] = entrie
@@ -38,7 +38,7 @@ console.log('wallets', data)
 
         return [ getCoinSymbol(coinName), wallet_hash ]
     }))
-console.log(walletsData)
+
     walletState(walletsData);
 }
 
@@ -146,7 +146,7 @@ export const calculateCryptoPrice = (price = 0, amount = 0) => {
 * @param {Number} amount
 */
 export const calculateCryptoPriceWithoutFee = (price = 0, amount = 0) => {
-    return amount * price 
+    return (amount * price).toFixed(2) 
 }
 
 /**

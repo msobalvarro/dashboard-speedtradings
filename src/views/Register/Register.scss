@@ -25,8 +25,9 @@ div.container-register {
     flex-direction: column;
     justify-content: space-between;
     height: 100vh;
+    max-height: 100vh;
     overflow: auto;
-    width: 480px;
+    width: 580px;
 
     .sponsor-message {
       padding: 10px;
@@ -49,6 +50,7 @@ div.container-register {
     img.image-logo {
       max-width: 40%;
       align-self: center;
+      min-height: 80px;
     }
 
     .tab {
@@ -59,7 +61,23 @@ div.container-register {
         display: none;
       }
 
-      .row {
+      .row-group {
+        display: flex;
+        flex-direction: row;
+        justify-content: space-between;
+        width: 100%;
+        flex-wrap: nowrap;
+
+        .col {
+          margin:  10px 0;
+          width: calc(50% - .5rem);
+
+          &.country-field { width: calc(40% - .5rem); }
+          &.telephone-field { width: calc(60% - .5rem); }
+        }
+      }
+
+      .row, .col {
         justify-content: flex-end;
         display: flex;
         flex-direction: column;
@@ -115,6 +133,10 @@ div.container-register {
             margin-top: 10px;
             padding: 5px;
             width: 100%;
+            text-overflow: ellipsis;
+            /* Needed to make it work */
+            overflow: hidden;
+            white-space: nowrap;
           }
         }
 
@@ -173,6 +195,7 @@ div.container-register {
 
     .read-term {
       margin: 20px 0;
+      padding: .5rem;
       text-align: center;
 
       a {
