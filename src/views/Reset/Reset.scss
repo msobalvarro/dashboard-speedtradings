@@ -63,7 +63,7 @@
       &.password {
         input {
           margin: 10px auto;
-          width: 512px;
+          width: 100%;
         }
       }
 
@@ -77,18 +77,18 @@
           font-size: 1em;
           margin: auto;
           width: 80%;
-          
+
           &.code {
             font-weight: bold;
             text-align: center;
-            letter-spacing: 1.5em;            
+            letter-spacing: 1.5em;
           }
         }
       }
     }
 
     p {
-      color: #CCC;
+      color: #ccc;
       margin-top: 1em;
       text-align: center;
       font-size: 0.8em;

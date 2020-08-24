@@ -72,12 +72,18 @@ const Reset = () => {
      */
     const generateCode = async () => {
         try {
+            if (!validator.isEmail(state.email)) {
+                throw String("El correo electronico no es correcto")
+            }
+
             dispatch({ type: "loader", payload: true })
 
+            // ejecutamos la peticion para solicitar el PIN
             const { data } = await Petition.post("/reset-password/generate", { email: state.email })
 
+            // validamos si hay un error en el server
             if (data.error) {
-                throw data.message
+                throw String(data.message)
             }
 
             if (data.response === "success") {
@@ -144,9 +150,25 @@ const Reset = () => {
             }
 
         } catch (error) {
-            Swal.fire("Ha ocurrido un error", error.toString(), "error")
+            Swal.fire("Ha ocurrido un incoveniente", error.toString(), "warning")
         } finally {
             dispatch({ type: "loader", payload: false })
+        }
+    }
+
+    /**
+     * Funcion que valida el pin de seguridada
+     */
+    const onNextToPassword = () => {
+        try {
+            // validamos si el pin tiene un formato correcto
+            if (!validator.isInt(state.code)) {
+                throw String("Formato de PIN no es correcto")
+            }
+
+            setShowPassword(true)
+        } catch (error) {
+            Swal.fire("Ha ocurrido un incoveniente", error.toString(), "warning")
         }
     }
 
@@ -166,7 +188,7 @@ const Reset = () => {
 
                                 <div className="row code">
                                     <input
-                                        value={state.email} 
+                                        value={state.email}
                                         onChange={e => dispatch({ type: "email", payload: e.target.value })}
                                         type="email"
                                         placeholder="Correo electrónico SpeedTradings"
@@ -210,7 +232,7 @@ const Reset = () => {
                                         onChange={e => dispatch({ type: "code", payload: e.target.value })}
                                         className="text-input code"
                                         maxLength={6}
-                                        type="text" 
+                                        type="text"
                                         autoFocus />
                                 </div>
 
@@ -224,7 +246,7 @@ const Reset = () => {
                                     <div className="row buttons">
                                         <a href="#" onClick={onWriteEmail} className="write">Ingresar correo</a>
 
-                                        <button onClick={_ => setShowPassword(true)} className="button">Siguiente</button>
+                                        <button onClick={onNextToPassword} className="button">Siguiente</button>
                                     </div>
                                 }
                             </>
