@@ -113,6 +113,7 @@ div.container-dashboard {
                 color: $colorSecondary;
                 font-weight: bolder;
                 font-size: 1.2em;
+                text-align: right;
               }
             }
 
@@ -127,6 +128,17 @@ div.container-dashboard {
                 display: flex;
                 justify-content: space-between;
                 padding: 10px 0;
+                text-align: right;
+                width: 100%;
+
+                span {
+                  display: inline-block;
+                  width: calc(100% / 4);
+
+                  &:first-child {
+                    text-align: left;
+                  }
+                }
 
                 &.paymented {
                   opacity: 0.5;
