@@ -12,7 +12,7 @@ import LogoETH from "../../static/icons/ether.svg"
 import ProgressBar from "../ProgressBar/ProgressBar"
 import Swal from "sweetalert2"
 import validator from "validator"
-import { Petition, getWallets, copyData, calculateCryptoPrice, WithDecimals } from "../../utils/constanst"
+import { Petition, getWallets, copyData, calculateCryptoPrice, calculateCryptoPriceWithoutFee, WithDecimals, amountMin } from "../../utils/constanst"
 
 const images = {
     btc: LogoBTC,
@@ -131,6 +131,11 @@ const HeaderDashboard = ({ type = "btc", amount = 0.5, amountToday = 2, idInvest
                 throw String('Seleccione un plan de inversion')
             }
 
+            // Validamos que el monto del plan sea mayor o igual al mínimo permitido
+            if ((type === 'btc' && state.plan < amountMin.btc) || (type === 'eth' && state.plan < amountMin.eth)) {
+                throw String('Por favor ingrese un plan de inversión mayor o igual al mínimo permitido')
+            }
+
             // Validamos el correo AIRTM 
             if (state.airtm && !validator.isEmail(state.emailAirtm)) {
                 throw String("Ingrese un correo de transacción valido")
@@ -198,23 +203,27 @@ const HeaderDashboard = ({ type = "btc", amount = 0.5, amountToday = 2, idInvest
 
     /**Metodo que se ejecuta cuando el usuario cambia el plan de inversion */
     const onChangePrice = (e) => {
-        const { value } = e.target
+        let { value } = e.target
 
         // Expresiones regulares para comprobar que la entrada del monto sea válida
-        // const floatRegex = /^(?:\d{1,})(?:\.\d{1,})?$/
-        // const floatRegexStart = /^(?:\d{1,})(?:\.)?$/
+        const floatRegex = /^(?:\d{1,})(?:\.\d{1,})?$/
+        const floatRegexStart = /^(?:\d{1,})(?:\.)?$/
 
         // Verificamos si valor ingresado no contiene letras o símbolos no permitidos
-        if (!isNaN(value)) {
+        if (!value.length || floatRegex.test(value) || floatRegexStart.test(value)) {
             dispatch({ type: "userInput", payload: value })
-            dispatch({ type: "plan", payload: parseFloat(value) })
+
+            value = (value.length) ? value : '0'
 
             // Verificamos si el usuario pagara con transaccion Airtm
             if (state.airtm) {
                 // Sacamos el monto (USD) aproximado en el momento
                 const amount = calculateCryptoPrice(cryptoPrice, parseFloat(value))
-
                 dispatch({ type: "aproximateAmount", payload: parseFloat(amount) })
+            } else {
+                // Se calcula el monto en dolares sin impuestos de la inversión
+                const amount = calculateCryptoPriceWithoutFee(cryptoPrice, parseFloat(value))
+                dispatch({ type: "plan", payload: parseFloat(amount) })
             }
         }
     }
@@ -265,7 +274,7 @@ const HeaderDashboard = ({ type = "btc", amount = 0.5, amountToday = 2, idInvest
     }, [])
 
     useEffect(() => {
-        if (state.showModal && state.airtm) {
+        if (state.showModal) {
             getAllPrices()
 
         }
@@ -346,20 +355,17 @@ const HeaderDashboard = ({ type = "btc", amount = 0.5, amountToday = 2, idInvest
                                     className="text-input" />
 
 
-                                {
-                                    (state.airtm && state.cryptoPrices.BTC !== null) &&
-                                    <div className="aproximateAmount-legend">
-                                        <p>Monto apróximado (USD):</p>
-                                        <span>
-                                            {
-                                                isNaN(state.aproximateAmount)
-                                                ? "$ 0"
-                                                : `$ ${WithDecimals(state.aproximateAmount)}`                                                
-                                            }
-                                        </span>
-                                    </div>
-                                }
-
+                                <div className="aproximateAmount-legend">
+                                    <p>Monto mínimo de inversión: {amountMin[type]} {type.toUpperCase()}</p>
+                                    <p>
+                                        Monto inversión (USD):
+                                        {
+                                            !state.airtm
+                                            ? ` $ ${WithDecimals(state.plan)}`
+                                            : ` $ ${WithDecimals(state.aproximateAmount)}`                                                
+                                        }
+                                    </p>
+                                </div>
                             </div>
 
                             <div className="col">
