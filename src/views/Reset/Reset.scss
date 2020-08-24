@@ -1,70 +1,97 @@
 @import "../../utils/constants.scss";
 
 .container-reset {
+  align-items: center;
+  display: flex;
+  justify-content: center;
+  height: 100vh;
+  width: 100vw;
+
+  .content {
     animation: fadeEffect 1s;
     align-items: center;
+    border-radius: 10px;
+    background-color: $colorMain;
+    box-shadow: rgba(0, 0, 0, 0.7) 0px 10px 25px 5px;
+    // border: 2px solid $colorMain;
     display: flex;
+    padding: 1em;
     flex-direction: column;
     justify-content: center;
-    height: 100vh;
-    width: 100vw;
+    height: auto;
+    width: 512px;
 
     h1 {
-        color: $colorYellow;
-        font-size: 1.2em;
-        text-align: center;
-        margin: 25px 0;
-        font-weight: lighter;
-        width: 50%;
+      color: $colorYellow;
+      font-size: 1.2em;
+      text-align: center;
+      margin: 25px 0;
+      font-weight: lighter;
+      width: 50%;
     }
 
-
     .logo {
-        max-width: 256px;
+      max-width: 256px;
     }
 
     .row {
+      align-items: center;
+      display: flex;
+      margin: 1em auto;
+      flex-direction: column;
+      width: 100%;
+
+      .legend {
+        color: $colorYellow;
+      }
+
+      &.captcha {
+        align-items: center;
         display: flex;
-        margin: 1em auto;
-        flex-direction: column;
-        width: 50%;
+        justify-content: center;
+      }
 
-        .legend {
-            color: $colorYellow;
+      &.buttons {
+        flex-direction: row;
+        justify-content: space-evenly;
+
+        .write {
+          color: $colorSecondary;
         }
+      }
 
-        &.captcha {
-            align-items: center;
-            display: flex;
-            justify-content: center;
+      &.password {
+        input {
+          margin: 10px auto;
+          width: 512px;
         }
+      }
 
-        &.buttons {
-            flex-direction: row;
-            justify-content: space-evenly;
+      &.code {
+        align-items: center;
+        display: flex;
+        flex-direction: row;
+        justify-content: space-between;
 
-            .write {
-                color: $colorSecondary;
-            }
+        input {
+          font-size: 1em;
+          margin: auto;
+          width: 80%;
+          
+          &.code {
+            font-weight: bold;
+            text-align: center;
+            letter-spacing: 1.5em;            
+          }
         }
-
-        &.password {
-            input {
-                margin: 10px auto;
-                width: 512px;
-            }
-        }
-
-
-        &.code {
-            display: flex;
-            flex-direction: row;
-            justify-content: space-between;
-
-            input {
-                text-align: center;
-                width: 15%;
-            }
-        }
+      }
     }
+
+    p {
+      color: #CCC;
+      margin-top: 1em;
+      text-align: center;
+      font-size: 0.8em;
+    }
+  }
 }

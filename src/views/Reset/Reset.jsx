@@ -14,12 +14,7 @@ import logo from "../../static/images/logo.png"
 import Swal from "sweetalert2"
 
 const initialState = {
-    codeOne: "",
-    codeTwo: "",
-    codeThree: "",
-    codeFour: "",
-    codeFive: "",
-    codeSix: "",
+    code: "",
 
     verifyCaptcha: "",
 
@@ -45,7 +40,7 @@ const Reset = () => {
     const [state, dispatch] = useReducer(reducer, initialState)
 
     // Estado que indica la vista final
-    const [showPassword, setShowPassword] = useState(true)
+    const [showPassword, setShowPassword] = useState(false)
 
     // Estado que indica que muestra opcion de escribir codigo
     const [writeCode, setWrite] = useState(false)
@@ -104,38 +99,43 @@ const Reset = () => {
         try {
             dispatch({ type: "loader", payload: true })
 
-            const { codeOne, codeTwo, codeThree, codeFour, codeFive, codeSix } = state
+            const { code } = state
 
-            if (codeOne.trim() === "" || codeTwo.trim() === "" || codeThree.trim() === "" || codeFour.trim() === "" || codeFive.trim() === "" || codeSix.trim() === "") {
-                throw "Pin incorrecto, intente de nuevo"
+            // validamos todos los codigos
+            if (code.trim().length !== 6) {
+                throw String("Pin incorrecto, intente de nuevo")
             }
 
-            const pin = (codeOne + codeTwo + codeThree + codeFour + codeFive + codeSix)
-
-            if (!validator.isInt(pin)) {
-                throw "Formato de PIN no es correcto"
+            // validamos si el pin tiene un formato correcto
+            if (!validator.isInt(code)) {
+                throw String("Formato de PIN no es correcto")
             }
 
+            // validamos si el capctha es correcto
             if (state.verifyCaptcha.length === 0) {
-                throw "Verifique el reCaptcha"
+                throw String("Verifique el reCaptcha")
             }
 
+            // creamos el datos que enviaremos del server
             const dataSend = {
-                pin,
+                pin: code,
                 password: state.password,
                 "g-recaptcha-response": state.verifyCaptcha
             }
 
+            // Ejecutamos la peticion para generar el pin
             const { data } = await Petition.post("/reset-password/pin", dataSend, {
                 params: {
                     secret: state.verifyCaptcha
                 }
             })
 
+            // verificamos si hay error en el server
             if (data.error) {
                 throw data.message
             }
 
+            // verificamos si todo esta correcto
             if (data.response === "success") {
                 Swal.fire("Listo", "Tu contraseña se ha actualizado", "success")
                     .then(_ => {
@@ -152,145 +152,118 @@ const Reset = () => {
 
     return (
         <div className="container-reset">
-            <img className="logo" src={logo} alt="logo" />
 
-            {
-                !showPassword &&
-                <>
-                    {
-                        !writeCode &&
-                        <>
-                            <h1>Hola, para que todo este seguro, enviaremos un pin de seguridad a tu correo electrónico</h1>
+            <div className="content">
+                <img className="logo" src={logo} alt="logo" />
 
-                            <div className="row">
-                                <span className="legend">Correo electrónico</span>
-                                <input
-                                    value={state.email} onChange={e => dispatch({ type: "email", payload: e.target.value })}
-                                    type="email"
-                                    className="text-input" />
+                {
+                    !showPassword &&
+                    <>
+                        {
+                            !writeCode &&
+                            <>
+                                <h3>Escribe tu correo SpeedTradings</h3>
 
-                            </div>
+                                <div className="row code">
+                                    <input
+                                        value={state.email} 
+                                        onChange={e => dispatch({ type: "email", payload: e.target.value })}
+                                        type="email"
+                                        placeholder="Correo electrónico SpeedTradings"
+                                        autoFocus
+                                        className="text-input" />
 
-                            <div className="row buttons">
-                                {
-                                    validator.isEmail(state.email) &&
-                                    <>
-                                        {
-                                            !state.loader &&
-                                            <a href="#" onClick={onWrite} className="write">Escribir código de seguridad</a>
-                                        }
-
-                                        {
-                                            state.loader
-                                                ? <ActivityIndicator size={64} />
-                                                : <button className="button" disabled={state.loader} onClick={generateCode}>Enviar codigo</button>
-                                        }
-
-                                    </>
-                                }
-                            </div>
-                        </>
-                    }
-
-                    {
-                        writeCode &&
-                        <>
-                            <h3>Escribe el codigo de verificación</h3>
-
-                            <div className="row code">
-                                <input
-                                    value={state.codeOne}
-                                    onChange={e => dispatch({ type: "codeOne", payload: e.target.value })}
-                                    className="text-input"
-                                    maxLength={1}
-                                    type="text" autoFocus />
-
-                                <input
-                                    value={state.codeTwo}
-                                    onChange={e => dispatch({ type: "codeTwo", payload: e.target.value })}
-                                    className="text-input"
-                                    maxLength={1}
-                                    type="text" />
-
-                                <input
-                                    value={state.codeThree}
-                                    onChange={e => dispatch({ type: "codeThree", payload: e.target.value })}
-                                    className="text-input"
-                                    maxLength={1}
-                                    type="text" />
-
-                                <input
-                                    value={state.codeFour}
-                                    onChange={e => dispatch({ type: "codeFour", payload: e.target.value })}
-                                    className="text-input"
-                                    maxLength={1}
-                                    type="text" />
-
-                                <input
-                                    value={state.codeFive}
-                                    onChange={e => dispatch({ type: "codeFive", payload: e.target.value })}
-                                    className="text-input"
-                                    maxLength={1}
-                                    type="text" />
-
-                                <input
-                                    value={state.codeSix}
-                                    onChange={e => dispatch({ type: "codeSix", payload: e.target.value })}
-                                    className="text-input"
-                                    maxLength={1}
-                                    type="text" />
-                            </div>
-
-                            {
-                                state.loader &&
-                                <ActivityIndicator size={64} />
-                            }
-
-                            {
-                                !state.loader &&
-                                <div className="row buttons">
-                                    <a href="#" onClick={onWriteEmail} className="write">Ingresar correo</a>
-
-                                    <button onClick={_ => setShowPassword(true)} className="button">Enviar codigo</button>
                                 </div>
-                            }
-                        </>
-                    }
-                </>
-            }
 
-            {
-                showPassword &&
-                <>
-                    <div className="row password">
-                        <input className="text-input" placeholder="Escribe tu contraseña" type="password" value={state.password} onChange={e => dispatch({ type: "password", payload: e.target.value })} />
+                                <div className="row buttons">
+                                    {
+                                        !state.loader &&
+                                        <>
+                                            <a href="#" onClick={onWrite} className="write">Escribir PIN de seguridad</a>
 
-                        <input className="text-input" placeholder="Confirma tu contraseña" type="password" value={state.otherPassword} onChange={e => dispatch({ type: "otherPassword", payload: e.target.value })} />
-                    </div>
+                                            <button className="button" disabled={state.loader} onClick={generateCode}>Enviar PIN</button>
+                                        </>
+                                    }
 
-                    <div className="row captcha">
-                        <Recaptcha
-                            size={128}
-                            verifyCallback={payload => dispatch({ type: "verifyCaptcha", payload })} sitekey={siteKeyreCaptcha} />
-                    </div>
+                                    {
+                                        state.loader &&
+                                        <ActivityIndicator size={64} />
+                                    }
+                                </div>
 
+                                <p>
+                                    Para que todo este seguro, enviaremos un PIN de seguridad a tu correo electrónico.
 
-                    {
-                        state.loader &&
-                        <ActivityIndicator size={64} />
-                    }
+                                    Ten en cuenta que si ya tienes un Pin de seguridad tienes que escribirlo ya que no podrás volverlo a solicitar.
+                                </p>
+                            </>
+                        }
 
-                    {
-                        !state.loader &&
-                        <div className="row buttons">
-                            <button onClick={_ => setShowPassword(false)} className="button">Cancelar</button>
+                        {
+                            writeCode &&
+                            <>
+                                <h3>Escribe el PIN de seguridad</h3>
 
-                            <button disabled={state.password === "" || state.password !== state.otherPassword} onClick={sendSecurityCode} className="button secondary">Finalizar</button>
+                                <div className="row code">
+                                    <input
+                                        value={state.code}
+                                        onChange={e => dispatch({ type: "code", payload: e.target.value })}
+                                        className="text-input code"
+                                        maxLength={6}
+                                        type="text" 
+                                        autoFocus />
+                                </div>
+
+                                {
+                                    state.loader &&
+                                    <ActivityIndicator size={64} />
+                                }
+
+                                {
+                                    !state.loader &&
+                                    <div className="row buttons">
+                                        <a href="#" onClick={onWriteEmail} className="write">Ingresar correo</a>
+
+                                        <button onClick={_ => setShowPassword(true)} className="button">Siguiente</button>
+                                    </div>
+                                }
+                            </>
+                        }
+                    </>
+                }
+
+                {
+                    showPassword &&
+                    <>
+                        <div className="row password">
+                            <input className="text-input" placeholder="Escribe tu contraseña" type="password" value={state.password} onChange={e => dispatch({ type: "password", payload: e.target.value })} />
+
+                            <input className="text-input" placeholder="Confirma tu contraseña" type="password" value={state.otherPassword} onChange={e => dispatch({ type: "otherPassword", payload: e.target.value })} />
                         </div>
-                    }
-                </>
-            }
 
+                        <div className="row captcha">
+                            <Recaptcha
+                                size={128}
+                                verifyCallback={payload => dispatch({ type: "verifyCaptcha", payload })} sitekey={siteKeyreCaptcha} />
+                        </div>
+
+
+                        {
+                            state.loader &&
+                            <ActivityIndicator size={64} />
+                        }
+
+                        {
+                            !state.loader &&
+                            <div className="row buttons">
+                                <button onClick={_ => setShowPassword(false)} className="button">Cancelar</button>
+
+                                <button disabled={state.password === "" || state.password !== state.otherPassword} onClick={sendSecurityCode} className="button secondary">Finalizar</button>
+                            </div>
+                        }
+                    </>
+                }
+            </div>
         </div>
     )
 }
