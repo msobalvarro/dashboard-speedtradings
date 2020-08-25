@@ -8,6 +8,9 @@ import { setStorage, Petition } from "../../utils/constanst"
 import { useDispatch } from "react-redux"
 import { SETSTORAGE } from "../../store/ActionTypes"
 
+// Import components
+import PasswordField from '../../components/PasswordField/PasswordField'
+
 // import Assets
 import "./Login.scss"
 import Logo from "../../static/images/logo.png"
@@ -105,7 +108,8 @@ const Login = () => {
                 ? <span className="error">Contraseña es requerida</span>
                 : <span>Contraseña</span>
             }
-            <input required value={password} onChange={e => setPassword(e.target.value)} type="password" className="text-input" />
+
+            <PasswordField required value={password} onChange={e => setPassword(e.target.value)} className="text-input" />
 
             <Link className="password-forgot link" to="reset/password">¿Olvido su contraseña?</Link>
           </div>

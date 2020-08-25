@@ -113,7 +113,7 @@ const Register = (props) => {
         try {
 
             if((crypto === 1 && amountPlan < amountMin.btc) || (crypto === 2 && amountPlan < amountMin.eth)) {
-                //throw String('Por favor ingrese un plan de inversión mayor o igual al mínimo permitido')
+                throw String('Por favor ingrese un plan de inversión mayor o igual al mínimo permitido')
             }
 
             const dataSend = {
