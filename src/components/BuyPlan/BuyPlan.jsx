@@ -167,7 +167,7 @@ const BuyPlan = ({ idCrypto = 1, onBuy = () => { } }) => {
                 dispatch({ type: "aproximateAmount", payload: parseFloat(_amountDollar) })
             } else {
                 // Se calcula el monto en dolares sin impuestos de la inversión
-                const amount = calculateCryptoPriceWithoutFee(cryptoPrice, parseFloat(value))
+                _amountDollar = calculateCryptoPriceWithoutFee(cryptoPrice, parseFloat(value))
                 dispatch({ type: "amount", payload: parseFloat(value) })
             }
 

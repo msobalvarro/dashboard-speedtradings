@@ -24,7 +24,7 @@ const PasswordField = ({value, onChange, className, ...rest}) => {
                 onFocus={handleFocus}
                 value={value} {...rest} />
 
-            <button onClick={handlClickShowPassword} title='Mostrar contraseña' className={!showPassword ? '' : 'hide'}></button>
+            <div onClick={handlClickShowPassword} title='Mostrar contraseña' className={!showPassword ? '' : 'hide'}></div>
         </fieldset>
     )
 }
