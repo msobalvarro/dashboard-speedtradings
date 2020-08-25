@@ -22,7 +22,7 @@ const PasswordField = ({value, onChange, className, ...rest}) => {
                 onInvalid={handleInvalid}
                 onChange={onChange}
                 onFocus={handleFocus}
-                value={value} {...rest} />
+                value={value} {...rest} className='PasswordField-input' />
 
             <div onClick={handlClickShowPassword} title='Mostrar contraseña' className={!showPassword ? '' : 'hide'}></div>
         </fieldset>
