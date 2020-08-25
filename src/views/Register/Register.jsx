@@ -5,6 +5,9 @@ import Validator from "validator"
 // Import styles
 import "./Register.scss"
 
+// Import components
+import FilminasSlider from "../../components/FilminasSlider/FilminasSlider"
+
 // import Assets
 import Logo from "../../static/images/logo.png"
 
@@ -426,6 +429,7 @@ const Register = (props) => {
         <div className="container-register">
             <div className="cover-image">
                 {/* <h1>registrate gratis</h1> */}
+                <FilminasSlider />
             </div>
 
             <div className="form-container">

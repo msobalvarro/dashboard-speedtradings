@@ -10,7 +10,7 @@ div.container-register {
   width: 100%;
 
   .cover-image {
-    background-image: url(../../static/images/cover-login.jpg);
+    //background-image: url(../../static/images/cover-login.jpg);
     background-position-y: 60%;
     background-position-x: 50%;
     background-attachment: scroll;
@@ -18,8 +18,8 @@ div.container-register {
     flex: 1;
     opacity: 0.8;
     height: 100vh;
-    background-color: tomato;
-    border: 1px dashed red;
+    width: calc(100vw - 580px);
+    overflow: hidden;
   }
 
   .form-container {    
