@@ -55,7 +55,10 @@ const initialState = {
     showModal: false,
 
     // Estado que guarda la informacion de la coinmarketcap
-    cryptoPrices: { BTC: null, ETH: null }
+    cryptoPrices: { BTC: null, ETH: null },
+
+    // Estado para mostrar el valor en dólares la inversión
+    amountDollar: 0
 
 }
 
@@ -216,17 +219,20 @@ const HeaderDashboard = ({ type = "btc", amount = 0.5, amountToday = 2, idInvest
             dispatch({ type: "userInput", payload: value })
 
             value = (value.length) ? value : '0'
+            let _amountDollar = 0
 
             // Verificamos si el usuario pagara con transaccion Airtm
             if (state.airtm) {
                 // Sacamos el monto (USD) aproximado en el momento
-                const amount = calculateCryptoPrice(cryptoPrice, parseFloat(value))
-                dispatch({ type: "aproximateAmount", payload: parseFloat(amount) })
+                _amountDollar = calculateCryptoPrice(cryptoPrice, parseFloat(value))
+                dispatch({ type: "aproximateAmount", payload: parseFloat(_amountDollar) })
             } else {
                 // Se calcula el monto en dolares sin impuestos de la inversión
-                const amount = calculateCryptoPriceWithoutFee(cryptoPrice, parseFloat(value))
-                dispatch({ type: "plan", payload: parseFloat(amount) })
+                _amountDollar = calculateCryptoPriceWithoutFee(cryptoPrice, parseFloat(value))
+                dispatch({ type: "plan", payload: parseFloat(value) })
             }
+
+            dispatch({ type: 'amountDollar', payload: _amountDollar })
         }
     }
 
@@ -360,12 +366,7 @@ const HeaderDashboard = ({ type = "btc", amount = 0.5, amountToday = 2, idInvest
                                 <div className="aproximateAmount-legend">
                                     <p>Monto mínimo de inversión: {amountMin[type]} {type.toUpperCase()}</p>
                                     <p>
-                                        Monto inversión (USD):
-                                        {
-                                            !state.airtm
-                                            ? ` $ ${WithDecimals(state.plan)}`
-                                            : ` $ ${WithDecimals(state.aproximateAmount)}`                                                
-                                        }
+                                        Monto inversión (USD): ${state.amountDollar}
                                     </p>
                                 </div>
                             </div>

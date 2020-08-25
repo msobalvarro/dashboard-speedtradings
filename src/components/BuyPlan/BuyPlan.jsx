@@ -47,7 +47,9 @@ const initialState = {
     loaderCoinmarketCap: false,
 
     // Estado que almacena los hash de las distintas wallets a usar en  los métodos de pago
-    wallets: {}
+    wallets: {},
+
+    amountDollar: 0
 }
 
 const reducer = (state, action) => {
@@ -156,17 +158,20 @@ const BuyPlan = ({ idCrypto = 1, onBuy = () => { } }) => {
             dispatch({ type: "userInput", payload: value })
 
             value = (value.length) ? value : '0'
+            let _amountDollar = 0
 
             // Verificamos si el usuario pagara con transaccion Airtm
             if (state.airtm) {
                 // Sacamos el monto (USD) aproximado en el momento
-                const amount = calculateCryptoPrice(cryptoPrice, parseFloat(value))
-                dispatch({ type: "aproximateAmount", payload: parseFloat(amount) })
+                _amountDollar = calculateCryptoPrice(cryptoPrice, parseFloat(value))
+                dispatch({ type: "aproximateAmount", payload: parseFloat(_amountDollar) })
             } else {
                 // Se calcula el monto en dolares sin impuestos de la inversión
                 const amount = calculateCryptoPriceWithoutFee(cryptoPrice, parseFloat(value))
-                dispatch({ type: "amount", payload: parseFloat(amount) })
+                dispatch({ type: "amount", payload: parseFloat(value) })
             }
+
+            dispatch({ type: "amountDollar", payload: _amountDollar })
         }
     }
 
@@ -289,12 +294,7 @@ const BuyPlan = ({ idCrypto = 1, onBuy = () => { } }) => {
                 <div className="aproximateAmount-legend">
                     <p>Monto mínimo de inversión: {amountMin[type]} {type.toUpperCase()}</p>
                     <p>
-                        Monto inversión (USD):
-                        {
-                            !state.airtm
-                            ? ` $ ${WithDecimals(state.amount)}`
-                            : ` $ ${WithDecimals(state.aproximateAmount)}`                                                
-                        }
+                        Monto inversión (USD): ${WithDecimals(state.amountDollar)}
                     </p>
                 </div>
             </div>

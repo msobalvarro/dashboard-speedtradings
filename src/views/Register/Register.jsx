@@ -91,12 +91,15 @@ const Register = (props) => {
     // Estado que guarda los precios y detalles de la coinmarketcap
     const [cryptoPrices, setCryptoPrices] = useState({ BTC: null, ETH: null })
 
+    // Estado para controlar la leyenda del monto en dolares
+    const [amountDollar, setAmountDollar] = useState(0)
+
     /**Coleccion de botones */
     const validationButtons = {
         first: firstName.length > 0 && lastname.length > 0 && Validator.isEmail(email) && phone.length > 6 && country !== '0' && validateEmail === true && !loader && password === passwordSecurity && password.length > 0 && passwordSecurity.length > 0 && username.length > 0 && validateUser === true,
 
         second: amountPlan !== null &&
-            ((crypto === 1) ? amountPlan >= amountMin.btc : amountPlan >= amountMin.eth) &&
+            //((crypto === 1) ? amountPlan >= amountMin.btc : amountPlan >= amountMin.eth) &&
             hash.length > 10 &&
             walletBTC.length > 10 &&
             walletETH.length > 10 &&
@@ -110,7 +113,7 @@ const Register = (props) => {
         try {
 
             if((crypto === 1 && amountPlan < amountMin.btc) || (crypto === 2 && amountPlan < amountMin.eth)) {
-                throw String('Por favor ingrese un plan de inversión mayor o igual al mínimo permitido')
+                //throw String('Por favor ingrese un plan de inversión mayor o igual al mínimo permitido')
             }
 
             const dataSend = {
@@ -126,6 +129,7 @@ const Register = (props) => {
                 walletETH,
                 emailAirtm,
                 airtm,
+                alypay,
                 aproximateAmountAirtm,
                 amount: Number(amountPlan),
                 id_currency: Number(crypto),
@@ -139,7 +143,7 @@ const Register = (props) => {
                 throw String(data.message)
             }
 
-            if (data.success === "success") {
+            if (data.response === "success") {
                 Swal.fire(
                     'Registro creado',
                     'Revisa tu correo, hemos enviado un correo para activar tu cuenta',
@@ -271,19 +275,22 @@ const Register = (props) => {
             setUserInput(value);
 
             value = (value.length) ? value : '0'
+            let _amountDollar = 0
 
             // Verificamos si el usuario pagara con transaccion Airtm
             if (airtm) {
                 // Sacamos el monto (USD) aproximado en el momento
-                const amount = (value !== '0') ? calculateCryptoPrice(cryptoPrice, parseFloat(value)) : 0
+                _amountDollar = (value !== '0') ? calculateCryptoPrice(cryptoPrice, parseFloat(value)) : 0
 
-                setAproximateAmount(amount);
+                setAproximateAmount(_amountDollar);
             } else {
                 // Sacamos el monto (USD) aproximado en el momento sin impuestos
-                const amount = calculateCryptoPriceWithoutFee(cryptoPrice, parseFloat(value))
+                _amountDollar = calculateCryptoPriceWithoutFee(cryptoPrice, parseFloat(value))
 
-                setAmountPlan(amount)
+                setAmountPlan(parseFloat(value))
             }
+
+            setAmountDollar(_amountDollar)
         }
     }
 
@@ -649,7 +656,7 @@ const Register = (props) => {
                             </div>
 
                             <div className="col country-field">
-                                <span>$ {WithDecimals((airtm) ? aproximateAmountAirtm : amountPlan)}</span>
+                                <span>$ {WithDecimals(amountDollar)}</span>
                             </div>
                         </div>
 
