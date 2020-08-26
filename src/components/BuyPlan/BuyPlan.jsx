@@ -167,7 +167,9 @@ const BuyPlan = ({ idCrypto = 1, onBuy = () => { } }) => {
             if (state.airtm) {
                 // Sacamos el monto (USD) aproximado en el momento
                 _amountDollar = calculateCryptoPrice(cryptoPrice, parseFloat(value))
+
                 dispatch({ type: "aproximateAmount", payload: parseFloat(_amountDollar) })
+                dispatch({ type: "amount", payload: parseFloat(value) })
             } else {
                 // Se calcula el monto en dolares sin impuestos de la inversión
                 _amountDollar = calculateCryptoPriceWithoutFee(cryptoPrice, parseFloat(value))

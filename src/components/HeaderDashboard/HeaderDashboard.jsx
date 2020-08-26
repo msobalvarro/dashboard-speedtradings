@@ -225,7 +225,9 @@ const HeaderDashboard = ({ type = "btc", amount = 0.5, amountToday = 2, idInvest
             if (state.airtm) {
                 // Sacamos el monto (USD) aproximado en el momento
                 _amountDollar = calculateCryptoPrice(cryptoPrice, parseFloat(value))
+
                 dispatch({ type: "aproximateAmount", payload: parseFloat(_amountDollar) })
+                dispatch({ type: "plan", payload: parseFloat(value) })
             } else {
                 // Se calcula el monto en dolares sin impuestos de la inversión
                 _amountDollar = calculateCryptoPriceWithoutFee(cryptoPrice, parseFloat(value))
@@ -233,15 +235,6 @@ const HeaderDashboard = ({ type = "btc", amount = 0.5, amountToday = 2, idInvest
             }
 
             dispatch({ type: 'amountDollar', payload: _amountDollar })
-        }
-    }
-
-    /** Método para verificar si el monto de inversión ingresado es mayor o igual al minimo permitido */
-    const onCheckAmountMinValue = _ => {
-        const checker = (type === 'btc') ? !(state.plan >= amountMin.btc) : !(state.plan >= amountMin.eth)
-
-        if (checker) {
-            Swal.fire("", "Ingrese un plan de inversión mayor o igual al mínimo permitido", "warning")
         }
     }
 
@@ -369,14 +362,13 @@ const HeaderDashboard = ({ type = "btc", amount = 0.5, amountToday = 2, idInvest
                                     value={state.userInput}
                                     type="text"
                                     onChange={onChangePrice}
-                                    onBlur={onCheckAmountMinValue}
                                     className="text-input" />
 
 
                                 <div className="aproximateAmount-legend">
                                     <p>Monto mínimo de inversión: {amountMin[type]} {type.toUpperCase()}</p>
                                     <p>
-                                        Monto inversión (USD): ${state.amountDollar}
+                                        Monto inversión (USD): $ {WithDecimals(state.amountDollar)}
                                     </p>
                                 </div>
                             </div>
