@@ -134,9 +134,11 @@ const HeaderDashboard = ({ type = "btc", amount = 0.5, amountToday = 2, idInvest
                 throw String('Seleccione un plan de inversion')
             }
 
-            // Validamos que el monto del plan sea mayor o igual al mínimo permitido
-            if ((type === 'btc' && state.plan < amountMin.btc) || (type === 'eth' && state.plan < amountMin.eth)) {
-                throw String('Por favor ingrese un plan de inversión mayor o igual al mínimo permitido')
+            // Verifica si el monto de inversión es menor al mínimo
+            const checker = (type === 'btc') ? !(state.plan >= amountMin.btc) : !(state.plan >= amountMin.eth)
+
+            if (checker) {
+                throw String("Ingrese un plan de inversión mayor o igual al mínimo permitido")
             }
 
             // Validamos el correo AIRTM 
@@ -164,8 +166,6 @@ const HeaderDashboard = ({ type = "btc", amount = 0.5, amountToday = 2, idInvest
                 id: idInvestment,
                 hash: state.hash,
             }
-
-            console.log(dataSend)
 
             await Petition.post('/buy/upgrade', dataSend, {
                 headers: {
@@ -233,6 +233,15 @@ const HeaderDashboard = ({ type = "btc", amount = 0.5, amountToday = 2, idInvest
             }
 
             dispatch({ type: 'amountDollar', payload: _amountDollar })
+        }
+    }
+
+    /** Método para verificar si el monto de inversión ingresado es mayor o igual al minimo permitido */
+    const onCheckAmountMinValue = _ => {
+        const checker = (type === 'btc') ? !(state.plan >= amountMin.btc) : !(state.plan >= amountMin.eth)
+
+        if (checker) {
+            Swal.fire("", "Ingrese un plan de inversión mayor o igual al mínimo permitido", "warning")
         }
     }
 
@@ -360,6 +369,7 @@ const HeaderDashboard = ({ type = "btc", amount = 0.5, amountToday = 2, idInvest
                                     value={state.userInput}
                                     type="text"
                                     onChange={onChangePrice}
+                                    onBlur={onCheckAmountMinValue}
                                     className="text-input" />
 
 

@@ -84,28 +84,31 @@ const BuyPlan = ({ idCrypto = 1, onBuy = () => { } }) => {
             // Validamos el hash
             if (state.hash.trim().length < 8) {
                 if (state.airtm) {
-                    throw 'Id de manipulacion Airtm incorrecto'
+                    throw String('Id de manipulacion Airtm incorrecto')
                 } else {
-                    throw 'Hash incorrecto'
+                    throw String('Hash incorrecto')
                 }
             }
 
             // Validamos que el monto sea correcto
             if (state.amount === 0) {
-                throw "Seleccion un Plan de inversion"
+                throw String("Seleccion un Plan de inversion")
             }
 
-            if ((type === 'btc' && state.amount < amountMin.btc) || (type === 'eth' && state.amount < amountMin.eth)) {
-                throw String("Por favor ingrese un plan de inversión mayor o igual al mínimo permitido")
+            // Verifica si el monto de inversión es menor al mínimo
+            const checker = (type === 'btc') ? !(state.amount >= amountMin.btc) : !(state.amount >= amountMin.eth)
+
+            if (checker) {
+                throw String("Ingrese un plan de inversión mayor o igual al mínimo permitido")
             }
 
             if (state.airtm) {
                 if (!validator.isEmail(state.emailAirtm)) {
-                    throw "Correo de transacción Airtm incorrecto"
+                    throw String("Correo de transacción Airtm incorrecto")
                 }
 
                 if (state.aproximateAmount === 0) {
-                    throw "No se ha podido calcular el monto, contacte a soporte"
+                    throw String("No se ha podido calcular el monto, contacte a soporte")
                 }
             }
 
