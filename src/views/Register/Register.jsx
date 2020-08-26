@@ -277,6 +277,7 @@ const Register = (props) => {
                 _amountDollar = (value !== '0') ? calculateCryptoPrice(cryptoPrice, parseFloat(value)) : 0
 
                 setAproximateAmount(_amountDollar);
+                setAmountPlan(parseFloat(value))
             } else {
                 // Sacamos el monto (USD) aproximado en el momento sin impuestos
                 _amountDollar = calculateCryptoPriceWithoutFee(cryptoPrice, parseFloat(value))
