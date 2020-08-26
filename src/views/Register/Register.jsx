@@ -40,7 +40,7 @@ const Register = (props) => {
     const [validateUserSponsor, setValidateUserSponsor] = useState(null)
 
     // State for show tabs view
-    const [tabActive, setTab] = useState(1)
+    const [tabActive, setTab] = useState(2)
 
     // Show modal terms
     const [modal, setModal] = useState(false)
@@ -121,14 +121,14 @@ const Register = (props) => {
                 throw String(data.message)
             }
 
-            if (data.response === "success") {
-                Swal.fire(
-                    'Registro creado',
-                    'Revisa tu correo, hemos enviado un correo para activar tu cuenta',
-                    'success').then(() => window.location.hash = '/')
-            } else {
-                throw String('Su registro no se ha podido procesar, contacte a soporte o intentelo mas tarde')
-            }
+            Swal.fire(
+                'Registro creado',
+                'Revisa tu correo, hemos enviado un correo para activar tu cuenta',
+                'success').then(() => window.location.hash = '/')
+            // if (data.response === "success") {
+            // } else {
+            //     throw String('Su registro no se ha podido procesar, contacte a soporte o intentelo mas tarde')
+            // }
 
         } catch (error) {
             Swal.fire("", error.toString(), "warning")
