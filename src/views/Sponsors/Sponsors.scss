@@ -45,7 +45,7 @@ div.container-sponsors {
       background-color: rgba(0, 0, 0, 0.5);
       padding: 25px;
       border-radius: 10px;
-      width: 45%;
+      width: 47%;
 
       h2.title {
         color: $colorYellow;
@@ -82,6 +82,21 @@ div.container-sponsors {
           padding: 10px 0;
           display: flex;
           justify-content: space-between;
+
+          span {
+            width: 20%;
+            font-size: .9rem;
+            text-align: center;
+
+            &:first-child {
+              text-align: left;
+            }
+
+            &:last-child {
+              text-align: right;
+              width: 15%;
+            }
+          }
         }
 
         .body {
@@ -90,13 +105,14 @@ div.container-sponsors {
             padding: 15px 0;
             display: flex;
             justify-content: space-between;
+            font-size: .9rem;
 
             span {
               overflow: hidden;
               white-space: nowrap;
               text-overflow: ellipsis;
               text-align: center;
-              width: 25%;
+              width: 20%;
 
               &:first-child {
                 text-align: left;
@@ -104,6 +120,7 @@ div.container-sponsors {
 
               &:last-child {
                 text-align: right;
+                width: 15%;
               }
             }
           }
