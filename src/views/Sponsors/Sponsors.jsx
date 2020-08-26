@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react"
 import { useSelector } from "react-redux"
 
-import { Petition } from "../../utils/constanst"
+import { Petition, calculateCryptoPriceWithoutFee } from "../../utils/constanst"
 
 // Import styles and assets
 import astronaut from "../../static/images/astronaut.png"
@@ -24,6 +24,8 @@ const Sponsors = () => {
 
     const [SumBTC, setSumBTC] = useState(0)
     const [SumETH, setSumETH] = useState(0)
+
+    const [cryptoPrices, setCryptoPrices] = useState({BTC: null, ETH: null})
 
     useEffect(() => {
         try {
@@ -101,6 +103,29 @@ const Sponsors = () => {
         Swal.fire('Listo!', 'Link de referencia copiado, comparte con tus amigos!', 'success')
     }
 
+    /**
+     * Obtiene los precios de la coinmarketcap
+     * */
+    const getAllPrices = async () => {
+        await Petition.get("/collection/prices")
+            .then(
+                ({ data }) => {
+                    if (data.error) {
+                        Swal.fire("Ha ocurrido un error", data.message, "error")
+                    } else {
+                        const { BTC, ETH } = data
+
+                        setCryptoPrices({ BTC, ETH })
+                    }
+                }
+            )
+    }
+
+    // se cargan los precios de las monedas
+    useEffect(() => {
+        getAllPrices()
+    }, [])
+
 
     return (
         <div className="container-sponsors">
@@ -143,6 +168,7 @@ const Sponsors = () => {
                                         <span>Fecha de registro</span>
                                         <span>Inversion</span>
                                         <span>Ganancia</span>
+                                        <span>USD</span>
                                     </div>
                                     <div className="body">
                                         {
@@ -153,13 +179,29 @@ const Sponsors = () => {
                                                         <span>{moment(item.registration_date).format('MMM. D, YYYY')}</span>
                                                         <span>{item.amount}</span>
                                                         <span>{item.amount * 0.05}</span>
+                                                        <span>
+                                                            $ {
+                                                                cryptoPrices.BTC !== null
+                                                                ? calculateCryptoPriceWithoutFee(
+                                                                        cryptoPrices.BTC.quote.USD.price,
+                                                                        item.amount * 0.05
+                                                                    )
+                                                                : 0
+                                                            }
+                                                        </span>
                                                     </div>
                                                 )
                                             })
                                         }
                                     </div>
                                     <div className="footer">
-                                        Total {SumBTC}
+                                        Total {SumBTC} ($ 
+                                            {
+                                                cryptoPrices.BTC !== null
+                                                ? calculateCryptoPriceWithoutFee(cryptoPrices.BTC.quote.USD.price, SumBTC)
+                                                : 0
+                                            }
+                                        )
                                     </div>
                                 </>
                             }
@@ -187,6 +229,7 @@ const Sponsors = () => {
                                         <span>Fecha de registro</span>
                                         <span>Inversion</span>
                                         <span>Ganancia</span>
+                                        <span>USD</span>
                                     </div>
                                     <div className="body">
                                         {
@@ -197,13 +240,29 @@ const Sponsors = () => {
                                                         <span>{moment(item.registration_date).format('MMM. D, YYYY')}</span>
                                                         <span>{item.amount}</span>
                                                         <span>{item.amount * 0.05}</span>
+                                                        <span>
+                                                            $ {
+                                                                cryptoPrices.BTC !== null
+                                                                ? calculateCryptoPriceWithoutFee(
+                                                                        cryptoPrices.ETH.quote.USD.price,
+                                                                        item.amount * 0.05
+                                                                    )
+                                                                : 0
+                                                            }
+                                                        </span>
                                                     </div>
                                                 )
                                             })
                                         }
                                     </div>
                                     <div className="footer">
-                                        Total {SumETH}
+                                        Total {SumETH} ($ 
+                                            {
+                                                cryptoPrices.ETH !== null
+                                                ? calculateCryptoPriceWithoutFee(cryptoPrices.ETH.quote.USD.price, SumETH)
+                                                : 0
+                                            }
+                                        )
                                     </div>
                                 </>
                             }

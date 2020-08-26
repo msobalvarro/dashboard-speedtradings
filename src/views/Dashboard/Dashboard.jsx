@@ -2,6 +2,7 @@ import React, { useRef, useEffect, useState } from "react"
 import "chartist/dist/scss/chartist.scss"
 import ChartistGraph from 'react-chartist'
 import Moment from "moment"
+import lodash_math from "lodash/math"
 
 // Import Assets
 import "./Dashboard.scss"
@@ -13,12 +14,13 @@ import HeaderDashboard from "../../components/HeaderDashboard/HeaderDashboard"
 import NavigationBar from "../../components/NavigationBar/NavigationBar"
 import MobileMessage from "../../components/Mobile/Mobile"
 import Swal from "sweetalert2"
-import { optionsChartDashboard, Petition } from "../../utils/constanst"
+import { optionsChartDashboard, Petition, calculateCryptoPriceWithoutFee } from "../../utils/constanst"
 import { useSelector } from "react-redux"
 
 
 const DashboardDetails = ({ data, type = "" }) => {
     const [showMoreContent, setShow] = useState(false)
+    const [cryptoPrices, setCryptoPrices] = useState({BTC: null, ETH: null})
     const labels = []
     const series = []
 
@@ -51,6 +53,37 @@ const DashboardDetails = ({ data, type = "" }) => {
 
     /**Costante que almacena el total de las ganancias */
     const amountSumArr = []
+
+    /** Calcula el total de la profit-table */
+    const calculateTotalProfitTable = (data) => {
+        const sum = data.reduce((a, b) => a + b, 0)
+        const total = lodash_math.floor(sum, 8)
+
+        return total
+    }
+
+    /**
+     * Obtiene los precios de la coinmarketcap
+     * */
+    const getAllPrices = async () => {
+        await Petition.get("/collection/prices")
+            .then(
+                ({ data }) => {
+                    if (data.error) {
+                        Swal.fire("Ha ocurrido un error", data.message, "error")
+                    } else {
+                        const { BTC, ETH } = data
+
+                        setCryptoPrices({ BTC, ETH })
+                    }
+                }
+            )
+    }
+
+    // Se cargan los precios de las monedas
+    useEffect(() => {
+        getAllPrices()
+    }, [data, type])
 
     return (
         <>
@@ -120,6 +153,7 @@ const DashboardDetails = ({ data, type = "" }) => {
                                 <span>Fecha</span>
                                 <span>Pocentaje</span>
                                 <span>Ganancias</span>
+                                <span>USD</span>
                             </div>
                             <div className={`body ${!showMoreContent ? 'hidden' : ''}`}>
                                 {
@@ -131,6 +165,15 @@ const DashboardDetails = ({ data, type = "" }) => {
                                                 <span>{Moment(item.date).format('MMM. D, YYYY')}</span>
                                                 <span>{item.percentage}%</span>
                                                 <span>{item.amount}</span>
+                                                <span>
+                                                    $ {
+                                                        cryptoPrices.BTC !== null
+                                                        ? (type === 'btc')
+                                                            ? calculateCryptoPriceWithoutFee(cryptoPrices.BTC.quote.USD.price, item.amount)
+                                                            : calculateCryptoPriceWithoutFee(cryptoPrices.ETH.quote.USD.price, item.amount)
+                                                        : 0
+                                                    }
+                                                </span>
                                             </div>
                                         )
                                     })
@@ -148,7 +191,18 @@ const DashboardDetails = ({ data, type = "" }) => {
                                 <div className="content-total">
                                     <span className="total">Total</span>
                                     <span className="amount">
-                                        {amountSumArr.reduce((a, b) => a + b, 0)} {type.toUpperCase()}
+                                        {
+                                            `${calculateTotalProfitTable(amountSumArr)} ${type.toUpperCase()}`
+                                        }
+                                        {
+                                            ` ($ ${
+                                                cryptoPrices.BTC !== null
+                                                        ? (type === 'btc')
+                                                            ? calculateCryptoPriceWithoutFee(cryptoPrices.BTC.quote.USD.price, calculateTotalProfitTable(amountSumArr))
+                                                            : calculateCryptoPriceWithoutFee(cryptoPrices.ETH.quote.USD.price, calculateTotalProfitTable(amountSumArr))
+                                                        : 0
+                                            })`
+                                        }
                                     </span>
                                 </div>
                             </div>

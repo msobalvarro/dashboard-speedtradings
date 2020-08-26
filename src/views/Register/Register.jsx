@@ -5,6 +5,9 @@ import Validator from "validator"
 // Import styles
 import "./Register.scss"
 
+// Import components
+import FilminasSlider from "../../components/FilminasSlider/FilminasSlider"
+
 // import Assets
 import Logo from "../../static/images/logo.png"
 
@@ -12,7 +15,7 @@ import Logo from "../../static/images/logo.png"
 import Countries from "../../utils/countries.json"
 import ModalTerms from "../../components/Modal/ModalTerms"
 import ActivityIndicator from "../../components/ActivityIndicator/Activityindicator"
-import { Petition, wallets, copyData, calculateCryptoPrice } from "../../utils/constanst"
+import { Petition, getWallets, WithDecimals, copyData, calculateCryptoPrice, calculateCryptoPriceWithoutFee, amountMin } from "../../utils/constanst"
 import Swal from "sweetalert2"
 import Axios from "axios"
 import mobileDetect from "mobile-detect"
@@ -40,13 +43,15 @@ const Register = (props) => {
     const [validateUserSponsor, setValidateUserSponsor] = useState(null)
 
     // State for show tabs view
-    const [tabActive, setTab] = useState(2)
+    const [tabActive, setTab] = useState(1)
 
     // Show modal terms
     const [modal, setModal] = useState(false)
 
     // Input accept terms check
     const [term, setTerms] = useState(false)
+
+    const [wallets, setWallets] = useState({});
 
     // form control data
     const [firstName, setFirstname] = useState('')
@@ -61,18 +66,21 @@ const Register = (props) => {
     const [passwordSecurity, setPasswordSecurity] = useState('')
     const [walletBTC, setWalletBTC] = useState('')
     const [walletETH, setWalletETH] = useState('')
-    const [amountPlan, setAmountPlan] = useState(null)
+    const [amountPlan, setAmountPlan] = useState(0)
     const [usernameSponsor, setUsernameSponsor] = useState('')
     const [aproximateAmountAirtm, setAproximateAmount] = useState(0)
+    const [showPassword, setShowPassword] = useState(false)
 
-    // Crypto select
+    // Tipo de moneda en la inversion btc/eth
     const [crypto, setCrypto] = useState(1)
 
     // Guarda el codigo de pais para numero telefonico
     const [codeNumber, setCode] = useState(Countries[0].phoneCode)
 
-    // Plan selection
-    const [plan, setPlan] = useState([])
+    // Captura el valor ingresado por el usuario en el campo del monto del plan
+    const [userInput, setUserInput] = useState('')
+
+    const [plan, setPlan] = useState(null)
 
     // Guarda la informacion de usuario
     const [info, setInfo] = useState('')
@@ -80,21 +88,36 @@ const Register = (props) => {
     // Estado que indica si el pago es Airtm
     const [airtm, setAirtm] = useState(false)
 
+    // Estado que indica si el pago es Alypay
+    const [alypay, setAlypay] = useState(false)
+
     // Estado que guarda los precios y detalles de la coinmarketcap
     const [cryptoPrices, setCryptoPrices] = useState({ BTC: null, ETH: null })
 
+    // Estado para controlar la leyenda del monto en dolares
+    const [amountDollar, setAmountDollar] = useState(0)
+
     /**Coleccion de botones */
     const validationButtons = {
-        first: firstName.length > 0 && lastname.length > 0 && Validator.isEmail(email) && phone.length > 6 && country !== '0' && validateEmail === true && !loader,
-        second: amountPlan !== null,
-        third: hash.length > 10 && walletBTC.length > 10 && walletETH.length > 10 && (airtm ? Validator.isEmail(emailAirtm) : true),
-        fourth: password === passwordSecurity && password.length > 0 && passwordSecurity.length > 0 && username.length > 0 && validateUser === true && term === true,
+        first: firstName.length > 0 && lastname.length > 0 && Validator.isEmail(email) && phone.length > 6 && country !== '0' && validateEmail === true && !loader && password === passwordSecurity && password.length > 0 && passwordSecurity.length > 0 && username.length > 0 && validateUser === true,
+
+        second: amountPlan !== null &&
+            //((crypto === 1) ? amountPlan >= amountMin.btc : amountPlan >= amountMin.eth) &&
+            hash.length > 10 &&
+            walletBTC.length > 10 &&
+            walletETH.length > 10 &&
+            (airtm ? Validator.isEmail(emailAirtm) : true) &&
+            term === true,
     }
 
     /**Function handled submit form */
     const onSubmitInformation = async () => {
         setLoaderData(true)
         try {
+            if ((crypto === 1 && amountPlan < amountMin.btc) || (crypto === 2 && amountPlan < amountMin.eth)) {
+                throw String('Por favor ingrese un plan de inversión mayor o igual al mínimo permitido')
+            }
+
             const dataSend = {
                 firstname: firstName,
                 lastname: lastname,
@@ -108,6 +131,7 @@ const Register = (props) => {
                 walletETH,
                 emailAirtm,
                 airtm,
+                alypay,
                 aproximateAmountAirtm,
                 amount: Number(amountPlan),
                 id_currency: Number(crypto),
@@ -121,14 +145,14 @@ const Register = (props) => {
                 throw String(data.message)
             }
 
-            Swal.fire(
-                'Registro creado',
-                'Revisa tu correo, hemos enviado un correo para activar tu cuenta',
-                'success').then(() => window.location.hash = '/')
-            // if (data.response === "success") {
-            // } else {
-            //     throw String('Su registro no se ha podido procesar, contacte a soporte o intentelo mas tarde')
-            // }
+            if (data.response === "success") {
+                Swal.fire(
+                    'Registro creado',
+                    'Revisa tu correo, hemos enviado un correo para activar tu cuenta',
+                    'success').then(() => window.location.hash = '/')
+            } else {
+                throw String('Su registro no se ha podido procesar, contacte a soporte o intentelo mas tarde')
+            }
 
         } catch (error) {
             Swal.fire("", error.toString(), "warning")
@@ -199,27 +223,22 @@ const Register = (props) => {
 
         try {
             if (username.length > 0) {
-                await Petition.post(`/comprobate/username/exist`, { username })
-                    .then((response) => {
-                        console.log(response.data)
-                        if (response.data.length > 0) {
-                            setValidateUserSponsor(true)
-                        } else {
-                            setRedirect(true)
-                            setValidateUserSponsor(false)
+                const { data } = await Petition.post(`/comprobate/username/exist`, { username })
 
-                            setTimeout(() => {
-                                setValidateUserSponsor(null)
-                                setUsernameSponsor('')
-                            }, 5000)
-                        }
-                    })
-                    .catch(reason => {
-                        throw reason
-                    })
+                if (data.length > 0) {
+                    setValidateUserSponsor(true)
+                    setUsernameSponsor(data[0].name)
+                } else {
+                    setRedirect(true)
+                    setValidateUserSponsor(false)
+
+                    setTimeout(() => {
+                        setValidateUserSponsor(null)
+                        setUsernameSponsor('')
+                    }, 5000)
+                }
             }
         } catch (error) {
-            console.log(error)
             Swal.fire('error', error.toString(), 'error')
         } finally {
             setLoader(false)
@@ -233,25 +252,74 @@ const Register = (props) => {
         setCode(Countries[Number(e.target.value)].phoneCode)
     }
 
+    /** Método para capturar el monto del plan de inversión ingresado por el usuario */
+    const onChangeAmountPlan = (e) => {
+        let { value } = e.target
+
+        // Expresiones regulares para comprobar que la entrada del monto sea válida
+        const floatRegex = /^(?:\d{1,})(?:\.\d{1,})?$/
+        const floatRegexStart = /^(?:\d{1,})(?:\.)?$/
+
+        /**Constante que define el precio de moneda seleccionada */
+        const cryptoPrice = cryptoPrices.BTC !== null
+            ? crypto === 1
+                ? cryptoPrices.BTC.quote.USD.price
+                : cryptoPrices.ETH.quote.USD.price
+            : 0
+
+        // Verificamos si valor ingresado no contiene letras o símbolos no permitidos
+        if (!value.length || floatRegex.test(value) || floatRegexStart.test(value)) {
+            setUserInput(value);
+
+            value = (value.length) ? value : '0'
+            let _amountDollar = 0
+
+            // Verificamos si el usuario pagara con transaccion Airtm
+            if (airtm) {
+                // Sacamos el monto (USD) aproximado en el momento
+                _amountDollar = (value !== '0') ? calculateCryptoPrice(cryptoPrice, parseFloat(value)) : 0
+
+                setAproximateAmount(_amountDollar);
+            } else {
+                // Sacamos el monto (USD) aproximado en el momento sin impuestos
+                _amountDollar = calculateCryptoPriceWithoutFee(cryptoPrice, parseFloat(value))
+
+                setAmountPlan(parseFloat(value))
+            }
+
+            setAmountDollar(_amountDollar)
+        }
+    }
+
+    /**Metodo que se ejecuta cuando el usuario cambia el método de pago */
+    const onChangePaidMethod = (e) => {
+        const { value } = e.target
+
+        setUserInput('')
+
+        switch (value) {
+            case "0":
+                setAirtm(false)
+                setAlypay(false)
+                break
+
+            case "1":
+                setAirtm(true)
+                setAlypay(false)
+                break
+
+            case "2":
+                setAirtm(false)
+                setAlypay(true)
+                break
+        }
+    }
+
     /**Metodo que muestra la ventana modal con terminos y condiciones */
     const showTermsModal = (e) => {
         e.preventDefault()
 
         setModal(true)
-    }
-
-    /**Metodo que se ejecuta cuando el usuario selecciona un plan */
-    const onSelectAmount = (e,) => {
-        setAmountPlan(e.target.value)
-
-        // Si el usuario quiere ejecutar el pago con Airtm
-        // Guardaremos el precio del momento como monto aproximado
-        if (airtm && cryptoPrices.BTC !== null) {
-            const price = crypto === 1 ? cryptoPrices.BTC.quote.USD.price : cryptoPrices.ETH.quote.USD.price
-            const newPrice = calculateCryptoPrice(price, parseFloat(e.target.value))
-
-            setAproximateAmount(parseFloat(newPrice))
-        }
     }
 
     /**
@@ -277,11 +345,21 @@ const Register = (props) => {
     }
 
     useEffect(() => {
-        if (airtm && tabActive === 2) {
+        // Se obtinen los has de las wallets
+        getWallets(setWallets);
+    }, [])
+
+    useEffect(() => {
+        if (tabActive === 2) {
             getAllPrices()
         }
 
-    }, [tabActive, airtm])
+    }, [tabActive])
+
+    // Cuando cambia el tipo de moneda, se recalcula el valor en $ según el valor del input del monto
+    useEffect(() => {
+        onChangeAmountPlan({ target: { value: userInput } })
+    }, [crypto])
 
     useEffect(() => {
         try {
@@ -310,20 +388,15 @@ const Register = (props) => {
 
             // Obtenemos algunos datos generales
             Axios.get('https://www.cloudflare.com/cdn-cgi/trace').then(({ data }) => {
+                // quitamos los espacios 
                 const _e = data.replace(/\n|\r/g, " - ")
                 setInfo(_e)
             })
 
-            // Obtenemos todos los planes de inversion
-            Petition.get(`/collection/investment-plan`)
-                .then(response => {
-                    setPlan(response.data)
-                })
-                .catch(reason => {
-                    throw reason
-                }).finally(_ => setLoader(false))
         } catch (error) {
             Swal.fire('error', error.toString(), 'error')
+        } finally {
+            setLoader(false)
         }
     }, [])
 
@@ -331,6 +404,7 @@ const Register = (props) => {
         <div className="container-register">
             <div className="cover-image">
                 {/* <h1>registrate gratis</h1> */}
+                <FilminasSlider />
             </div>
 
             <div className="form-container">
@@ -357,21 +431,22 @@ const Register = (props) => {
                     <div className="tab">
                         <h2>Informacion basica</h2>
 
-                        <div className="row">
-                            <span className="required">Nombre</span>
+                        <div className="row-group">
+                            <div className="col">
+                                <span className="required">Nombre</span>
 
-                            <input value={firstName} autoFocus onChange={e => setFirstname(e.target.value)} type="text" className="text-input" />
-                        </div>
+                                <input value={firstName} autoFocus onChange={e => setFirstname(e.target.value)} type="text" className="text-input" />
+                            </div>
+                            <div className="col">
+                                <span className="required">Apellido</span>
 
-                        <div className="row">
-                            <span className="required">Apellido</span>
-
-                            <input value={lastname} onChange={e => setLastname(e.target.value)} type="text" className="text-input" />
+                                <input value={lastname} onChange={e => setLastname(e.target.value)} type="text" className="text-input" />
+                            </div>
                         </div>
 
                         <div className="row">
                             <span className="required comprobate">
-                                Correo Electronico
+                                Correo Electrónico
 
                                 {
                                     loader &&
@@ -393,204 +468,23 @@ const Register = (props) => {
                             <input value={email} onBlur={validateEmailFunction} onChange={e => setEmail(e.target.value)} type="email" className="text-input" />
                         </div>
 
-                        <div className="row">
-                            <span className="required">Pais</span>
+                        <div className="row-group">
+                            <div className="col country-field">
+                                <span className="required">País</span>
 
-                            <select className="picker" value={country} onChange={changeCountry}>
-                                {Countries.map(
-                                    ({ name }, index) => <option value={index} key={index}>{name}</option>
-                                )}
-                            </select>
-                        </div>
+                                <select className="picker" value={country} onChange={changeCountry}>
+                                    {Countries.map(
+                                        ({ name }, index) => <option value={index} key={index}>{name}</option>
+                                    )}
+                                </select>
+                            </div>
 
-                        <div className="row">
-                            <span className="required">Numero telefonico <span>({codeNumber.toString()})</span></span>
+                            <div className="col telephone-field">
+                                <span className="required">Numero telefónico <span>({codeNumber.toString()})</span></span>
 
-                            <input value={phone} onChange={e => setPhone(e.target.value)} type="phone" className="text-input" />
-                        </div>
-
-                        <div className="collection-buttons">
-                            <Link to="/" className="link">Iniciar sesion</Link>
-                            <button className="button no-border" disabled={!validationButtons.first} onClick={_ => setTab(2)}>Siguiente</button>
-                        </div>
-                    </div>
-                }
-
-                {
-                    tabActive === 2 &&
-                    <div className="tab">
-                        <h2>Plan de inversion</h2>
-
-                        <div className="row">
-                            <span>Moneda</span>
-
-                            <select className="picker" value={crypto} onChange={e => setCrypto(parseInt(e.target.value))}>
-                                <option value={1}>Bitcoin (BTC)</option>
-                                <option value={2}>Ethereum (ETH)</option>
-                            </select>
-
-                            <div className="airtm-row">
-                                <label htmlFor="check-airtm">Pagar con Airtm</label>
-
-                                <input type="checkbox" checked={airtm} onChange={_ => setAirtm(!airtm)} name="airtm" id="check-airtm" />
+                                <input value={phone} onChange={e => setPhone(e.target.value)} type="phone" className="text-input" />
                             </div>
                         </div>
-
-                        <div className="row">
-                            {
-                                !airtm &&
-                                <>
-                                    {
-                                        crypto === 1 &&
-                                        <span className="required">Direccion Wallet (BTC)</span>
-                                    }
-
-                                    {
-                                        crypto === 2 &&
-                                        <span className="required">Direccion Wallet (ETH)</span>
-                                    }
-
-                                    {
-                                        crypto === 1 &&
-                                        <span className="wallet-direction" onClick={_ => copyData(wallets.btc)} title="toca para copiar">
-                                            {wallets.btc}
-                                        </span>
-                                    }
-
-                                    {
-                                        crypto === 2 &&
-                                        <span className="wallet-direction" onClick={_ => copyData(wallets.eth)} title="toca para copiar">
-                                            {wallets.eth}
-                                        </span>
-                                    }
-                                </>
-                            }
-
-                            {
-                                airtm &&
-                                <>
-                                    <span className="required">Correo Airtm</span>
-
-                                    <span className="wallet-direction" onClick={_ => copyData(wallets.airtm)} title="toca para copiar">
-                                        {wallets.airtm}
-                                    </span>
-                                </>
-                            }
-
-                        </div>
-
-                        <div className="row investment-plan">
-                            <span className="required">Plan de inversion</span>
-
-                            <div className="plan">
-                                {
-                                    (loader && plan.length === 0) &&
-
-                                    <ActivityIndicator />
-                                }
-
-                                {
-                                    plan.map((item, index) => {
-                                        // Verirficamos los planes de ETH/BTC
-                                        if (item.id_currency === crypto) {
-                                            return (
-                                                <div className="element" key={index}>
-                                                    <input
-                                                        onChange={onSelectAmount}
-                                                        value={item.amount}
-                                                        checked={item.amount === parseFloat(amountPlan)}
-                                                        type="radio" id={`plan-${index}`}
-                                                        className="check"
-                                                        name="plan" />
-
-                                                    {
-                                                        !airtm &&
-                                                        <label htmlFor={`plan-${index}`}>
-                                                            {item.id_currency === 1 && item.amount + ' BTC'}
-                                                            {item.id_currency === 2 && item.amount + ' ETH'}
-                                                        </label>
-                                                    }
-
-                                                    {
-                                                        (airtm && cryptoPrices.BTC !== null) &&
-                                                        <label htmlFor={`plan-${index}`}>
-                                                            {
-                                                                item.id_currency === 1 &&
-                                                                "$ " + calculateCryptoPrice(cryptoPrices.BTC.quote.USD.price, item.amount)
-                                                            }
-
-                                                            {
-                                                                item.id_currency === 2 &&
-                                                                "$ " + calculateCryptoPrice(cryptoPrices.ETH.quote.USD.price, item.amount)
-                                                            }
-                                                        </label>
-                                                    }
-                                                </div>
-                                            )
-                                        }
-                                    })
-                                }
-                            </div>
-                        </div>
-
-                        <div className="collection-buttons">
-                            <button className="button no-border" onClick={_ => setTab(1)}>Atras</button>
-                            <button className="button no-border" disabled={!validationButtons.second} onClick={_ => setTab(3)}>Siguiente</button>
-                        </div>
-                    </div>
-                }
-
-                {
-                    tabActive === 3 &&
-                    <div className="tab">
-                        <h2>Informacion de transaccion</h2>
-
-                        <div className="row">
-                            {
-                                airtm &&
-                                <span className="required">Id de manipulacion Airtm</span>
-                            }
-
-                            {
-                                !airtm &&
-                                <span className="required">Hash de transaccion</span>
-                            }
-
-                            <input value={hash} onChange={e => setHash(e.target.value)} type="text" className="text-input" />
-                        </div>
-
-                        {
-                            airtm &&
-                            <div className="row">
-                                <span className="required">Correo de transaccion Airtm</span>
-                                <input value={emailAirtm} onChange={e => setEmailAirtm(e.target.value)} type="text" className="text-input" />
-                            </div>
-                        }
-
-                        <div className="row">
-                            <span className="required">Direccion Wallet BTC</span>
-
-                            <input value={walletBTC} onChange={e => setWalletBTC(e.target.value)} type="text" className="text-input" />
-                        </div>
-
-                        <div className="row">
-                            <span className="required">Direccion Wallet ETH</span>
-
-                            <input value={walletETH} onChange={e => setWalletETH(e.target.value)} type="text" className="text-input" />
-                        </div>
-
-                        <div className="collection-buttons">
-                            <button className="button no-border" onClick={_ => setTab(2)}>Atras</button>
-                            <button className="button no-border" disabled={!validationButtons.third} onClick={_ => setTab(4)}>Siguiente</button>
-                        </div>
-                    </div>
-                }
-
-
-                {
-                    tabActive === 4 &&
-                    <div className="tab">
-                        <h2>Seguridad</h2>
 
                         <div className="row">
                             <span className="required comprobate">
@@ -616,28 +510,201 @@ const Register = (props) => {
                             <input value={username} onBlur={validateUsername} onChange={e => setUsername(e.target.value)} type="text" className="text-input" />
                         </div>
 
-                        <div className="row">
-                            <span className="required">Contraseña</span>
+                        <div className="row-group">
+                            <div className="col">
+                                <span className="required">Contraseña</span>
 
-                            <input value={password} onChange={e => setPassword(e.target.value)} type="password" className="text-input" />
+                                <input value={password} onChange={e => setPassword(e.target.value)} type={(!showPassword) ? 'password' : 'text'} className="text-input" />
+                            </div>
+
+                            <div className="col">
+                                <span className="required">Confirmar Contraseña</span>
+
+                                <input value={passwordSecurity} onChange={e => setPasswordSecurity(e.target.value)} type={(!showPassword) ? 'password' : 'text'} className="text-input" />
+                            </div>
+                        </div>
+
+                        <div className="terms">
+                            <label htmlFor="showpassword-check">Mostrar Contraseñas</label>
+
+                            <input type="checkbox" checked={showPassword} id="showpassword-check" onChange={e => setShowPassword(!showPassword)} />
+                        </div>
+
+                        <div className="collection-buttons">
+                            <Link to="/" className="link">Iniciar sesion</Link>
+                            <button className="button no-border" disabled={!validationButtons.first} onClick={_ => setTab(2)}>Siguiente</button>
+                        </div>
+                    </div>
+                }
+
+                {
+                    tabActive === 2 &&
+                    <div className="tab">
+                        <h2>Plan de inversion</h2>
+
+                        <div className="row">
+                            {
+                                !airtm &&
+                                <>
+                                    {
+                                        crypto === 1 &&
+                                        <span className="required">Direccion Wallet (BTC)</span>
+                                    }
+
+                                    {
+                                        crypto === 2 &&
+                                        <span className="required">Direccion Wallet (ETH)</span>
+                                    }
+
+                                    {
+                                        crypto === 1 &&
+                                        <span
+                                            className="wallet-direction"
+                                            onClick={_ => copyData(!alypay ? wallets.btc : wallets.alypay.btc)}
+                                            title="toca para copiar">
+                                            {
+                                                !alypay ? wallets.btc : wallets.alypay.btc
+                                            }
+                                        </span>
+                                    }
+
+                                    {
+                                        crypto === 2 &&
+                                        <span
+                                            className="wallet-direction"
+                                            onClick={_ => copyData(!alypay ? wallets.eth : wallets.alypay.eth)}
+                                            title="toca para copiar">
+                                            {
+                                                !alypay ? wallets.eth : wallets.alypay.eth
+                                            }
+                                        </span>
+                                    }
+                                </>
+                            }
+
+                            {
+                                airtm &&
+                                <>
+                                    <span className="required">Correo Airtm</span>
+
+                                    <span className="wallet-direction" onClick={_ => copyData(wallets.airtm)} title="toca para copiar">
+                                        {wallets.airtm}
+                                    </span>
+                                </>
+                            }
+
+                        </div>
+
+                        <div className="row-group">
+                            <div className="col">
+                                <span>Moneda</span>
+
+                                <select className="picker" value={crypto} onChange={e => setCrypto(parseInt(e.target.value))}>
+                                    <option value={1}>Bitcoin (BTC)</option>
+                                    <option value={2}>Ethereum (ETH)</option>
+                                </select>
+                            </div>
+
+                            <div className="col">
+                                <label htmlFor="check-airtm">Tipo de Pago</label>
+
+                                <select className="picker" name="paidMethod" onChange={onChangePaidMethod}>
+                                    <option value={0}>Criptomoneda</option>
+                                    <option value={1}>Airtm</option>
+                                    <option value={2}>AlyPay</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div className="row-group">
+                            <div className="col telephone-field">
+                                <span className="required">
+                                    Monto plan de inversion
+                                    {
+                                        crypto === 1
+                                            ? "(BTC)"
+                                            : "(ETH)"
+                                    }
+                                </span>
+
+                                <input
+                                    value={userInput}
+                                    type="text"
+                                    onChange={onChangeAmountPlan}
+                                    className="text-input" />
+                            </div>
+
+                            <div className="col dollar-amount">
+                                <span>$ {WithDecimals(amountDollar)}</span>
+                            </div>
+                        </div>
+
+                        <div className="row min-amount">
+                            <span>
+                                Monto mínimo de inversion:
+                                {
+                                    crypto === 1
+                                        ? ` ${amountMin.btc} BTC`
+                                        : ` ${amountMin.eth} ETH`
+                                }
+                            </span>
                         </div>
 
                         <div className="row">
-                            <span className="required">Confirmar Contraseña</span>
+                            {
+                                airtm &&
+                                <span className="required">Id de manipulacion Airtm</span>
+                            }
 
-                            <input value={passwordSecurity} onChange={e => setPasswordSecurity(e.target.value)} type="password" className="text-input" />
+                            {
+                                !airtm &&
+                                <span className="required">Hash de transaccion</span>
+                            }
+
+                            <input value={hash} onChange={e => setHash(e.target.value)} type="text" className="text-input" />
+                        </div>
+
+                        {
+                            airtm &&
+                            <div className="row">
+                                <span className="required">Correo de transaccion Airtm</span>
+                                <input value={emailAirtm} onChange={e => setEmailAirtm(e.target.value)} type="text" className="text-input" />
+                            </div>
+                        }
+
+                        <div className="row">
+                            <span className="required">
+                                {
+                                    !alypay
+                                        ? "Direccion Wallet Externa BTC"
+                                        : "Direccion Wallet AlyPay BTC"
+                                }
+                            </span>
+
+                            <input value={walletBTC} onChange={e => setWalletBTC(e.target.value)} type="text" className="text-input" />
+                        </div>
+
+                        <div className="row">
+                            <span className="required">
+                                {
+                                    !alypay
+                                        ? "Direccion Wallet Externa ETH"
+                                        : "Direccion Wallet AlyPay ETH"
+                                }
+                            </span>
+
+                            <input value={walletETH} onChange={e => setWalletETH(e.target.value)} type="text" className="text-input" />
                         </div>
 
                         <div className="terms">
                             <label htmlFor="terms-input">He leído términos y condiciones</label>
 
-                            <input type="checkbox" checked={term} id="terms-input" onChange={e => setTerms(!term)} />
+                            <input type="checkbox" checked={term} id="terms-input" onChange={_ => setTerms(!term)} />
                         </div>
 
                         <div className="collection-buttons">
-                            <button className="button no-border" onClick={_ => setTab(3)}>Atras</button>
-
-                            <button className="button secondary no-border" disabled={!validationButtons.fourth || loader || loaderData} onClick={onSubmitInformation}>
+                            <button className="button no-border" onClick={_ => setTab(1)}>Atras</button>
+                            <button className="button secondary no-border" disabled={!validationButtons.second || loader || loaderData} onClick={onSubmitInformation}>
                                 Enviar
                             </button>
                         </div>
