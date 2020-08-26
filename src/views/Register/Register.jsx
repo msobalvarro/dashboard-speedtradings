@@ -102,7 +102,7 @@ const Register = (props) => {
         first: firstName.length > 0 && lastname.length > 0 && Validator.isEmail(email) && phone.length > 6 && country !== '0' && validateEmail === true && !loader && password === passwordSecurity && password.length > 0 && passwordSecurity.length > 0 && username.length > 0 && validateUser === true,
 
         second: amountPlan !== null &&
-            //((crypto === 1) ? amountPlan >= amountMin.btc : amountPlan >= amountMin.eth) &&
+            ((crypto === 1) ? amountPlan >= amountMin.btc : amountPlan >= amountMin.eth) &&
             hash.length > 10 &&
             walletBTC.length > 10 &&
             walletETH.length > 10 &&
@@ -114,9 +114,6 @@ const Register = (props) => {
     const onSubmitInformation = async () => {
         setLoaderData(true)
         try {
-            if ((crypto === 1 && amountPlan < amountMin.btc) || (crypto === 2 && amountPlan < amountMin.eth)) {
-                throw String('Por favor ingrese un plan de inversión mayor o igual al mínimo permitido')
-            }
 
             const dataSend = {
                 firstname: firstName,
@@ -288,6 +285,15 @@ const Register = (props) => {
             }
 
             setAmountDollar(_amountDollar)
+        }
+    }
+
+    /** Método para verificar si el monto de inversión ingresado es mayor o igual al minimo permitido */
+    const onCheckAmountMinValue = _ => {
+        const checker = (crypto === 1) ? !(amountPlan >= amountMin.btc) : !(amountPlan >= amountMin.eth)
+
+        if (checker) {
+            Swal.fire("", "Ingrese un plan de inversión mayor o igual al mínimo permitido", "warning")
         }
     }
 
@@ -631,6 +637,7 @@ const Register = (props) => {
                                     value={userInput}
                                     type="text"
                                     onChange={onChangeAmountPlan}
+                                    onBlur={onCheckAmountMinValue}
                                     className="text-input" />
                             </div>
 
