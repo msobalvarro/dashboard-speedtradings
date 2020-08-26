@@ -407,7 +407,7 @@ const HeaderDashboard = ({ type = "btc", amount = 0.5, amountToday = 2, idInvest
                             <div className="airtm-row">
                                 <span htmlFor="check-airtm">Seleccione su método de pago</span>
                                 <select className="picker" onChange={onChangePaidMethod}>
-                                    <option value={0}>Depósito</option>
+                                    <option value={0}>Criptomoneda</option>
                                     <option value={1}>Airtm</option>
                                     <option value={2}>AlyPay</option>
                                 </select>
