@@ -80,8 +80,6 @@ const Register = (props) => {
     // Captura el valor ingresado por el usuario en el campo del monto del plan
     const [userInput, setUserInput] = useState('')
 
-    const [plan, setPlan] = useState(null)
-
     // Guarda la informacion de usuario
     const [info, setInfo] = useState('')
 
@@ -224,7 +222,7 @@ const Register = (props) => {
 
                 if (data.length > 0) {
                     setValidateUserSponsor(true)
-                    setUsernameSponsor(data[0].name)
+                    // setUsernameSponsor(data[0].name)
                 } else {
                     setRedirect(true)
                     setValidateUserSponsor(false)
