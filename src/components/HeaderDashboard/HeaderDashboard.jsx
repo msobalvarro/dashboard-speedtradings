@@ -301,7 +301,7 @@ const HeaderDashboard = ({ type = "btc", amount = 0.5, amountToday = 2, idInvest
                     <div className="row-header">
                         <h1>{amount} {type.toUpperCase()}</h1>
 
-                        <button className="button large secondary" onClick={onUpgrade} disabled={disabled}>Upgrade</button>
+                        <button className="button secondary" onClick={onUpgrade} disabled={disabled}>Upgrade</button>
                     </div>
 
                     <div className="row-header progress">
