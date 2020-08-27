@@ -5,7 +5,7 @@ import "./FilminasSlider.scss"
 // Import asset's
 import AlyPay from "../../static/images/AlyPay.png"
 import AlyCoin from "../../static/images/AlyCoin.png"
-import AlySystem from "../../static/images/AlySystem.png"
+import AlySystem from "../../static/images/AlySystem-banner.png"
 import SpeedTradings from "../../static/images/SpeedTradings.png"
 import PlayStore from "../../static/images/playstore.png"
 import AppStore from "../../static/images/appstore.png"
@@ -50,20 +50,7 @@ const FilminasSlider = () => {
             <img src={AlyCoin} alt="" className={`Filmina ${activeFilmina==2 ? 'active' : ''}`}/>
             <img src={AlySystem} alt="" className={`Filmina ${activeFilmina==1 ? 'active' : ''}`}/>
 
-            <div className='footer'>                     
-                <div className='apps-references'>
-                    <a
-                        href={activeFilmina===3 ? playstoreApps.alypay : playstoreApps.speedtradings}
-                        target='_blank'>
-                            <img src={PlayStore} alt=""/>
-                    </a>
-
-                    <a 
-                        href={activeFilmina===3 ? appstoreApps.alypay : appstoreApps.speedtradings}>
-                        <img src={AppStore} alt=""/>
-                    </a>
-                </div>
-
+            <div className='footer'> 
                 <div className='footer-content'>
                     <p>
                         Síguenos en
@@ -75,6 +62,19 @@ const FilminasSlider = () => {
                     <p>
                         &copy;2020 AlySystem  |  RUC J031000037155
                     </p>
+                </div>     
+                              
+                <div className='apps-references'>
+                    <a
+                        href={activeFilmina===3 ? playstoreApps.alypay : playstoreApps.speedtradings}
+                        target='_blank'>
+                            <img src={PlayStore} alt=""/>
+                    </a>
+
+                    <a 
+                        href={activeFilmina===3 ? appstoreApps.alypay : appstoreApps.speedtradings}>
+                        <img src={AppStore} alt=""/>
+                    </a>
                 </div>
             </div>
         </div>

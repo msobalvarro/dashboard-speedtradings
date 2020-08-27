@@ -28,13 +28,13 @@ $icon-fill: '2d2d2d';
     .footer {
         position: absolute;
         display: flex;
-        flex-direction: row;
-        align-items: center;
+        flex-direction: column;
+        align-items: flex-start;
         justify-content: space-between;
         bottom: 0;
         left: 0;
         width: 100%;
-        background-color: rgba($colorMain, .9);
+        //background-color: rgba($colorMain, .9);
         color: #fff;
         font-weight: bold;
         font-size: .9rem;
@@ -48,8 +48,8 @@ $icon-fill: '2d2d2d';
             }
 
             .apps-references, .footer-content {
-                justify-content: center;
-                width: 100% !important;
+                //justify-content: center;
+                //width: 100% !important;
             }
 
             .apps-references {
@@ -74,7 +74,7 @@ $icon-fill: '2d2d2d';
         @media (max-width: 1150px) {
             & {
                 .apps-references {
-                    width: 30%;
+                    //width: 30%;
 
                     img {
                         width: 7rem;
@@ -82,7 +82,7 @@ $icon-fill: '2d2d2d';
                 }
 
                 .footer-content {
-                    width: 70%;
+                    //width: 70%;
                     font-size: .75rem;
                     padding: 0 0 0 1.5rem;
                 }
@@ -92,7 +92,7 @@ $icon-fill: '2d2d2d';
         .apps-references {
             display: flex;
             flex-direction: row;
-            width: 40%;
+            //width: 40%;
             animation: showAppReference .2s;
 
             img {
@@ -108,18 +108,15 @@ $icon-fill: '2d2d2d';
         .footer-content {
             display: flex;
             flex-direction: column;
-            width: 60%;
+            //width: 60%;
 
             p {
                 display: flex;
                 flex-direction: row;
                 align-items: center;
-                justify-content: center;
+                justify-content: flex-start;
                 text-align: center;
-
-                &:first-child {
-                    margin-bottom: 5px;
-                }
+                margin-bottom: 5px;
             }
         }
 
