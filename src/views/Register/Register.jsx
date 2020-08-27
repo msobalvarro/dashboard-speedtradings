@@ -10,6 +10,7 @@ import FilminasSlider from "../../components/FilminasSlider/FilminasSlider"
 
 // import Assets
 import Logo from "../../static/images/logo.png"
+import AlypayLogo from "../../static/images/alypay-logo.png"
 
 // Import Components
 import Countries from "../../utils/countries.json"
@@ -51,7 +52,7 @@ const Register = (props) => {
     // Input accept terms check
     const [term, setTerms] = useState(false)
 
-    const [wallets, setWallets] = useState({});
+    const [wallets, setWallets] = useState({btc: null, alypay: null, eth: null});
 
     // form control data
     const [firstName, setFirstname] = useState('')
@@ -87,7 +88,13 @@ const Register = (props) => {
     const [airtm, setAirtm] = useState(false)
 
     // Estado que indica si el pago es Alypay
-    const [alypay, setAlypay] = useState(false)
+    const [alypay, setAlypay] = useState(true)
+
+    // Estado que indica el valor del check de wallet alypay
+    const [isWalletAlypay, setIsWalletAlypay] = useState(true)
+
+    // Estado que indica el tipo de método de pago seleccionado
+    const [paidMethod, setPaidMethod] = useState(2)
 
     // Estado que guarda los precios y detalles de la coinmarketcap
     const [cryptoPrices, setCryptoPrices] = useState({ BTC: null, ETH: null })
@@ -113,6 +120,11 @@ const Register = (props) => {
         setLoaderData(true)
         try {
 
+            // Validamos que si el usuario ha seleccionado un plan
+            if (amountPlan === 0) {
+                throw String('Seleccione un plan de inversion')
+            }
+
             const dataSend = {
                 firstname: firstName,
                 lastname: lastname,
@@ -127,6 +139,7 @@ const Register = (props) => {
                 emailAirtm,
                 airtm,
                 alypay,
+                alyWallet: isWalletAlypay,
                 aproximateAmountAirtm,
                 amount: Number(amountPlan),
                 id_currency: Number(crypto),
@@ -301,21 +314,28 @@ const Register = (props) => {
         const { value } = e.target
 
         setUserInput('')
+        setPaidMethod(parseInt(value))
 
         switch (value) {
-            case "0":
-                setAirtm(false)
-                setAlypay(false)
-                break
-
-            case "1":
-                setAirtm(true)
-                setAlypay(false)
-                break
-
+            // Método de pago alypay
             case "2":
                 setAirtm(false)
                 setAlypay(true)
+                setIsWalletAlypay(true)
+                break
+
+            // Método de pago airtm
+            case "1":
+                setAirtm(true)
+                setAlypay(false)
+                setIsWalletAlypay(false)
+                break
+
+            // Método de pago de criptomoneda
+            default:
+                setAirtm(false)
+                setAlypay(false)
+                setIsWalletAlypay(false)
                 break
         }
     }
@@ -429,7 +449,13 @@ const Register = (props) => {
                     </>
                 }
 
-                <img className="image-logo" src={Logo} alt="logo" />
+                <div className="row-logos">
+                    <img className="image-logo" src={Logo} alt="logo" />
+                    {
+                        tabActive === 2 && isWalletAlypay &&
+                        <img src={AlypayLogo} alt="" className="alypay-logo"/>
+                    }
+                </div>
 
                 {
                     tabActive === 1 &&
@@ -565,10 +591,16 @@ const Register = (props) => {
                                         crypto === 1 &&
                                         <span
                                             className="wallet-direction"
-                                            onClick={_ => copyData(!alypay ? wallets.btc : wallets.alypay.btc)}
+                                            onClick={_ => copyData(
+                                                    wallets.btc !== null && wallets.alypay !== null
+                                                    ? !alypay ? wallets.btc : wallets.alypay.btc
+                                                    : ''
+                                                )}
                                             title="toca para copiar">
                                             {
-                                                !alypay ? wallets.btc : wallets.alypay.btc
+                                                wallets.btc !== null && wallets.alypay !== null
+                                                    ? !alypay ? wallets.btc : wallets.alypay.btc
+                                                    : ''
                                             }
                                         </span>
                                     }
@@ -577,10 +609,16 @@ const Register = (props) => {
                                         crypto === 2 &&
                                         <span
                                             className="wallet-direction"
-                                            onClick={_ => copyData(!alypay ? wallets.eth : wallets.alypay.eth)}
+                                            onClick={_ => copyData(
+                                                    wallets.eth !== null && wallets.alypay !== null
+                                                        ? !alypay ? wallets.eth : wallets.alypay.eth
+                                                        : ''
+                                                )}
                                             title="toca para copiar">
                                             {
-                                                !alypay ? wallets.eth : wallets.alypay.eth
+                                                wallets.eth !== null && wallets.alypay !== null
+                                                    ? !alypay ? wallets.eth : wallets.alypay.eth
+                                                    : ''
                                             }
                                         </span>
                                     }
@@ -613,15 +651,15 @@ const Register = (props) => {
                             <div className="col">
                                 <label htmlFor="check-airtm">Tipo de Pago</label>
 
-                                <select className="picker" name="paidMethod" onChange={onChangePaidMethod}>
-                                    <option value={0}>Criptomoneda</option>
-                                    <option value={1}>Airtm</option>
+                                <select className="picker" value={paidMethod} name="paidMethod" onChange={onChangePaidMethod}>
                                     <option value={2}>AlyPay</option>
+                                    <option value={1}>Airtm</option>
+                                    <option value={0}>Criptomoneda</option>
                                 </select>
                             </div>
                         </div>
 
-                        <div className="row-group">
+                        <div className="row-group amount-plan">
                             <div className="col telephone-field">
                                 <span className="required">
                                     Monto plan de inversion
@@ -679,28 +717,41 @@ const Register = (props) => {
                         }
 
                         <div className="row">
-                            <span className="required">
-                                {
-                                    !alypay
-                                        ? "Direccion Wallet Externa BTC"
-                                        : "Direccion Wallet AlyPay BTC"
-                                }
-                            </span>
+                            {
+                                !isWalletAlypay &&
+                                <span className="required">Direccion Wallet Externa BTC</span>
+                            }
+
+                            {
+                                isWalletAlypay &&
+                                <span className="required">Direccion Wallet AlyPay BTC</span>
+                            }
 
                             <input value={walletBTC} onChange={e => setWalletBTC(e.target.value)} type="text" className="text-input" />
                         </div>
 
                         <div className="row">
-                            <span className="required">
-                                {
-                                    !alypay
-                                        ? "Direccion Wallet Externa ETH"
-                                        : "Direccion Wallet AlyPay ETH"
-                                }
-                            </span>
+                            {
+                                !isWalletAlypay &&
+                                <span className="required">Direccion Wallet Externa ETH</span>
+                            }
+
+                            {
+                                isWalletAlypay &&
+                                <span className="required">Direccion Wallet AlyPay ETH</span>
+                            }
 
                             <input value={walletETH} onChange={e => setWalletETH(e.target.value)} type="text" className="text-input" />
                         </div>
+
+                        {
+                            !alypay && 
+                            <div className="terms">
+                                <label htmlFor="iswalletalypay-input">Wallet AlyPay</label>
+
+                                <input type="checkbox" checked={isWalletAlypay} id="iswalletalypay-input" onChange={_ => setIsWalletAlypay(!isWalletAlypay)} />
+                            </div>
+                        }
 
                         <div className="terms">
                             <label htmlFor="terms-input">He leído términos y condiciones</label>
