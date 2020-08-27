@@ -73,8 +73,8 @@ export const amountMin = {
     eth: 0.1
 }
 
-//export const urlServer = "https://ardent-medley-272823.appspot.com"
-export const urlServer = "http://10.70.12.18:8080"
+export const urlServer = "https://ardent-medley-272823.appspot.com"
+//export const urlServer = "http://10.70.12.18:8080"
 
 
 /**
