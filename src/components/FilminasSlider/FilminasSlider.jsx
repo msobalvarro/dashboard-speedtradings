@@ -77,8 +77,6 @@ const FilminasSlider = () => {
                     </p>
                 </div>
             </div>
-
-            <img src={WhatsappQR} alt="" className='whatsapp-qr' />
         </div>
     )
 }

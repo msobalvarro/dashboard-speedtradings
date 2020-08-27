@@ -29,6 +29,19 @@ div.container-register {
     }
   }
 
+  .row-logos {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-evenly;
+    align-items: center;
+    width: 100%;
+
+    img {
+      width: 40%;
+      max-width: 10rem;
+    }
+  }
+
   .form-container {
     display: flex;
     flex-direction: column;
@@ -51,6 +64,27 @@ div.container-register {
       & {
         width: 100%;
         min-width: 480px;
+      }
+    }
+
+    @media (max-width: 1000px) {
+      & {
+        .row, .col {
+          span {
+            font-size: .8rem;
+          }
+        }
+
+        .dollar-amount {
+          font-size: 1rem !important;
+
+          &::after {
+            // align-self: center;
+            font-size: 10px !important;
+            margin-bottom: 8px !important;
+            margin-left: 5px;
+          }
+        }
       }
     }
 

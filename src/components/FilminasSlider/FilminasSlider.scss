@@ -10,6 +10,7 @@ $icon-fill: '2d2d2d';
     overflow: hidden;
 
     .Filmina {
+        display: block;
         position: absolute;
         top: 0;
         left: 0;
@@ -21,21 +22,6 @@ $icon-fill: '2d2d2d';
 
         &.active {
             opacity: 1;
-        }
-    }
-
-    .whatsapp-qr {
-        position: absolute;
-        box-shadow: $colorMain 5px 0 25px 5px;
-        background-color: #fff;
-        border-radius: 7px;
-        bottom: 4.75rem;
-        right: .5rem;
-        width: 6rem;
-        height: 100px;
-
-        @media (max-width: $tablet-big) {
-            & { width: 5rem; }
         }
     }
 
