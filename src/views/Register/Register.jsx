@@ -621,7 +621,7 @@ const Register = (props) => {
                             </div>
                         </div>
 
-                        <div className="row-group">
+                        <div className="row-group amount-plan">
                             <div className="col telephone-field">
                                 <span className="required">
                                     Monto plan de inversion
@@ -679,25 +679,13 @@ const Register = (props) => {
                         }
 
                         <div className="row">
-                            <span className="required">
-                                {
-                                    !alypay
-                                        ? "Direccion Wallet Externa BTC"
-                                        : "Direccion Wallet AlyPay BTC"
-                                }
-                            </span>
+                            <span className="required">Direccion Wallet Externa BTC</span>
 
                             <input value={walletBTC} onChange={e => setWalletBTC(e.target.value)} type="text" className="text-input" />
                         </div>
 
                         <div className="row">
-                            <span className="required">
-                                {
-                                    !alypay
-                                        ? "Direccion Wallet Externa ETH"
-                                        : "Direccion Wallet AlyPay ETH"
-                                }
-                            </span>
+                            <span className="required">Direccion Wallet Externa ETH</span>
 
                             <input value={walletETH} onChange={e => setWalletETH(e.target.value)} type="text" className="text-input" />
                         </div>

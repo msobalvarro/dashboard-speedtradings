@@ -20,6 +20,13 @@ div.container-register {
     height: 100vh;
     width: calc(100vw - 580px);
     overflow: hidden;
+
+    // En pantallas de 620px o menos, se remueve el banner
+    @media (max-width: $tablet-small) {
+      & {
+        display: none; 
+      }
+    }
   }
 
   .form-container {
@@ -29,7 +36,30 @@ div.container-register {
     height: 100vh;
     max-height: 100vh;
     overflow: auto;
-    width: 580px;
+    width: 50%;
+
+    // Estilos para el formulario cuando la pantalla tiene un maximo de 768px
+    @media (max-width: $tablet-big) {
+      & {
+        width: 50%;
+        height: auto;
+        max-height: auto;
+      }
+    }
+
+    @media (max-width: $tablet-small) {
+      & {
+        width: 100%;
+        min-width: 480px;
+      }
+    }
+
+    @media (min-width: $desktop) {
+      & {
+        width: 35%;
+        min-width: 560px;
+      }
+    }
 
     .sponsor-message {
       padding: 10px;
@@ -101,6 +131,34 @@ div.container-register {
             width: calc(60% - 0.5rem);
           }
         }
+
+        // Estilos para los campos que están dentro de un group row
+        @media (max-width: $tablet-big) {
+          & {
+            flex-direction: column;
+            margin: 2rem 0;
+
+            &:last-child, &.telephone-field {
+              margin-bottom: 0;
+            }
+
+            .col {
+              width: 100%;
+
+              &.country-field, &.telephone-field {
+                width: 100%;              }
+            }
+
+            .dollar-amount {
+              justify-content: center;
+              margin-top: 1rem;
+            }
+
+            &.amount-plan {
+              margin-bottom: -1rem;
+            }
+          }
+        }
       }
 
       .row,
@@ -119,6 +177,13 @@ div.container-register {
             margin: 0;
             padding: 0;
             transform: translateY(-5px);
+          }
+
+          // Ajustes para la leyenda del monto mínimo
+          @media (max-width: $tablet-big) {
+            & {
+              transform: translateY(-2.8rem);
+            }
           }
         }
 

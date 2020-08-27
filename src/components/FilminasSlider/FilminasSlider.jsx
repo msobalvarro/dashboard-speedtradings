@@ -3,10 +3,10 @@ import React, {useState, useEffect} from 'react'
 import "./FilminasSlider.scss"
 
 // Import asset's
-import AlyPay from "../../static/images/AlyPay.jpg"
-import AlyCoin from "../../static/images/AlyCoin.jpg"
-import AlySystem from "../../static/images/AlySystem.jpg"
-import SpeedTradings from "../../static/images/SpeedTradings.jpg"
+import AlyPay from "../../static/images/AlyPay.png"
+import AlyCoin from "../../static/images/AlyCoin.png"
+import AlySystem from "../../static/images/AlySystem.png"
+import SpeedTradings from "../../static/images/SpeedTradings.png"
 import PlayStore from "../../static/images/playstore.png"
 import AppStore from "../../static/images/appstore.png"
 import WhatsappQR from "../../static/images/QR.png"
@@ -73,7 +73,7 @@ const FilminasSlider = () => {
                         <a href={telegram} target='_blank' className='social-icon telegram'></a>
                     </p>
                     <p>
-                        &copy; AlySystem 2020  |  RUC J031000037155
+                        &copy;2020 AlySystem  |  RUC J031000037155
                     </p>
                 </div>
             </div>
