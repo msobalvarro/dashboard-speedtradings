@@ -10,11 +10,6 @@ div.container-register {
   width: 100%;
 
   .cover-image {
-    //background-image: url(../../static/images/cover-login.jpg);
-    background-position-y: 60%;
-    background-position-x: 50%;
-    background-attachment: scroll;
-    background-repeat: no-repeat;
     flex: 1;
     opacity: 0.8;
     height: 100vh;
@@ -51,6 +46,39 @@ div.container-register {
     overflow: auto;
     width: 50%;
 
+    @media (max-width: $mobile) {
+      & {
+        width: 100%;
+        min-height: 100vh !important;
+        
+
+        .row, .col {
+          span {
+            font-size: 0.9rem !important;
+            margin-bottom: 5px !important;
+          }
+        }
+
+        .dollar-amount {
+          span {
+            font-size: 1.2rem !important;
+            margin-top: .5rem;
+
+            &::after {
+              // align-self: center;
+              font-size: 10px !important;
+              margin-bottom: 8px !important;
+              margin-left: 5px;
+            }
+          }
+        }
+
+        .amount-plan {
+          margin-bottom: -1.2rem !important;
+        }
+      }
+    }
+
     // Estilos para el formulario cuando la pantalla tiene un maximo de 768px
     @media (max-width: $tablet-big) {
       & {
@@ -63,7 +91,7 @@ div.container-register {
     @media (max-width: $tablet-small) {
       & {
         width: 100%;
-        min-width: 480px;
+        height: 100vh;
       }
     }
 

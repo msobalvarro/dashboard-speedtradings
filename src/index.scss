@@ -23,6 +23,9 @@
 }
 
 body {
+  min-height: 100vh;
+  margin: 0;
+  padding: 0;
   background: rgb(0, 0, 0);
   background: linear-gradient(
     238deg,
@@ -32,6 +35,7 @@ body {
   );
   background-repeat: no-repeat;
   background-attachment: fixed;
+  background-size: contain;
   color: #fff;
   font-family: Gotham;
   -webkit-font-smoothing: antialiased;
