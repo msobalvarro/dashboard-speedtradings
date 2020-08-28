@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react"
+import React, { useState, useEffect, useReducer } from "react"
 import { Link, Redirect } from "react-router-dom"
 import Validator from "validator"
 
@@ -101,6 +101,9 @@ const Register = (props) => {
 
     // Estado para controlar la leyenda del monto en dolares
     const [amountDollar, setAmountDollar] = useState(0)
+
+    // Hook para forzar un renderizado
+    const [__, forceUpdate] = useReducer((x) => x + 1, 0)
 
     /**Coleccion de botones */
     const validationButtons = {
@@ -298,6 +301,8 @@ const Register = (props) => {
 
             setAmountDollar(_amountDollar)
         }
+
+        forceUpdate()
     }
 
     /** Método para verificar si el monto de inversión ingresado es mayor o igual al minimo permitido */
@@ -338,6 +343,8 @@ const Register = (props) => {
                 setIsWalletAlypay(false)
                 break
         }
+
+        forceUpdate()
     }
 
     /**Metodo que muestra la ventana modal con terminos y condiciones */
@@ -367,11 +374,13 @@ const Register = (props) => {
             )
 
         setLoader(false)
+        forceUpdate()
     }
 
     useEffect(() => {
         // Se obtinen los has de las wallets
         getWallets(setWallets);
+        forceUpdate()
     }, [])
 
     useEffect(() => {
@@ -427,6 +436,7 @@ const Register = (props) => {
 
     return (
         <div className="container-register">
+            <input type="hidden" value={__}/>
             <div className="cover-image">
                 {/* <h1>registrate gratis</h1> */}
                 <FilminasSlider />
@@ -600,7 +610,7 @@ const Register = (props) => {
                                             {
                                                 wallets.btc !== null && wallets.alypay !== null
                                                     ? !alypay ? wallets.btc : wallets.alypay.btc
-                                                    : ''
+                                                    : 'Cargando wallet...'
                                             }
                                         </span>
                                     }
@@ -618,7 +628,7 @@ const Register = (props) => {
                                             {
                                                 wallets.eth !== null && wallets.alypay !== null
                                                     ? !alypay ? wallets.eth : wallets.alypay.eth
-                                                    : ''
+                                                    : 'Cargando wallet...'
                                             }
                                         </span>
                                     }
@@ -661,14 +671,15 @@ const Register = (props) => {
 
                         <div className="row-group amount-plan">
                             <div className="col telephone-field">
-                                <span className="required">
-                                    Monto plan de inversion
-                                    {
-                                        crypto === 1
-                                            ? "(BTC)"
-                                            : "(ETH)"
-                                    }
-                                </span>
+                                {
+                                    crypto === 1 &&
+                                    <span className="required">Monto plan de inversion(BTC)</span>
+                                }
+
+                                {
+                                    crypto === 2 &&
+                                    <span className="required">Monto plan de inversion(ETH)</span>
+                                }
 
                                 <input
                                     value={userInput}
@@ -684,14 +695,15 @@ const Register = (props) => {
                         </div>
 
                         <div className="row min-amount">
-                            <span>
-                                Monto mínimo de inversion:
-                                {
-                                    crypto === 1
-                                        ? ` ${amountMin.btc} BTC`
-                                        : ` ${amountMin.eth} ETH`
-                                }
-                            </span>
+                            {
+                                crypto === 1 &&
+                                <span>Monto mínimo de inversion: {amountMin.btc} BTC</span>
+                            }
+
+                            {
+                                crypto === 2 &&
+                                <span>Monto mínimo de inversion: {amountMin.eth} ETH</span>
+                            }
                         </div>
 
                         <div className="row">

@@ -24,22 +24,38 @@ export const getWallets = async (walletState) => {
     const { data } = await Petition.get('/collection/directions')
 
     // Se recorren los pares de llave:valor de la data obtenida y se construye el objeto final de las wallets
-    let walletsData = Object.fromEntries(Object.entries(data).map(entrie => {
+    let walletsData = Object.entries(data).map(entrie => {
         let [coinName, wallet_hash] = entrie
 
         // Si la entrada contiene subentradas, también se recorren
         if (coinName.toLowerCase() === 'alypay') {
-            wallet_hash = Object.fromEntries(Object.entries(wallet_hash).map(subentrie => {
+            let alypay_wallets = Object.entries(wallet_hash).map(subentrie => {
                 const [subCoinName, subWallet_hash] = subentrie;
 
                 return [getCoinSymbol(subCoinName), subWallet_hash]
-            }))
+            })
+
+            wallet_hash = fromEntries(alypay_wallets)
         }
 
         return [getCoinSymbol(coinName), wallet_hash]
-    }))
+    })
+
+    walletsData = fromEntries(walletsData)
 
     walletState(walletsData);
+}
+
+// Construye un objeto a partir de las entradas de uno existente
+const fromEntries = (data) => {
+    let result = {}
+
+    for(let i=0; i<data.length; i++) {
+        let [key, value] = data[i]
+        result[key] = value;
+    } 
+
+    return result;
 }
 
 /**
