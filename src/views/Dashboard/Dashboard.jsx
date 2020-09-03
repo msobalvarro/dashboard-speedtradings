@@ -85,6 +85,8 @@ const DashboardDetails = ({ data, type = "" }) => {
         getAllPrices()
     }, [data, type])
 
+    // Se indica la lista de transacciones a listar
+
     return (
         <>
             {
@@ -224,19 +226,14 @@ const Dashboard = () => {
 
     const [loader, setLoader] = useState(true)
 
-    const [dataDashoardBTC, setDataDashboardBTC] = useState([])
-    const [dataDashoardETH, setDataDashboardETH] = useState([])
+    const [dataDashoardBTC, setDataDashboardBTC] = useState({info: null, history: null})
+    const [dataDashoardETH, setDataDashboardETH] = useState({info: null, history: null})
 
     const ConfigurateComponent = async () => {
         try {
 
             // Get data BTC
-            await Petition.post(
-                '/data/dashboard',
-                {
-                    user_id: storage.id_user,
-                    currency_id: 1
-                },
+            await Petition.get('/dashboard/1',
                 {
                     headers: {
                         "x-auth-token": storage.token
@@ -249,11 +246,7 @@ const Dashboard = () => {
 
             // Get data ETH
             await Petition.post(
-                '/data/dashboard',
-                {
-                    user_id: storage.id_user,
-                    currency_id: 2
-                },
+                '/dashboard/2',
                 {
                     headers: {
                         "x-auth-token": storage.token
@@ -294,16 +287,16 @@ const Dashboard = () => {
                 <div className="content-dashboard">
                     <div className="content">
                         {
-                            (dataDashoardBTC.length > 0) &&
+                            (dataDashoardBTC.info !== null) &&
                             <>
                                 {
-                                    (dataDashoardBTC[0].amount !== null) &&
+                                    (dataDashoardBTC.info.amount !== null) &&
                                     < DashboardDetails type="btc" data={dataDashoardBTC} />
                                 }
 
 
                                 {
-                                    dataDashoardBTC[0].amount === null &&
+                                    dataDashoardBTC.info.amount === null &&
                                     <BuyPlan onBuy={ConfigurateComponent} idCrypto={1} />
                                 }
                             </>
@@ -317,12 +310,12 @@ const Dashboard = () => {
                             dataDashoardETH.length > 0 &&
                             <>
                                 {
-                                    (dataDashoardETH[0]?.amount !== null) &&
+                                    (dataDashoardETH.info?.amount !== null) &&
                                     <DashboardDetails type="eth" data={dataDashoardETH} />
                                 }
 
                                 {
-                                    dataDashoardETH[0]?.amount === null &&
+                                    dataDashoardETH.info?.amount === null &&
                                     <BuyPlan onBuy={ConfigurateComponent} idCrypto={2} />
                                 }
                             </>
