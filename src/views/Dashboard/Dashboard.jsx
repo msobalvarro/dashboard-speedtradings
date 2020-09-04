@@ -2,7 +2,7 @@ import React, { useRef, useEffect, useState } from "react"
 import "chartist/dist/scss/chartist.scss"
 import ChartistGraph from 'react-chartist'
 import moment from "moment"
-import lodash_math from "lodash/math"
+import _ from "lodash"
 
 // Import Assets
 import "./Dashboard.scss"
@@ -59,7 +59,7 @@ const DashboardDetails = ({ data = {}, type = "" }) => {
     /** Calcula el total de la profit-table */
     const calculateTotalProfitTable = (data) => {
         const sum = data.reduce((a, b) => a + b, 0)
-        const total = lodash_math.floor(sum, 8)
+        const total = _.floor(sum, 8)
 
         return total
     }
