@@ -162,7 +162,7 @@ const DashboardDetails = ({ data = {}, type = "" }) => {
                                     </span>
                                 }
 
-                                <div className="content-total">
+                                {/* <div className="content-total">
                                     <span className="total">Total</span>
                                     <span className="amount">
                                         {
@@ -176,7 +176,7 @@ const DashboardDetails = ({ data = {}, type = "" }) => {
                                             })`
                                         }
                                     </span>
-                                </div>
+                                </div> */}
                             </div>
                         </div>
                     }
