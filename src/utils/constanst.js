@@ -2,7 +2,6 @@ import jwt from "jwt-simple"
 import Axios from "axios"
 import copy from "copy-to-clipboard"
 import Swal from "sweetalert2"
-import { useSelector } from "react-redux"
 
 // Constanst
 const keySecret = "testDevelop"
@@ -50,10 +49,10 @@ export const getWallets = async (walletState) => {
 const fromEntries = (data) => {
     let result = {}
 
-    for(let i=0; i<data.length; i++) {
+    for (let i = 0; i < data.length; i++) {
         let [key, value] = data[i]
         result[key] = value;
-    } 
+    }
 
     return result;
 }
@@ -89,8 +88,8 @@ export const amountMin = {
     eth: 0.1
 }
 
-export const urlServer = "https://ardent-medley-272823.appspot.com"
-//export const urlServer = "http://10.70.12.18:8080"
+// export const urlServer = "https://ardent-medley-272823.appspot.com"
+export const urlServer = "http://10.70.12.18:8080"
 
 
 /**
