@@ -1,0 +1,115 @@
+@import '../../utils/constants.scss';
+
+.DashboardAllReports {
+    animation: fadeEffect 1s;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: fixed;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    top: 0;
+    height: 100vh;
+    width: 100%;
+    overflow: hidden;
+    background-color: rgba(0, 0, 0, 0.8);
+    z-index: 1000;
+
+    svg.loader-dashboard {
+      margin: 5em auto;
+      text-align: center;
+      display: block;
+    }
+
+    .close {
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+        font-size: 1.2em;
+        padding: 15px;
+        position: absolute;
+        outline: none;
+        top: 5%;
+        right: 5%;
+        transition: $transition;
+
+        &:active {
+            opacity: 0.5;
+        }
+        /* right: 5%; */
+      }
+
+    .profit-table {
+        width: 50%;
+        max-height: 90%;
+        max-width: 550px;
+        background-color: $colorMain;
+        border-radius: 5px;
+        padding: 1rem 2rem;
+        overflow-y: auto;
+
+        .table {
+            .header {
+                border-bottom: 2px solid $colorSecondary;
+                padding: 10px 0;
+                display: flex;
+                justify-content: space-between;
+
+                span {
+                    color: $colorSecondary;
+                    font-weight: bolder;
+                    font-size: 1.2em;
+                    text-align: right;
+                }
+            }
+
+            .body {
+                &.hidden {
+                    overflow: hidden;
+                    height: 250px;
+            }
+
+            .row {
+                border-bottom: 1px solid #fff;
+                display: flex;
+                justify-content: space-between;
+                padding: 10px 0;
+                text-align: right;
+                width: 100%;
+
+                span {
+                    display: inline-block;
+                    width: calc(100% / 4);
+
+                    &:first-child {
+                        text-align: left;
+                    }
+                }
+
+                &.paymented {
+                    opacity: 0.5;
+                }
+                }
+            }
+
+            .footer {
+                align-items: center;
+                display: flex;
+                margin-top: 25px;
+                margin-bottom: 2rem;
+                justify-content: flex-end;
+
+                .content-total {
+                    font-size: 1.5em;
+
+                    .total {
+                        color: $colorSecondary;
+                        font-weight: bolder;
+                        margin-right: 10px;
+                    }
+                }
+            }
+        }
+    }
+}
