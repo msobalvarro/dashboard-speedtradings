@@ -28,8 +28,8 @@ const DashboardDetails = ({ data = {}, type = "" }) => {
     /**Costante que almacena el total de las ganancias */
     const amountSumArr = []
 
-    /** Destructuración de las data recibida para separar el historial y la info */
-    const {history, info, prices={ BTC: null, ETH: null }} = data;
+    /** Destructuración de las data recibida para separar el historial, la info y el precio */
+    const {history, info, price=0} = data;
 
     const showMore = () => {
         setShow(true)
@@ -144,8 +144,8 @@ const DashboardDetails = ({ data = {}, type = "" }) => {
                                             <span>{item.amount}</span>
                                             <span>
                                                 $ {
-                                                    prices.BTC !== null
-                                                        ? calculateCryptoPriceWithoutFee(prices[type.toUpperCase()], item.amount)
+                                                    price !== 0
+                                                        ? calculateCryptoPriceWithoutFee(price, item.amount)
                                                         : 0
                                                 }
                                             </span>
