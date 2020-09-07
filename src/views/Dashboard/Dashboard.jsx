@@ -161,22 +161,6 @@ const DashboardDetails = ({ data = {}, type = "" }) => {
                                         Mostrar todo
                                     </span>
                                 }
-
-                                {/* <div className="content-total">
-                                    <span className="total">Total</span>
-                                    <span className="amount">
-                                        {
-                                            `${calculateTotalProfitTable(amountSumArr)} ${type.toUpperCase()}`
-                                        }
-                                        {
-                                            ` ($ ${
-                                            prices.BTC !== null
-                                                ? calculateCryptoPriceWithoutFee(prices[type.toUpperCase()], calculateTotalProfitTable(amountSumArr))
-                                                : 0
-                                            })`
-                                        }
-                                    </span>
-                                </div> */}
                             </div>
                         </div>
                     }
@@ -189,7 +173,7 @@ const DashboardDetails = ({ data = {}, type = "" }) => {
 
                 {
                     showMoreContent &&
-                    <DashboardAllReports type={type} prices={prices} onClose={_ => setShow(false)}/>
+                    <DashboardAllReports type={type} onClose={_ => setShow(false)}/>
                 }
             </div>
         </>

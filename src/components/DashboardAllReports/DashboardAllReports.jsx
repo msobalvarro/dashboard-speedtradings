@@ -10,13 +10,14 @@ import Swal from "sweetalert2"
 import { useSelector } from "react-redux"
 
 
-const DashboardAllReports = ({type='btc', prices={ BTC: null, ETH: null }, onClose=_ => {}}) => {
+const DashboardAllReports = ({type='btc', onClose=_ => {}}) => {
     // Cargamos el storage
     const storage = useSelector(({ globalStorage }) => globalStorage)
     const coinCode = type === 'btc' ? 1 : 2
 
     // Estado para almacenar los reportes recibidos
     const [allReports, setAllReports] = useState([])
+    const [price, setPrice] = useState(0)
     const [loader, setLoader] = useState(false)
 
     /**Costante que almacena el total de las ganancias */
@@ -49,7 +50,8 @@ const DashboardAllReports = ({type='btc', prices={ BTC: null, ETH: null }, onClo
             if (data.error) {
                 throw String(data.message)
             } else {
-                setAllReports(data);
+                setAllReports(data.history);
+                setPrice(data.price)
             }
 
         } catch(error) {
@@ -96,8 +98,8 @@ const DashboardAllReports = ({type='btc', prices={ BTC: null, ETH: null }, onClo
                                             <span>{item.amount}</span>
                                             <span>
                                                 $ {
-                                                    (prices.BTC !== null)
-                                                        ? calculateCryptoPriceWithoutFee(prices[type.toUpperCase()], item.amount)
+                                                    (price !== 0)
+                                                        ? calculateCryptoPriceWithoutFee(price, item.amount)
                                                         : 0
                                                 }
                                             </span>
@@ -115,8 +117,8 @@ const DashboardAllReports = ({type='btc', prices={ BTC: null, ETH: null }, onClo
                                     }
                                     {
                                         ` ($ ${
-                                            (prices.BTC !== null)
-                                                ? calculateCryptoPriceWithoutFee(prices[type.toUpperCase()], calculateTotalProfitTable(amountSumArr))
+                                            (price !== 0)
+                                                ? calculateCryptoPriceWithoutFee(price, calculateTotalProfitTable(amountSumArr))
                                                 : 0
                                         })`
                                     }
