@@ -1,7 +1,10 @@
 import React from "react"
 import "./ModalTerms.scss"
 
-
+/**
+ * @param {Boolean} isVisible - Determina si se muestra o no el componente
+ * @param {Callback} onClose - Función a ejecutar cuando se cierra el modal
+ */
 const ModalTerms = ({ isVisible = false, onClose = () => { } }) => {
     if (isVisible) {
         return (

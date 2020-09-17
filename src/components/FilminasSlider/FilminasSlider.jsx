@@ -1,5 +1,4 @@
 import React, {useState, useEffect} from 'react'
-
 import "./FilminasSlider.scss"
 
 // Import asset's
@@ -9,10 +8,10 @@ import AlySystem from "../../static/images/AlySystem-banner.png"
 import SpeedTradings from "../../static/images/SpeedTradings.png"
 import PlayStore from "../../static/images/playstore.png"
 import AppStore from "../../static/images/appstore.png"
-import WhatsappQR from "../../static/images/QR.png"
 
 
 const FilminasSlider = () => {
+    // Estado para establecer cuál es la filmina activa
     const [activeFilmina, setActiveFilmina] = useState(1)
 
     // Url de las redes sociales
@@ -45,10 +44,11 @@ const FilminasSlider = () => {
 
     return (
         <div className='FilminasSlider'>
-            <img src={SpeedTradings} alt="" className={`Filmina ${activeFilmina==4 ? 'active' : ''}`}/>
-            <img src={AlyPay} alt="" className={`Filmina ${activeFilmina==3 ? 'active' : ''}`}/>
-            <img src={AlyCoin} alt="" className={`Filmina ${activeFilmina==2 ? 'active' : ''}`}/>
-            <img src={AlySystem} alt="" className={`Filmina ${activeFilmina==1 ? 'active' : ''}`}/>
+            {/** Filminas a mostrar */}
+            <img src={SpeedTradings} alt="" className={`Filmina ${activeFilmina===4 ? 'active' : ''}`}/>
+            <img src={AlyPay} alt="" className={`Filmina ${activeFilmina===3 ? 'active' : ''}`}/>
+            <img src={AlyCoin} alt="" className={`Filmina ${activeFilmina===2 ? 'active' : ''}`}/>
+            <img src={AlySystem} alt="" className={`Filmina ${activeFilmina===1 ? 'active' : ''}`}/>
 
             <div className='footer'> 
                 <div className='footer-content'>

@@ -1,6 +1,10 @@
 import React from "react"
 import "./ActivityIndicator.scss"
 
+/**
+ * @param {Number} size - size of activity indicator
+ * @param {String} className - optionals className 
+ */
 const ActivityIndicator = ({ size = 40, className = "" }) => {
 
     return (

@@ -16,7 +16,15 @@ import AlypayLogo from "../../static/images/alypay-logo.png"
 import Countries from "../../utils/countries.json"
 import ModalTerms from "../../components/Modal/ModalTerms"
 import ActivityIndicator from "../../components/ActivityIndicator/Activityindicator"
-import { Petition, getWallets, WithDecimals, copyData, calculateCryptoPrice, calculateCryptoPriceWithoutFee, amountMin } from "../../utils/constanst"
+import { 
+    Petition,
+    getWallets,
+    WithDecimals,
+    copyData,
+    calculateCryptoPrice,
+    calculateCryptoPriceWithoutFee,
+    amountMin
+} from "../../utils/constanst"
 import Swal from "sweetalert2"
 import Axios from "axios"
 import mobileDetect from "mobile-detect"
@@ -238,7 +246,6 @@ const Register = (props) => {
 
                 if (data.length > 0) {
                     setValidateUserSponsor(true)
-                    // setUsernameSponsor(data[0].name)
                 } else {
                     setRedirect(true)
                     setValidateUserSponsor(false)
@@ -438,7 +445,6 @@ const Register = (props) => {
         <div className="container-register">
             <input type="hidden" value={__}/>
             <div className="cover-image">
-                {/* <h1>registrate gratis</h1> */}
                 <FilminasSlider />
             </div>
 

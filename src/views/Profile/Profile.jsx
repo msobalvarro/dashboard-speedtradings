@@ -10,7 +10,6 @@ import ActivityIndicator from "../../components/ActivityIndicator/Activityindica
 // Import Assets
 import "./Profile.scss"
 import ImagePlaceholder from "../../static/images/profile/placeholder-profile.jpg"
-import Planet from "../../static/images/profile/planet.png"
 import { Petition, setStorage } from "../../utils/constanst"
 import Swal from "sweetalert2"
 import { SETSTORAGE } from "../../store/ActionTypes"
@@ -28,10 +27,6 @@ const initialState = {
     // Initial state BTC/ETH/Username Coinbase
     intialBTC: "",
     intialETH: "",
-    // intialCOINBASE: "",
-
-    // Estado que almacena el usuario Coinbase
-    // userCoinbase: "",
 
     // Password confirm
     password: "",
@@ -67,7 +62,6 @@ const Profile = () => {
         // Reseteamos todos los datos por defecto
         dispatch({ type: "walletBTC", payload: state.intialBTC })
         dispatch({ type: "walletETH", payload: state.intialETH })
-        // dispatch({ type: "userCoinbase", payload: state.intialCOINBASE })
     }
 
     /**Metodo que se ejecuta cuando las wallets y user coinbase sean editables */
@@ -82,7 +76,7 @@ const Profile = () => {
             setLoader(true)
 
             if (state.password.length === "") {
-                throw "Escribe tu Contraseña para continuar"
+                throw String("Escribe tu Contraseña para continuar")
             }
 
             // id_user, btc, eth, username, password, email
@@ -91,7 +85,6 @@ const Profile = () => {
                 email: globalStorage.email,
                 btc: state.walletBTC,
                 eth: state.walletETH,
-                // username: state.userCoinbase,
                 password: state.password,
             }
 
@@ -101,7 +94,7 @@ const Profile = () => {
                 }
             }).then(async ({ data }) => {
                 if (data.error) {
-                    throw data.message
+                    throw String(data.message)
                 } else {
                     // Hacemos el dispatch al store de redux
                     reduxStorage.dispatch({ type: SETSTORAGE, payload: data })
@@ -122,7 +115,6 @@ const Profile = () => {
                     setShowConfirm(false)
 
                     Swal.fire("Speed Tradings", "Tus datos se han actualizado", "success")
-
                 }
             })
 
@@ -152,23 +144,19 @@ const Profile = () => {
             dispatch({ type: "walletETH", payload: updateStorage.wallet_eth })
             dispatch({ type: "intialETH", payload: updateStorage.wallet_eth })
 
-            // Initial State coinbase username
-            // dispatch({ type: "intialCOINBASE", payload: updateStorage.user_coinbase !== null ? updateStorage.user_coinbase : "" })
-            // dispatch({ type: "userCoinbase", payload: updateStorage.user_coinbase !== null ? updateStorage.user_coinbase : "" })
-
             Petition.get(`/profile/info?id=${globalStorage.id_user}`, {
                 headers: {
                     "x-auth-token": globalStorage.token
                 }
             }).then(({ data }) => {
                 if (data.error) {
-                    throw data.message
+                    throw String(data.message)
                 } else {
                     setInfo(data)
                 }
             })
                 .catch(() => {
-                    throw "No se ha podido actualizar tu perfil"
+                    throw String("No se ha podido actualizar tu perfil")
                 })
         } catch (error) {
             Swal.fire("Ha ocurrido un error", error, "error")
@@ -200,8 +188,6 @@ const Profile = () => {
 
                         <div className="row info">
                             <div className="item">
-                                {/* <img src={Planet} alt="" /> */}
-
                                 <div className="ng-row">
                                     <span className="key">Numero de Contacto</span>
                                     <span>{globalStorage.phone}</span>
@@ -209,8 +195,6 @@ const Profile = () => {
                             </div>
 
                             <div className="item">
-                                {/* <img src={Planet} alt="" /> */}
-
                                 <div className="ng-row">
                                     <span className="key">Pais</span>
                                     <span>{globalStorage.country}</span>
@@ -220,8 +204,6 @@ const Profile = () => {
                             {
                                 (info !== null) &&
                                 <div className="item">
-                                    {/* <img src={Planet} alt="" /> */}
-
                                     <div className="ng-row">
                                         <span className="key">Primera actividad</span>
                                         <span>{moment(info.start_date).format('MMM. D, YYYY')}</span>
@@ -269,9 +251,6 @@ const Profile = () => {
                                     <span className="value">{info.sponsors}</span>
                                 </div>
                             </div>
-                            {/* <div className="row medal">
-                            <img src="https://pngimage.net/wp-content/uploads/2018/06/medalla-bronce-png-6.png" alt="" />
-                        </div> */}
                         </div>
                     }
                 </div>
@@ -299,19 +278,6 @@ const Profile = () => {
                                 className="text-input"
                                 disabled={!state.editWallets} />
                         </div>
-
-                        {/* <div className="row">
-                            <span className="label">
-                                Usuario Coinbase <b>(Recomendado)</b>
-                            </span>
-
-                            <input
-                                value={state.userCoinbase}
-                                onChange={e => dispatch({ type: "userCoinbase", payload: e.target.value })}
-                                type="text"
-                                className="text-input"
-                                disabled={!state.editWallets} />
-                        </div> */}
 
                         <div className="buttons">
                             {

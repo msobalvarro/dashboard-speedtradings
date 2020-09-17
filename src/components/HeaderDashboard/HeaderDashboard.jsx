@@ -69,7 +69,13 @@ const reducer = (state, action) => {
     }
 }
 
-
+/**
+ * @param {String} type - Tipo de moneda a procesar
+ * @param {Number} amount - Monto inicial de la moneda en el plan
+ * @param {Number} amountToday - Monto de la moneda en plan al día actual
+ * @param {Number} idInvestment - Código del plan de inversión
+ * @param {Boolean} disabled
+ */
 const HeaderDashboard = ({ type = "btc", amount = 0.5, amountToday = 2, idInvestment = 0, disabled = false }) => {
     const { token } = useSelector(({ globalStorage }) => globalStorage)
 
@@ -257,6 +263,9 @@ const HeaderDashboard = ({ type = "btc", amount = 0.5, amountToday = 2, idInvest
                 dispatch({ type: "airtm", payload: false })
                 dispatch({ type: "alypay", payload: true })
                 break
+
+            default:
+                break;
         }
     }
 
@@ -279,10 +288,12 @@ const HeaderDashboard = ({ type = "btc", amount = 0.5, amountToday = 2, idInvest
         dispatch({ type: "loaderCoinmarketCap", payload: false })
     }
 
+    // Obtiene las direcciones de las wallets
     useEffect(() => {
         getWallets(setWallets)
     }, [])
 
+    // Se cargan los precios de las monedas y se reinician los valores de los montos
     useEffect(() => {
         if (state.showModal) {
             getAllPrices()
@@ -296,6 +307,7 @@ const HeaderDashboard = ({ type = "btc", amount = 0.5, amountToday = 2, idInvest
 
     return (
         <>
+            {/** Tarjeta que muestra el la información de las ganancias del plan */}
             <div className="container-info-crypto">
                 <img src={images[type]} className="crypto" alt="crypto" />
 
@@ -320,6 +332,7 @@ const HeaderDashboard = ({ type = "btc", amount = 0.5, amountToday = 2, idInvest
 
 
             {
+                /** Modal para realizar un upgrade */
                 state.showModal &&
                 <div className="modal-upgrade">
                     <div className="content">
@@ -329,6 +342,7 @@ const HeaderDashboard = ({ type = "btc", amount = 0.5, amountToday = 2, idInvest
 
                             <div className="col-wallet">
                                 {
+                                    // Se cargan as direcciones de las wallets
                                     !state.airtm &&
                                     <span
                                         className="wallet"
@@ -344,6 +358,7 @@ const HeaderDashboard = ({ type = "btc", amount = 0.5, amountToday = 2, idInvest
                                 }
 
                                 {
+                                    // Si el método de pago es de Airtm, se carga la dirección del correo
                                     state.airtm &&
                                     <span className="wallet" onClick={_ => copyData(wallets.airtm)}>
                                         {
@@ -355,6 +370,7 @@ const HeaderDashboard = ({ type = "btc", amount = 0.5, amountToday = 2, idInvest
                         </div>
 
                         <div className="row">
+                            {/** Campo para ingresar el monto del upgrade */}
                             <div className="col">
                                 <span>Ingresa el monto de inversion</span>
                                 <input
@@ -373,6 +389,7 @@ const HeaderDashboard = ({ type = "btc", amount = 0.5, amountToday = 2, idInvest
                                 </div>
                             </div>
 
+                            {/** Campo donde se carga el darección de la billetera */}
                             <div className="col">
 
                                 {
@@ -390,6 +407,7 @@ const HeaderDashboard = ({ type = "btc", amount = 0.5, amountToday = 2, idInvest
                         </div>
 
                         {
+                            // Cuando está seleccionado Airtm, se habilita el campo para ingresar el correo de transacción
                             state.airtm &&
                             <div className="row flex-end">
                                 <div className="col">
@@ -405,6 +423,7 @@ const HeaderDashboard = ({ type = "btc", amount = 0.5, amountToday = 2, idInvest
                             </div>
                         }
 
+                        {/** Campo para indicar el método de pago */}
                         <div className="footer-modal">
                             <div className="airtm-row">
                                 <span htmlFor="check-airtm">Seleccione su método de pago</span>

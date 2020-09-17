@@ -9,7 +9,10 @@ import { Petition, calculateCryptoPriceWithoutFee } from "../../utils/constanst"
 import Swal from "sweetalert2"
 import { useSelector } from "react-redux"
 
-
+/**
+ * @param {String} type - Tipo de moneda a procesar
+ * @param {Callback} onClose - Función a ejecutar cuando se cierra el modal
+ */
 const DashboardAllReports = ({type='btc', onClose=_ => {}}) => {
     // Cargamos el storage
     const storage = useSelector(({ globalStorage }) => globalStorage)
@@ -62,6 +65,7 @@ const DashboardAllReports = ({type='btc', onClose=_ => {}}) => {
     }
 
     useEffect(_ => {
+        // Se obtiene la lista de todos los reportes
         FetchAllReports()
 
         document.body.style.overflow = 'hidden';

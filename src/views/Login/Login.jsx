@@ -18,6 +18,8 @@ import alysystem from "../../static/images/alysystem.png"
 
 const Login = () => {
   const dispatch = useDispatch()
+
+  // Estados para almacenar los campos del correo y la contraseña
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
 
@@ -28,6 +30,7 @@ const Login = () => {
   // Loading state
   const [loading, setLoading] = useState(false)
 
+  // Función a ejecutar cuando se envía el formulario de inicio de sesión
   const submitLogin = (e) => {
     e.preventDefault()
 
@@ -42,6 +45,7 @@ const Login = () => {
       } else {
         // Si todo esta correcto
 
+        // Verifica el incio de sesión
         ComprobateLogin()
       }
     } else {
@@ -53,6 +57,7 @@ const Login = () => {
   const ComprobateLogin = async () => {
     setLoading(true)
 
+    // Datos de las credenciales a enviar
     const data = {
       email,
       password

@@ -8,6 +8,9 @@ import logoPlayStore from "../../static/images/play-store.png"
 import logoItunes from "../../static/images/itunes.png"
 import logo from "../../static/images/logo.png"
 
+/**
+ * @param {React.Component} children 
+ */
 const Mobile = ({ children }) => {
     const isMobile = useMediaQuery({ maxWidth: 767 })
 
@@ -56,6 +59,7 @@ const MobileMessage = () => {
                 <img src={logo} className="logo" alt="play store" />
 
                 {
+                    // Trajeta que se muestra cuando se detecta el uso de un disposito Android
                     typeDevice === "AndroidOS" &&
                     <a className="card" href="https://play.google.com/store/apps/details?id=com.speedtradingsapp">
                         <img src={logoPlayStore} alt="play store" />
@@ -68,6 +72,7 @@ const MobileMessage = () => {
                 }
 
                 {
+                    // Tarjte que se muestra cuando se detecta el uso de un dispositivo IOS
                     typeDevice === "iOS" &&
                     <a className="card" href="#">
                         <img src={logoItunes} alt="Itunes" />
@@ -79,7 +84,7 @@ const MobileMessage = () => {
                     </a>
                 }
 
-
+                {/** Botón para activar el modo de escritorio */}
                 <button className="button secondary" onClick={disabledDesktopMode}>Usar modo escritorio</button>
             </div>
         </Mobile>

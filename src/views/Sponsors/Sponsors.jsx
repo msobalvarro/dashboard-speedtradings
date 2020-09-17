@@ -19,12 +19,14 @@ const Sponsors = () => {
     const urlSponsor = 'https://' + window.location.host + '/#/register/' + globalStorage.username
     const [loader, setLoader] = useState(true)
 
+    // Estados para almacenar la información de los planes
     const [dataBTC, setDataBTC] = useState([])
     const [dataETH, setDataETH] = useState([])
 
     const [SumBTC, setSumBTC] = useState(0)
     const [SumETH, setSumETH] = useState(0)
 
+    // Estado para almacenar los precios de las monedas en dólares
     const [cryptoPrices, setCryptoPrices] = useState({BTC: null, ETH: null})
 
     useEffect(() => {
@@ -38,7 +40,7 @@ const Sponsors = () => {
             })
                 .then(({ data, status }) => {
                     if (data.error) {
-                        throw data.message
+                        throw String(data.message)
                     }
 
                     if (data && status === 200) {
@@ -49,7 +51,7 @@ const Sponsors = () => {
                     setLoader(false)
                 })
                 .catch(reason => {
-                    throw reason
+                    throw String(reason)
                 })
         } catch (error) {
             Swal.fire(
@@ -62,6 +64,9 @@ const Sponsors = () => {
         }
     }, [])
 
+    /**
+     * @param {Array} AllData
+     */
     const configurateData = (allData = []) => {
         const btc = []
         const eth = []
@@ -130,7 +135,6 @@ const Sponsors = () => {
     return (
         <div className="container-sponsors">
             <NavigationBar />
-            {/* <h2>{urlSponsor}</h2> */}
 
             <div className="row-header">
                 <span className="label">

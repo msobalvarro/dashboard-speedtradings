@@ -16,10 +16,12 @@ const NavigationBar = () => {
 
     return (
         <nav className="navigation-bar">
+            {/** Logo */}
             <div className="content-logo">
                 <img src={Logo} className="brand-logo" alt="logo" />
             </div>
 
+            {/** Elementos de navegación */}
             <div className="content-links">
                 <Link to="/" className={(location === '#/') ? 'active' : ''}>Dashboard</Link>
 

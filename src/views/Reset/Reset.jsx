@@ -89,7 +89,7 @@ const Reset = () => {
             if (data.response === "success") {
                 Swal.fire("Pin generado", "Revise su correo para obtener el codigo de seguridad", "success").then(() => setWrite(true))
             } else {
-                throw "El pin no se ha podido generar, contacte a soporte"
+                throw String("El pin no se ha podido generar, contacte a soporte")
             }
         } catch (error) {
             Swal.fire("Ha ocurrido un error", error.toString(), "error")
@@ -138,7 +138,7 @@ const Reset = () => {
 
             // verificamos si hay error en el server
             if (data.error) {
-                throw data.message
+                throw String(data.message)
             }
 
             // verificamos si todo esta correcto

@@ -16,17 +16,19 @@ import rocket from "../../static/images/not-found/rocket.svg"
 const NotFound = () => {
     const { pathname } = useLocation()
 
+    // Función que hace una redirección a la ruta base de la aplicación
     const goHome = () => {
         window.location.href = window.location.origin
     }
 
+    // Verifica si la ruta actual pertenece a la ruta de registro
     const isRegisterView = pathname.toLocaleLowerCase().search("/register") !== -1
 
     return (
         <div className="container-404">
             <div className="content-info">
                 <h1>404</h1>
-
+                {/** Si ya se ha iniciado sesión se pide al usuario cerrar sesión para poder acceder al registro, en caso contrario se le muestra la opción para acceder al inicio */}
                 {
                     isRegisterView
                         ? <p className="info">Para continuar deberas cerrar sesion</p>

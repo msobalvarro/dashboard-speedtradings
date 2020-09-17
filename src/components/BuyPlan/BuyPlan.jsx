@@ -59,6 +59,11 @@ const reducer = (state, action) => {
     }
 }
 
+
+/**
+ * @param {Number} idCrypto - código de la moneda
+ * @param {Callback} onBuy - Función a ejecutar cuando se realiza la comprar 
+ */
 const BuyPlan = ({ idCrypto = 1, onBuy = () => { } }) => {
     // Redux store
     const storage = useSelector(store => store.globalStorage)
@@ -199,12 +204,13 @@ const BuyPlan = ({ idCrypto = 1, onBuy = () => { } }) => {
                 dispatch({ type: "airtm", payload: false })
                 dispatch({ type: "alypay", payload: true })
                 break
+
+            default:
+                break
         }
     }
 
-    /**
-     * Obtiene los precios de la coinmarketcap
-     * */
+    /**Obtiene los precios de la coinmarketcap */
     const getAllPrices = async () => {
         dispatch({ type: "loaderCoinmarketCap", payload: true })
 
@@ -257,6 +263,7 @@ const BuyPlan = ({ idCrypto = 1, onBuy = () => { } }) => {
                 {
                     !state.airtm &&
                     <>
+                        {/** Se cargan las wallets según la moneda en que se realizará el pago del plan */}
                         <span>Toca para copiar wallet</span>
                         <span className="wallet" onClick={_ => copyData(!state.alypay ? state.wallets[type] : state.wallets.alypay[type])}>
                             {
@@ -271,6 +278,7 @@ const BuyPlan = ({ idCrypto = 1, onBuy = () => { } }) => {
                 {
                     state.airtm &&
                     <>
+                        {/** Si el pago se realizará el Airtm, se carga el correo electrónico donde se realizará el depósito */}
                         <span>Toca para copiar cuenta Airtm</span>
                         <span className="wallet" onClick={_ => copyData(state.wallets.airtm)}>{state.wallets.airtm}</span>
                     </>
@@ -278,6 +286,7 @@ const BuyPlan = ({ idCrypto = 1, onBuy = () => { } }) => {
             </div>
 
             <div className="row">
+                {/** Se establece el método de pago */}
                 <span htmlFor="check-airtm">Seleccione su método de pago</span>
                 <select className="picker" onChange={onChangePaidMethod}>
                     <option value={0}>Criptomoneda</option>
@@ -287,6 +296,7 @@ const BuyPlan = ({ idCrypto = 1, onBuy = () => { } }) => {
             </div>
 
             <div className="row">
+                {/** Campo para ingresar el monto del plan a adquirir */}
                 <span>Ingresa el monto de inversion</span>
                 <input
                     disabled={state.loaderCoinmarketCap}
@@ -310,6 +320,7 @@ const BuyPlan = ({ idCrypto = 1, onBuy = () => { } }) => {
                         ? <span>Id de manipulacion Airtm</span>
                         : <span>Escribe el hash de transacción</span>
                 }
+                {/** Campo para ingresar de dónde van a provenir los fondos */}
                 <input
                     value={state.hash}
                     onChange={e => dispatch({ type: "hash", payload: e.target.value })}
