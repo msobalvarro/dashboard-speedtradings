@@ -48,6 +48,14 @@ code {
     monospace;
 }
 
+input:-webkit-autofill,
+input:-webkit-autofill:hover, 
+input:-webkit-autofill:focus, 
+input:-webkit-autofill:active  {
+  transition-delay: 9999999s;
+  transition-property: background-color, color;
+}
+
 input,
 button,
 select,

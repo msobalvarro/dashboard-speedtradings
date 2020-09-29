@@ -88,8 +88,9 @@ export const amountMin = {
     eth: 0.1
 }
 
-// export const urlServer = "https://ardent-medley-272823.appspot.com"
-export const urlServer = "http://10.70.12.18:8080"
+ //export const urlServer = "https://ardent-medley-272823.appspot.com"
+//export const urlServer = "http://192.168.11.238:9000"
+export const urlServer = "http://192.168.11.224:8084"
 
 
 /**
@@ -178,17 +179,20 @@ export const calculateCryptoPriceWithoutFee = (price = 0, amount = 0) => {
  * @param {String} str
 */
 export const copyData = async (str = "") => {
-    if (navigator.clipboard) {
-        await navigator.clipboard.writeText(str)
+    let input = document.createElement('input');
+
+    input.setAttribute('value', str);
+    document.body.appendChild(input);
+    input.select();
+
+    let result = document.execCommand('copy');
+    document.body.removeChild(input);
+
+    if(result) {
+        Swal.fire("¡Listo!", "Copiado a portapapeles", "success")
+    } else {
+        Swal.fire("¡Opps!", "Error al copiar al portapapeles", "error")
     }
-
-    copy(str, {
-        message: "Dato copiado",
-        onCopy: () => Swal.fire("Listo", "Copiado a portapapeles", "success"),
-        debug: true
-    })
-
-
 }
 
 export const Petition = Axios.create({
