@@ -229,7 +229,7 @@ const Sponsors = () => {
                     <div className={`table`}>
                         <h2 className="title">Ganancias en Comisiones</h2>
 
-                        <div className="content-data">
+                        <div className={`content-data ${data.length === 0 ? 'empty' : ''}`}>
                             {
                                 data.length === 0 &&
                                 <>

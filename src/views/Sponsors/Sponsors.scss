@@ -68,12 +68,15 @@ div.container-sponsors {
           justify-content: center;
 
           img {
+            display: block;
             width: 256px;
+            margin: 0 auto;
           }
 
           h2 {
             font-weight: normal;
             margin-top: 10px;
+            text-align: center;
           }
         }
 
