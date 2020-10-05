@@ -20,6 +20,7 @@ import Sponsors from './Sponsors/Sponsors'
 import Profile from './Profile/Profile'
 import NotFound from './404/404'
 import Reset from './Reset/Reset'
+import Kyc from './Kyc/Kyc'
 
 const App = () => {
   const dispatch = useDispatch()
@@ -55,6 +56,7 @@ const App = () => {
             <Route path="/" exact component={Dashboard} />
             <Route path="/sponsors" component={Sponsors} />
             <Route path="/profile" component={Profile} />
+            <Route path="/kyc" component={Kyc}/>
             <Route path="*" component={NotFound} />
           </Switch>
 
