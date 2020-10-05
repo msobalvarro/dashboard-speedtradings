@@ -16,6 +16,7 @@ import "./Sponsors.scss"
 
 // Imports components
 import Swal from "sweetalert2"
+import "@sweetalert2/theme-dark/dark.scss"
 import NavigationBar from "../../components/NavigationBar/NavigationBar"
 import ActivityIndicator from "../../components/ActivityIndicator/Activityindicator"
 import moment from "moment"
@@ -35,7 +36,7 @@ const Sponsors = () => {
     const [SumETH, setSumETH] = useState(0)
 
     // Estado para almacenar los precios de las monedas en dólares
-    const [cryptoPrices, setCryptoPrices] = useState({BTC: null, ETH: null})
+    const [cryptoPrices, setCryptoPrices] = useState({ BTC: null, ETH: null })
 
     // Estado para almacenar el valor de búsqueda para el filtro
     const [filterValue, setFilterValue] = useState('')
@@ -86,7 +87,7 @@ const Sponsors = () => {
 
         // Suma los montos de las comisiones para cada moneda
         allData.forEach(item => {
-            switch(item.id_currency) {
+            switch (item.id_currency) {
                 // Si es Bitcoin
                 case 1:
                     _sumBTC += item.comission || 0
@@ -131,28 +132,28 @@ const Sponsors = () => {
      * @return {Number} - Monto en dolares del comisión recibida en criptomoneda
      */
     const calcDollarAmount = (_id_currency, _amount) => {
-        if(cryptoPrices.BTC === null || cryptoPrices.ETH === null) {
+        if (cryptoPrices.BTC === null || cryptoPrices.ETH === null) {
             return 0
         }
-        
+
         /**
          * Se obtiene el valor en dólares de la moneda según su id_current y se calcula 
          * el equivalente en dolares del monto recibido
          */
-        switch(_id_currency) {
+        switch (_id_currency) {
             // Para Bitcoin
             case 1:
                 return calculateCryptoPriceWithoutFee(
-                        cryptoPrices.BTC.quote.USD.price,
-                        _amount
-                    )
+                    cryptoPrices.BTC.quote.USD.price,
+                    _amount
+                )
 
             // Para Ethereum
             case 2:
                 return calculateCryptoPriceWithoutFee(
-                        cryptoPrices.ETH.quote.USD.price,
-                        _amount
-                    )
+                    cryptoPrices.ETH.quote.USD.price,
+                    _amount
+                )
 
             default:
                 return 0
@@ -165,7 +166,7 @@ const Sponsors = () => {
      * @param {Array} dataComissions - Lista de las comisiones pagadas al sponsor 
      */
     const filterData = (dataComissions) => {
-        if(filterValue.length === 0) return dataComissions
+        if (filterValue.length === 0) return dataComissions
 
         return dataComissions.filter(item =>
             (
@@ -200,15 +201,15 @@ const Sponsors = () => {
                     <div className="col">
                         <input type="text" disabled value={urlSponsor} className="text-input large" />
 
-                        <button 
+                        <button
                             onClick={_ => copyData(urlSponsor, 'Link de referencia copiado, ¡comparte con tus amigos!')}
-                            className="button secondary" 
-                            >
+                            className="button secondary"
+                        >
                             Copiar
                         </button>
                     </div>
                     <div className="col">
-                        <input 
+                        <input
                             value={filterValue}
                             onChange={e => setFilterValue(e.target.value)}
                             type="search"
@@ -267,31 +268,29 @@ const Sponsors = () => {
                                                             <span>
                                                                 {
                                                                     item.id_currency === 1
-                                                                    ? 'Bitcoin'
-                                                                    : 'Ethereum'
+                                                                        ? 'Bitcoin'
+                                                                        : 'Ethereum'
                                                                 }
                                                             </span>
 
                                                             {
                                                                 item.id_currency === 1
-                                                                ? <BitcoinIcon/>
-                                                                : <EthereumIcon/>
+                                                                    ? <BitcoinIcon />
+                                                                    : <EthereumIcon />
                                                             }
                                                         </p>
                                                         <span>
                                                             {
-                                                                `${item.amount} ${
-                                                                    item.id_currency === 1
+                                                                `${item.amount} ${item.id_currency === 1
                                                                     ? 'BTC'
                                                                     : 'ETH'
                                                                 }`
                                                             }
                                                         </span>
-                                                        <span>{item.fee_sponsor} %</span>
+                                                        <span>{item.fee_sponsor * 100} %</span>
                                                         <span>
                                                             {
-                                                                `${floor(item.comission, 8)} ${
-                                                                    item.id_currency === 1
+                                                                `${floor(item.comission, 8)} ${item.id_currency === 1
                                                                     ? 'BTC'
                                                                     : 'ETH'
                                                                 }`
@@ -311,23 +310,23 @@ const Sponsors = () => {
                                         }
                                     </div>
                                     <div className="footer">
-                                        <span>Total ganancias BTC</span> 
+                                        <span>Total ganancias BTC</span>
                                         <span>
-                                            {floor(SumBTC, 8)} BTC ($ 
+                                            {floor(SumBTC, 8)} BTC ($
                                                 {
-                                                    calcDollarAmount(1, SumBTC)
-                                                }
+                                                calcDollarAmount(1, SumBTC)
+                                            }
                                             )
                                         </span>
                                     </div>
                                     <div className="footer">
-                                        <span>Total ganancias ETH</span> 
-                                        
+                                        <span>Total ganancias ETH</span>
+
                                         <span>
-                                            {floor(SumETH, 8)} ETH ($ 
+                                            {floor(SumETH, 8)} ETH ($
                                                 {
-                                                    calcDollarAmount(2, SumETH)
-                                                }
+                                                calcDollarAmount(2, SumETH)
+                                            }
                                             )
                                         </span>
                                     </div>
