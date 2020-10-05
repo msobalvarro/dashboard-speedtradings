@@ -10,7 +10,6 @@ div.container-login {
 
   div.form-control {
     align-items: center;
-    // border: 2px solid #FFF;
     display: flex;
     flex-direction: column;
     width: 512px;
@@ -50,6 +49,8 @@ div.container-login {
           align-self: center;
           max-width: 128px;
         }
+
+        
 
         .password-forgot {
           align-self: flex-end;

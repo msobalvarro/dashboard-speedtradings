@@ -1,6 +1,5 @@
 import jwt from "jwt-simple"
 import Axios from "axios"
-import copy from "copy-to-clipboard"
 import Swal from "sweetalert2"
 
 // Constanst
@@ -129,6 +128,31 @@ export const WithDecimals = (number = 0) => number.toString().replace(/\B(?=(\d{
 export const Round = (number = 0) => Math.round(number * 100) / 100
 
 /**
+ * Creates a function like `round`. Extract from lodash library
+ *
+ * @private
+ * @param {string} methodName The name of the `Math` method to use when rounding.
+ * @returns {Function} Returns the new round function.
+ */
+export const floor = (number, precision) => {
+    const func = Math.floor
+
+    precision = precision == null ? 0 : (precision >= 0 ? Math.min(precision, 292) : Math.max(precision, -292))
+
+    if (precision) {
+        // Shift with exponential notation to avoid floating-point issues.
+        // See [MDN](https://mdn.io/round#Examples) for more details.
+        let pair = `${number}e`.split('e')
+        const value = func(`${pair[0]}e${+pair[1] + precision}`)
+
+        pair = `${value}e`.split('e')
+        return +`${pair[0]}e${+pair[1] - precision}`
+    }
+
+    return func(number)
+}
+
+/**
 * Calcula el precio agregando todos los impuestos
 * 
 * -- --
@@ -177,18 +201,21 @@ export const calculateCryptoPriceWithoutFee = (price = 0, amount = 0) => {
  * Copy string
  * @param {String} str
 */
-export const copyData = async (str = "") => {
-    if (navigator.clipboard) {
-        await navigator.clipboard.writeText(str)
+export const copyData = async (str = "", msg="Copiado a portapapeles") => {
+    let input = document.createElement('input');
+
+    input.setAttribute('value', str);
+    document.body.appendChild(input);
+    input.select();
+
+    let result = document.execCommand('copy');
+    document.body.removeChild(input);
+
+    if(result) {
+        Swal.fire("¡Listo!", msg, "success")
+    } else {
+        Swal.fire("¡Opps!", "Error al copiar al portapapeles", "error")
     }
-
-    copy(str, {
-        message: "Dato copiado",
-        onCopy: () => Swal.fire("Listo", "Copiado a portapapeles", "success"),
-        debug: true
-    })
-
-
 }
 
 export const Petition = Axios.create({

@@ -39,13 +39,13 @@ div.container-sponsors {
   .content-tables {
     padding: 0 25px;
     display: flex;
-    justify-content: space-between;
+    justify-content: center;
 
     .table {
       background-color: rgba(0, 0, 0, 0.5);
       padding: 25px;
       border-radius: 10px;
-      width: 47%;
+      width: 90%;
 
       h2.title {
         color: $colorYellow;
@@ -57,8 +57,9 @@ div.container-sponsors {
       }
 
       .content-data {
-        height: 50vh;
+        max-height: 55vh;
         overflow: auto;
+        padding-right: 1rem;
 
         &.empty {
           align-items: center;
@@ -67,12 +68,15 @@ div.container-sponsors {
           justify-content: center;
 
           img {
+            display: block;
             width: 256px;
+            margin: 0 auto;
           }
 
           h2 {
             font-weight: normal;
             margin-top: 10px;
+            text-align: center;
           }
         }
 
@@ -107,7 +111,7 @@ div.container-sponsors {
             justify-content: space-between;
             font-size: .9rem;
 
-            span {
+            span, p {
               overflow: hidden;
               white-space: nowrap;
               text-overflow: ellipsis;
@@ -123,11 +127,32 @@ div.container-sponsors {
                 width: 15%;
               }
             }
+
+            p {
+              display: flex;
+              flex-direction: row;
+              justify-content: center;
+              align-items: center;
+
+              span {
+                width: 75px;
+                text-align: center !important;
+              }
+
+              svg {
+                margin-left: .5rem;
+              }
+            }
+
+            &:last-child {
+              margin-bottom: 1rem;
+            }
           }
         }
 
         .footer {
-          text-align: right;
+          display: flex;
+          justify-content: space-between;
           margin-top: 10px;
           font-size: 1.2em;
         }
