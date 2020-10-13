@@ -7,7 +7,7 @@ import KycUserForm from "../../components/KycUserForm/KycUserForm"
 import KycEcommerceForm from "../../components/KycEcommerceForm/KycEcommerceForm"
 
 // Import utils
-import { userValidations } from "../../utils/kycFormValidations"
+import { userValidations, ecommerceValidations } from "../../utils/kycFormValidations"
 
 // Import assets
 import { ReactComponent as BackIcon } from "../../static/icons/arrow-back.svg"
@@ -17,15 +17,18 @@ import { ReactComponent as ForwardIcon } from "../../static/icons/arrow-forward.
 const Kyc = () => {
     const NOW = moment(new Date(), "YYYY-MM-DD")
     const [USERAGE, setUSERAGE] = useState(18)
-    const [activeSection, setActiveSection] = useState(1)
+    const [activeSection, setActiveSection] = useState(2)
 
     /**
      * Estados para los campos del formulario de KYC
      */
-    // Información del beneficiario
-    const [beneficiaryInfo, setBeneficiaryInfo] = useState({})
+    // Estados para almacenar la infromación de un usuario natural
     const [userInfo, setUserInfo] = useState({})
     const [tutorInfo, setTutorInfo] = useState({})
+    const [beneficiaryInfo, setBeneficiaryInfo] = useState({})
+
+    // Estados para almacenar la información de un comercio
+    const [ecommerceInfo, setEcommerceInfo] = useState({})
 
     /**
      * Verifica que los campos de la sección activa estén completos
@@ -36,7 +39,8 @@ const Kyc = () => {
         switch(activeSection) {
             // Validaciones para la sección 1
             case 1: 
-                return userValidations.userInfo(userInfo)
+                //return userValidations.userInfo(userInfo)
+                return ecommerceValidations.commerceInfo(ecommerceInfo)
 
             // Validaciones para la sección 2
             case 2: 
@@ -62,7 +66,7 @@ const Kyc = () => {
          */
         let section = (activeSection === 1 && USERAGE < 18)
             ? activeSection + 1
-            : activeSection + 2
+            : activeSection + 1
 
         setActiveSection(
             (activeSection === 3)
@@ -78,7 +82,7 @@ const Kyc = () => {
     const prevSection = _ => {
         let section = (activeSection === 3 && USERAGE < 18)
             ? activeSection - 1
-            : activeSection - 2
+            : activeSection - 1
 
         setActiveSection(
             (activeSection === 1)
@@ -129,7 +133,10 @@ const Kyc = () => {
                         beneficiaryForm={true}/>
                 }
 
-                <KycEcommerceForm />
+                <KycEcommerceForm 
+                    state={ecommerceInfo} 
+                    setState={setEcommerceInfo}
+                    activeSection={activeSection} />
 
                 <div className="footer">
                     <div className="pager">

@@ -1,0 +1,79 @@
+@import '../../utils/constants.scss';
+
+.KycEcommerceBeneficialOwner {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    box-shadow: $animationShadow;
+    border-radius: 7px;
+    padding: 1rem;
+    padding-bottom: 0;
+    margin-bottom: 2rem;
+
+    .item {
+        display: flex;
+        flex-direction: column;
+        width: calc(calc(100% - 6rem) / 4);
+        margin-bottom: 1rem;
+        margin-left: 2rem;
+
+        &:first-child, &:nth-child(4n + 1) {
+            margin-left: 0;
+        }
+
+        span {
+            margin-bottom: 5px;
+        }
+
+        .text-input, .picker {
+            height: 40px;
+            box-sizing: border-box;
+            font-size: 16px;
+            line-height: 100%;
+        }
+
+        &.horizontal {
+            flex-direction: row;
+        }
+    }
+
+    .footer, .upload-section {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+
+    .footer {
+        width: 100%;
+        margin-bottom: 1rem;
+
+        .item {
+            width: 350px;
+            margin-bottom: 0;
+
+            span {
+                margin-bottom: 0;
+            }
+        }
+
+        .img-preview {
+            display: block;
+            margin: 0 !important;
+            margin-left: 1.5rem !important;
+        }
+
+        .add-button {
+            line-height: 1;
+            width: 140px !important;
+            svg {
+                height: 1.1rem;
+                margin-left: .5rem;
+                fill: currentColor;
+
+                path {
+                    fill: currentColor;
+                }
+            }
+        }
+    }
+}

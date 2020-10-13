@@ -1,6 +1,7 @@
 import jwt from "jwt-simple"
 import Axios from "axios"
 import Swal from "sweetalert2"
+import moment from "moment"
 
 // Constanst
 const keySecret = "testDevelop"
@@ -12,6 +13,29 @@ export const wallets = {
     userCoinbase: '@SpeedTradingsBank',
     airtm: 'tradingspeed4@gmail.com',
 }
+
+// Lista preliminar de los tipos de comercios que se mostrarán dentro del kyc
+export const commercialCategories = [
+    'Abarrotería',
+    'Agencia de viaje',
+    'Bar',
+    'Bazar',
+    'Cafetería',
+    'Centro comercial',
+    'Charcutería',
+    'Discoteca',
+    'Estación de servicio',
+    'Ferretería',
+    'Almacén',
+    'Hotel / Hospedaje',
+    'Joyería',
+    'Librería',
+    'Mercado',
+    'Repostería',
+    'Restaurante',
+    'Tienda',
+    'Venta minorista'
+]
 
 /**
 * Método que obtiene los hash de las wallets desde la API,
@@ -88,8 +112,8 @@ export const amountMin = {
 }
 
  //export const urlServer = "https://ardent-medley-272823.appspot.com"
-//export const urlServer = "http://192.168.11.238:9000"
-export const urlServer = "http://192.168.11.224:8084"
+export const urlServer = "http://192.168.1.238:9000"
+//export const urlServer = "http://192.168.1.224:8084"
 
 
 /**
@@ -127,6 +151,11 @@ export const getMobileOperatingSystem = () => {
 export const WithDecimals = (number = 0) => number.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")
 
 export const Round = (number = 0) => Math.round(number * 100) / 100
+
+/**
+ * Return a unique string to use how component key into react
+ * */
+export const randomKey = _ => ('_' + Math.random().toString(36).substr(2, 9))
 
 /**
  * Creates a function like `round`. Extract from lodash library
@@ -217,6 +246,37 @@ export const copyData = async (str = "", msg="Copiado a portapapeles") => {
     } else {
         Swal.fire("¡Opps!", "Error al copiar al portapapeles", "error")
     }
+}
+
+/**
+ * Función para calcular una edad a partir de una fecha de nacimiento
+ * @param {Date || String} birthDate - Fecha a evaluar
+ */
+export const getAge = (birthDate) => {
+    // Se obtiene la fecha actual
+    let now = moment(new Date(), "YYYY-MM-DD")
+    let fromDate = moment(birthDate, "YYYY-MM-DD")
+
+    // Se calcula la edad del usuario
+    return Math.floor(moment.duration(now.diff(fromDate)).asYears())
+}
+
+/**
+ * Función para leer un archivo y retornarlo en base64
+ * @param {File} file - Archivo a leer y retornar en base64 
+ */
+export const readFile = (file) => {
+    return new Promise((resolve, reject) => {
+        let reader = new FileReader()
+  
+        reader.onload = () => {
+            resolve(reader.result)
+        };
+  
+        reader.onerror = reject
+  
+        reader.readAsDataURL(file)
+    })
 }
 
 export const Petition = Axios.create({

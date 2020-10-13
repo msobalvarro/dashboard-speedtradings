@@ -6,6 +6,7 @@ let now = moment(new Date(), 'YYYY-MM-DD').subtract(1, 'd')
  * Validaciones para el formulario kyc para los usuarios naturales
  * @param {Object} userData - Datos del usuario
  * @param {Object} tutorData - Datos del tutor 
+ * @param {Object} beneficiaryData - Datos del beneficiario 
  */
 const userValidations = {
     userInfo: (userData) => (
@@ -78,6 +79,53 @@ const userValidations = {
     )
 }
 
+const ecommerceValidations = {
+    commerceInfo: (commerceData) => (
+        (commerceData.hasOwnProperty('name') && commerceData.name.length > 0) &&
+        (commerceData.hasOwnProperty('email') && commerceData.email.length > 0) &&
+        (commerceData.hasOwnProperty('website') && commerceData.website.length > 0) &&
+        (commerceData.hasOwnProperty('nameLegalEntity') && commerceData.nameLegalEntity.length > 0) &&
+        (commerceData.hasOwnProperty('type') && commerceData.type !== -1) &&
+        (commerceData.hasOwnProperty('businessIdentification') && commerceData.businessIdentification.length > 0) &&
+        (commerceData.hasOwnProperty('businessIdentificationPicture') && commerceData.businessIdentificationPicture !== null) &&
+        (commerceData.hasOwnProperty('incorporationDate') && Math.floor(moment.duration(moment(commerceData.incorporationDate).diff(now)).asDays()) < 0) &&
+        (commerceData.hasOwnProperty('country') && commerceData.country !== -1) &&
+        (commerceData.hasOwnProperty('region') && commerceData.region.length > 0) &&
+        (commerceData.hasOwnProperty('city') && commerceData.city.length > 0) &&
+        ( 
+            (commerceData.hasOwnProperty('direction1') && commerceData.direction1.length > 0) || 
+            (commerceData.hasOwnProperty('direction2') && commerceData.direction2.length > 0)
+        ) &&
+        (commerceData.hasOwnProperty('postalCode') && commerceData.postalCode.length > 0) && 
+        (commerceData.hasOwnProperty('phoneCode') && commerceData.phoneCode.length > 0) &&
+        (commerceData.hasOwnProperty('mainTelephone') && commerceData.mainTelephone.length > 0) &&
+
+        (commerceData.hasOwnProperty('commercialActivityCountry') && commerceData.commercialActivityCountry !== -1) &&
+        (commerceData.hasOwnProperty('commercialActivityRegion') && commerceData.commercialActivityRegion.length > 0)
+    ),
+
+    beneficialOwnerItemInfo: (BOData) => (
+        (BOData.hasOwnProperty('title') && BOData.title.length > 0) &&
+        (BOData.hasOwnProperty('name') && BOData.name.length > 0) &&
+        (BOData.hasOwnProperty('birthDate') && Math.floor(moment.duration(moment(BOData.birthDate).diff(now)).asDays()) < 0) &&
+        (BOData.hasOwnProperty('passport') && BOData.passport.length > 0) &&
+        (BOData.hasOwnProperty('passportEmissionCountry') && BOData.passportEmissionCountry !== -1) &&
+        (BOData.hasOwnProperty('originCountry') && BOData.originCountry !== -1) &&
+        (BOData.hasOwnProperty('region') && BOData.region !== -1) &&
+        (BOData.hasOwnProperty('city') && BOData.city.length > 0) &&
+        (BOData.hasOwnProperty('direction') && BOData.direction.length > 0) &&
+        (BOData.hasOwnProperty('postalCode') && BOData.postalCode.length > 0) &&
+        (BOData.hasOwnProperty('participation') && BOData.participation.length > 0) &&
+        (BOData.hasOwnProperty('idTax') && BOData.idTax.length > 0) &&
+        (BOData.hasOwnProperty('passportPicture') && Boolean.passportPicture !== null)
+    ),
+
+    beneficialOwnerSectionInfo: (BOSInfo) => (
+        (BOSInfo.beneficialOwnerList.length > 0 ) 
+    )
+}
+
 export {
-    userValidations
+    userValidations,
+    ecommerceValidations
 }
