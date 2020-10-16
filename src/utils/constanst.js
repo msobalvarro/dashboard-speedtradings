@@ -52,7 +52,7 @@ export const getWallets = async (walletState) => {
         // Si la entrada contiene subentradas, también se recorren
         if (coinName.toLowerCase() === 'alypay') {
             let alypay_wallets = Object.entries(wallet_hash).map(subentrie => {
-                const [subCoinName, subWallet_hash] = subentrie;
+                const [subCoinName, subWallet_hash] = subentrie
 
                 return [getCoinSymbol(subCoinName), subWallet_hash]
             })
@@ -65,7 +65,7 @@ export const getWallets = async (walletState) => {
 
     walletsData = fromEntries(walletsData)
 
-    walletState(walletsData);
+    walletState(walletsData)
 }
 
 // Construye un objeto a partir de las entradas de uno existente
@@ -74,10 +74,10 @@ const fromEntries = (data) => {
 
     for (let i = 0; i < data.length; i++) {
         let [key, value] = data[i]
-        result[key] = value;
+        result[key] = value
     }
 
-    return result;
+    return result
 }
 
 /**
@@ -99,7 +99,7 @@ const getCoinSymbol = (coinName) => {
             return 'alypay'
 
         default:
-            return coinName;
+            return coinName
     }
 }
 
@@ -111,7 +111,7 @@ export const amountMin = {
     eth: 0.1
 }
 
- //export const urlServer = "https://ardent-medley-272823.appspot.com"
+//export const urlServer = "https://ardent-medley-272823.appspot.com"
 export const urlServer = "http://192.168.1.238:9000"
 //export const urlServer = "http://192.168.1.224:8084"
 
@@ -228,20 +228,33 @@ export const calculateCryptoPriceWithoutFee = (price = 0, amount = 0) => {
 }
 
 /**
+ * Calcula la edad según una fecha
+ * @param {String | Date} birthDate - Fecha a evaluar
+ */
+export const calcAge = (birthDate) => {
+    let NOW = moment(new Date(), 'YYYY-MM-DD')
+    let fromDate = moment(birthDate, "YYYY-MM-DD")
+    // Se calcula la edad
+    let age = moment.duration(NOW.diff(fromDate)).asYears()
+
+    return age
+}
+
+/**
  * Copy string
  * @param {String} str
 */
-export const copyData = async (str = "", msg="Copiado a portapapeles") => {
-    let input = document.createElement('input');
+export const copyData = async (str = "", msg = "Copiado a portapapeles") => {
+    let input = document.createElement('input')
 
-    input.setAttribute('value', str);
-    document.body.appendChild(input);
-    input.select();
+    input.setAttribute('value', str)
+    document.body.appendChild(input)
+    input.select()
 
-    let result = document.execCommand('copy');
-    document.body.removeChild(input);
+    let result = document.execCommand('copy')
+    document.body.removeChild(input)
 
-    if(result) {
+    if (result) {
         Swal.fire("¡Listo!", msg, "success")
     } else {
         Swal.fire("¡Opps!", "Error al copiar al portapapeles", "error")
@@ -268,13 +281,13 @@ export const getAge = (birthDate) => {
 export const readFile = (file) => {
     return new Promise((resolve, reject) => {
         let reader = new FileReader()
-  
+
         reader.onload = () => {
             resolve(reader.result)
-        };
-  
+        }
+
         reader.onerror = reject
-  
+
         reader.readAsDataURL(file)
     })
 }
@@ -289,7 +302,7 @@ export const Petition = Axios.create({
             LogOut()
         }
 
-        return status >= 200 && status < 300;
+        return status >= 200 && status < 300
     }
 })
 

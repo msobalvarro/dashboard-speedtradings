@@ -36,14 +36,15 @@
                     flex-direction: column;
     
                     span {
-                        display: flex;
-                        flex-direction: row;
-                        align-items: center;
+                        display: block;
+                        margin-bottom: 2px;
     
                         &.required {
                             &:after {
+                                display: inline-block;
                                 content: '\2731';
                                 color: $colorRed;
+                                font-size: 12px;
                                 margin-left: .25rem;
                             }
                         }
@@ -95,6 +96,7 @@
 
                 .upload-section {
                     span {
+                        display: block;
                         width: fit-content;
                         max-width: 250px;
                         font-size: .85rem;
@@ -152,6 +154,27 @@
                         box-shadow: 0 0 0 3px rgba($colorRed, .4);
                     }
                 }
+            }
+        }
+    }
+
+    .check-input {
+        display: flex;
+        align-items: center;
+        color: $colorYellow;
+        font-weight: bold;
+
+        input[type="checkbox"] {
+            margin-left: .5rem;
+        }
+    }
+
+    .toshow {
+        animation: toshow .5s linear;
+
+        @keyframes toshow {
+            from {
+                opacity: 0;
             }
         }
     }
