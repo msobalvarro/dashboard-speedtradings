@@ -2,6 +2,9 @@ import React, { useState, useEffect } from 'react'
 import moment from 'moment'
 import './KycEcommerceBeneficialOwner.scss'
 
+// Import components
+import TelephoneField from "../TelephoneField/TelephoneField"
+
 // Import assets
 import Countries from '../../utils/countries.json'
 import { ReactComponent as UploadIcon } from '../../static/icons/upload.svg'
@@ -12,9 +15,11 @@ import { ecommerceValidations } from '../../utils/kycFormValidations'
 import { randomKey } from '../../utils/constanst'
 
 
-const KycEcommerceBeneficialOwner = ({ onSubmit=_=>{}, onChange=null }) => {
+const KycEcommerceBeneficialOwner = ({ onSubmit = _ => { }, onChange = null }) => {
     // Estado para almacenar la previsualización de la imagen del pasaporte del propietario beneficiario
     const [passportPicturePreview, setPassportPicturePreview] = useState(null)
+    // Estado para almacenar la previsualización de la imagen de la cédula
+    const [personalIdPreview, setPersonalIdPreview] = useState(null)
 
     const [state, setState] = useState({})
 
@@ -33,7 +38,7 @@ const KycEcommerceBeneficialOwner = ({ onSubmit=_=>{}, onChange=null }) => {
     }
 
     useEffect(_ => {
-        if(onChange !== null) {
+        if (onChange !== null) {
             onChange(state)
         }
     }, [state])
@@ -44,77 +49,91 @@ const KycEcommerceBeneficialOwner = ({ onSubmit=_=>{}, onChange=null }) => {
                 <span>Título del cargo</span>
                 <input
                     value={state.title || ''}
-                    onChange={e => 
-                        setState({...state, title: e.target.value})
+                    onChange={e =>
+                        setState({ ...state, title: e.target.value })
                     }
                     type="text"
-                    className="text-input"/>
+                    className="text-input" />
             </div>
 
             <div className="item">
                 <span>Nombre completo</span>
-                <input 
+                <input
                     value={state.name || ''}
                     onChange={e =>
-                        setState({...state, name: e.target.value}) 
+                        setState({ ...state, name: e.target.value })
                     }
-                    type="text" 
-                    className="text-input"/>
+                    type="text"
+                    className="text-input" />
             </div>
 
             {
                 onChange === null &&
                 <div className="item">
                     <span>Fecha de nacimiento</span>
-                    <input 
+                    <input
                         value={state.birthDate || moment(new Date()).format("YYYY-MM-DD")}
-                        onChange={e => 
-                            setState({...state, birthDate: e.target.value})
+                        onChange={e =>
+                            setState({ ...state, birthDate: e.target.value })
                         }
-                        type="date" 
-                        className="picker"/>
+                        type="date"
+                        className="picker" />
                 </div>
             }
 
             <div className="item">
-                <span>Número de pasaporte</span>
+                <span>No. identificación personal</span>
                 <input
-                    value={state.passport || ''} 
+                    value={state.personalId || ''}
                     onChange={e =>
-                        setState({...state, passport: e.target.value})
+                        setState({ ...state, personalId: e.target.value })
                     }
-                    type="text" 
-                    className="text-input"/>
+                    type="text"
+                    className="text-input" />
             </div>
 
             <div className="item">
-                <span>País de emisión pasaporte</span>
-                <select
-                    value={state.passportEmissionCountry || -1}
-                    onChange={e => 
-                        setState({...state, passportEmissionCountry: e.target.value})
+                <span>Número de pasaporte</span>
+                <input
+                    value={state.passport || ''}
+                    onChange={e =>
+                        setState({ ...state, passport: e.target.value })
                     }
-                    className="picker">
-                    <option value="-1" disabled hidden>
-                        Seleccione un país
-                    </option>
-
-                    {
-                        Countries.map(({name}, index) => (
-                            <option key={index} value={index}>
-                                {name}
-                            </option>
-                        ))
-                    }
-                </select>
+                    type="text"
+                    className="text-input" />
             </div>
+
+            {
+                state.passport && state.passport.length > 0 &&
+                < div className="item toshow">
+                    <span>País de emisión pasaporte</span>
+                    <select
+                        value={state.passportEmissionCountry || -1}
+                        onChange={e =>
+                            setState({ ...state, passportEmissionCountry: e.target.value })
+                        }
+                        className="picker">
+                        <option value="-1" disabled hidden>
+                            Seleccione un país
+                                </option>
+
+                        {
+                            Countries.map(({ name }, index) => (
+                                <option key={index} value={index}>
+                                    {name}
+                                </option>
+                            ))
+                        }
+                    </select>
+                </div>
+            }
 
             <div className="item">
                 <span>País de origen</span>
                 <select
                     value={state.originCountry || -1}
-                    onChange={e => 
-                        setState({...state, originCountry: e.target.value})
+                    onChange={e =>
+                        setState({ ...state, originCountry: e.target.value })
                     }
                     className="picker">
                     <option value="-1" disabled hidden>
@@ -122,7 +141,7 @@ const KycEcommerceBeneficialOwner = ({ onSubmit=_=>{}, onChange=null }) => {
                     </option>
 
                     {
-                        Countries.map(({name}, index) => (
+                        Countries.map(({ name }, index) => (
                             <option key={index} value={index}>
                                 {name}
                             </option>
@@ -139,21 +158,21 @@ const KycEcommerceBeneficialOwner = ({ onSubmit=_=>{}, onChange=null }) => {
                         <input
                             value={state.region || ''}
                             onChange={e =>
-                                setState({...state, region: e.target.value})
-                            } 
-                            type="text" 
-                            className="text-input"/>
+                                setState({ ...state, region: e.target.value })
+                            }
+                            type="text"
+                            className="text-input" />
                     </div>
 
                     <div className="item">
                         <span>Ciudad</span>
-                        <input 
+                        <input
                             value={state.city || ''}
                             onChange={e =>
-                                setState({...state, city: e.target.value})
+                                setState({ ...state, city: e.target.value })
                             }
-                            type="text" 
-                            className="text-input"/>
+                            type="text"
+                            className="text-input" />
                     </div>
                 </>
             }
@@ -163,10 +182,10 @@ const KycEcommerceBeneficialOwner = ({ onSubmit=_=>{}, onChange=null }) => {
                 <input
                     value={state.direction || ''}
                     onChange={e =>
-                        setState({...state, direction: e.target.value})
-                    } 
-                    type="text" 
-                    className="text-input"/>
+                        setState({ ...state, direction: e.target.value })
+                    }
+                    type="text"
+                    className="text-input" />
             </div>
 
             {
@@ -176,11 +195,11 @@ const KycEcommerceBeneficialOwner = ({ onSubmit=_=>{}, onChange=null }) => {
                         <span>Código postal</span>
                         <input
                             value={state.postalCode || ''}
-                            onChange={e => 
-                                setState({...state, postalCode: e.target.value})
-                            } 
-                            type="text" 
-                            className="text-input"/>
+                            onChange={e =>
+                                setState({ ...state, postalCode: e.target.value })
+                            }
+                            type="text"
+                            className="text-input" />
                     </div>
 
                     <div className="item">
@@ -188,74 +207,111 @@ const KycEcommerceBeneficialOwner = ({ onSubmit=_=>{}, onChange=null }) => {
                         <input
                             value={state.participation || ''}
                             onChange={e =>
-                                setState({...state, participation: e.target.value})
-                            } 
-                            type="text" 
-                            className="text-input"/>
+                                setState({ ...state, participation: e.target.value })
+                            }
+                            type="text"
+                            className="text-input" />
                     </div>
                 </>
             }
 
             <div className="item">
-                <span>No. identificación tributaria</span>
+                <span>No. identificación tributaria (opcional)</span>
                 <input
                     value={state.idTax || ''}
                     onChange={e =>
-                        setState({...state, idTax: e.target.value})
-                    } 
-                    type="text" 
-                    className="text-input"/>
+                        setState({ ...state, idTax: e.target.value })
+                    }
+                    type="text"
+                    className="text-input" />
             </div>
 
             {
                 onChange !== null &&
                 <div className="item">
                     <span>Teléfono</span>
-                    <input 
+                    <TelephoneField
                         value={state.telephone || ''}
-                        onChange={e => 
-                            setState({...state, telephone: e.target.value})
-                        }
-                        type="text" 
-                        className="text-input"/>
+                        onChange={value =>
+                            setState({ ...state, telephone: value })
+                        } />
                 </div>
             }
 
             <div className="footer">
-                <div className="upload-section">
-                    <div className="item horizontal">
-                        <span className="required">Adjunte una foto del pasaporte</span>
+                <div className="uploads-container">
+                    {
+                        state.personalId && state.personalId.length > 0 &&
+                        <div className="upload-section toshow">
+                            <div className="item horizontal">
+                                <span className="required">Adjunte una foto su indetificación personal</span>
 
-                        <label
-                            title="Subir archivo"
-                            htmlFor={`passport-picture-${inputFileId}`}
-                            className="upload">
-                            <UploadIcon/>
-                        </label>
-                        <input
-                            type="file"
-                            id={`passport-picture-${inputFileId}`}
-                            onChange={e => 
-                                handleLoadPreview(
-                                    e, 
-                                    setPassportPicturePreview,
-                                    file => setState({
-                                        ...state, 
-                                        passportPicture: file
-                                    })
-                                )}
-                            />
-                    </div>
+                                <label
+                                    title="Subir archivo"
+                                    htmlFor={`personalId-picture-${inputFileId}`}
+                                    className="upload">
+                                    <UploadIcon />
+                                </label>
+                                <input
+                                    type="file"
+                                    id={`personalId-picture-${inputFileId}`}
+                                    onChange={e =>
+                                        handleLoadPreview(
+                                            e,
+                                            setPersonalIdPreview,
+                                            file => setState({
+                                                ...state,
+                                                personalIdPicture: file
+                                            })
+                                        )}
+                                />
+                            </div>
+
+                            {
+                                personalIdPreview !== null &&
+                                <img src={personalIdPreview} alt="" className="img-preview" />
+                            }
+                        </div>
+                    }
 
                     {
-                        passportPicturePreview !== null &&
-                        <img src={passportPicturePreview} alt="" className="img-preview"/>
+                        state.passport && state.passport.length > 0 &&
+                        <div className="upload-section toshow">
+                            <div className="item horizontal">
+                                <span className="required">Adjunte una foto del pasaporte</span>
+
+                                <label
+                                    title="Subir archivo"
+                                    htmlFor={`passport-picture-${inputFileId}`}
+                                    className="upload">
+                                    <UploadIcon />
+                                </label>
+                                <input
+                                    type="file"
+                                    id={`passport-picture-${inputFileId}`}
+                                    onChange={e =>
+                                        handleLoadPreview(
+                                            e,
+                                            setPassportPicturePreview,
+                                            file => setState({
+                                                ...state,
+                                                passportPicture: file
+                                            })
+                                        )}
+                                />
+                            </div>
+
+                            {
+                                passportPicturePreview !== null &&
+                                <img src={passportPicturePreview} alt="" className="img-preview" />
+                            }
+                        </div>
                     }
                 </div>
 
                 {
                     onChange === null &&
-                    <button 
+                    <button
                         disabled={!ecommerceValidations.beneficialOwnerItemInfo(state)}
                         onClick={_ => {
                             onSubmit(state)
@@ -268,7 +324,7 @@ const KycEcommerceBeneficialOwner = ({ onSubmit=_=>{}, onChange=null }) => {
                     </button>
                 }
             </div>
-        </div>
+        </div >
     )
 }
 

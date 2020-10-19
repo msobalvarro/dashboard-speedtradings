@@ -70,7 +70,7 @@ const userValidations = {
 }
 
 const ecommerceValidations = {
-    commerceInfo: (commerceData) => (
+    commerceBasicInfo: (commerceData) => (
         (commerceData.hasOwnProperty('name') && commerceData.name.length > 0) &&
         (commerceData.hasOwnProperty('email') && commerceData.email.length > 0) &&
         (commerceData.hasOwnProperty('website') && commerceData.website.length > 0) &&
@@ -87,12 +87,48 @@ const ecommerceValidations = {
             (commerceData.hasOwnProperty('direction2') && commerceData.direction2.length > 0)
         ) &&
         (commerceData.hasOwnProperty('postalCode') && commerceData.postalCode.length > 0) &&
-        (commerceData.hasOwnProperty('phoneCode') && commerceData.phoneCode.length > 0) &&
         (commerceData.hasOwnProperty('mainTelephone') && commerceData.mainTelephone.length > 0) &&
 
         (commerceData.hasOwnProperty('commercialActivityCountry') && commerceData.commercialActivityCountry !== -1) &&
         (commerceData.hasOwnProperty('commercialActivityRegion') && commerceData.commercialActivityRegion.length > 0)
     ),
+
+    commerceBeneficialInfo: (commerceData) => {
+        const {
+            beneficialOwnerList,
+            legalRepresentative
+        } = commerceData
+
+        return (
+            (beneficialOwnerList && beneficialOwnerList.length > 0) &&
+            (commerceData.hasOwnProperty('typeLegalRepresentative')) &&
+            (legalRepresentative && (
+                legalRepresentative.title && legalRepresentative.title.length > 0 &&
+                legalRepresentative.name && legalRepresentative.name.length > 0 &&
+                (
+                    (
+                        (legalRepresentative.passport && legalRepresentative.passport.length > 0) &&
+                        (legalRepresentative.passportEmissionCountry && legalRepresentative.passportEmissionCountry !== -1)
+                    ) ||
+                    (legalRepresentative.personalId && legalRepresentative.personalId.length > 0)
+                ) &&
+                (legalRepresentative.originCountry && legalRepresentative.originCountry !== -1) &&
+                (legalRepresentative.direction && legalRepresentative.direction.length > 0) &&
+                (legalRepresentative.telephone && legalRepresentative.telephone.length > 0) &&
+                (
+                    (
+                        legalRepresentative.passport &&
+                        (legalRepresentative.passportPicture && legalRepresentative.passportPicture !== null)
+                    ) ||
+                    (
+                        legalRepresentative.personalId &&
+                        (legalRepresentative.personalIdPicture && legalRepresentative.personalIdPicture !== null)
+                    )
+                )
+            )) &&
+            (commerceData.hasOwnProperty('isDiplomatic'))
+        )
+    },
 
     beneficialOwnerItemInfo: (BOData) => (
         (BOData.hasOwnProperty('title') && BOData.title.length > 0) &&
@@ -115,11 +151,11 @@ const ecommerceValidations = {
         (
             (
                 BOData.hasOwnProperty('passport') &&
-                (BOData.hasOwnProperty('passportPicture') && Boolean.passportPicture !== null)
+                (BOData.hasOwnProperty('passportPicture') && BOData.passportPicture !== null)
             ) ||
             (
                 BOData.hasOwnProperty('personalId') &&
-                (BOData.hasOwnProperty('personalIdPicture') && Boolean.personalIdPicture !== null)
+                (BOData.hasOwnProperty('personalIdPicture') && BOData.personalIdPicture !== null)
             )
         )
     ),

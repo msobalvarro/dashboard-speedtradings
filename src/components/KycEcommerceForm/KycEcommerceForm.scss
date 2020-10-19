@@ -9,6 +9,11 @@
             margin-bottom: 2rem;
         }
 
+        .name-legal-representative {
+            color: $colorYellow;
+            text-transform: capitalize;
+        }
+
         .paragraph, .check-paragraph {
             display: block;
             margin: 1rem 0;
@@ -74,6 +79,7 @@
                         display: flex;
                         flex-direction: row;
                         align-items: center;
+                        margin-bottom: 5px;
     
                         &.required {
                             &:after {
@@ -135,6 +141,34 @@
                         font-size: .85rem;
                     }
                 }
+
+                .legal-file {
+                    flex-direction: row;
+                    flex-wrap: wrap;
+                    justify-content: flex-start;
+                    align-items: center;
+                    padding-left: 1rem;
+
+                    span {
+                        display: inline-block;
+                        height: 100%;
+                        margin: 0;
+                    }
+
+                    .required {
+                        margin-right: 1rem;
+                    }
+
+                    .upload {
+                        width: fit-content;
+                        padding: .5rem 1rem;
+
+                        .filename:not(:empty) {
+                            display: inline-block;
+                            margin-right: 1rem;
+                        }
+                    }
+                }
     
                 label.upload {
                     display: flex;
@@ -192,6 +226,10 @@
             .beneficiaries {
                 width: 100%;
             }
+        }
+
+        .transactions-section {
+            max-width: 650px;
         }
 
         .table {

@@ -22,6 +22,7 @@
         }
 
         span {
+            font-size: .85rem;
             margin-bottom: 5px;
         }
 
@@ -40,15 +41,32 @@
     .footer, .upload-section {
         display: flex;
         justify-content: space-between;
-        align-items: center;
+        align-items: flex-end;
     }
 
     .footer {
         width: 100%;
         margin-bottom: 1rem;
 
+        .uploads-container {
+            min-width: 375px;
+        }
+
+        .upload-section {
+            align-items: center;
+
+            &:first-child {
+                margin-bottom: .75rem;
+            }
+
+            .upload {
+                width: 100px !important;
+                max-width: 100px !important;
+            }
+        }
+
         .item {
-            width: 350px;
+            width: 375px;
             margin-bottom: 0;
 
             span {
@@ -73,6 +91,18 @@
                 path {
                     fill: currentColor;
                 }
+            }
+        }
+    }
+
+    .toshow {
+        animation: toshow .5s linear;
+        transform-origin: left center;
+
+        @keyframes toshow {
+            from {
+                //transform: scale(0);
+                opacity: 0;
             }
         }
     }

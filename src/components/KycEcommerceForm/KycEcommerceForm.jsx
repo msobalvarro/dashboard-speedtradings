@@ -1,26 +1,28 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import moment from 'moment'
+import 'moment/locale/es'
 import './KycEcommerceForm.scss'
 
 // Import components
 import KycEcommerceBeneficialOwner from '../KycEcommerceBeneficialOwner/KycEcommerceBeneficialOwner'
+import TelephoneField from "../TelephoneField/TelephoneField"
 
 // Import assets
 import Countries from '../../utils/countries.json'
 import { ReactComponent as UploadIcon } from '../../static/icons/upload.svg'
 
 // Import constants & utils
-import { commercialCategories } from '../../utils/constanst'
+import { commercialCategories, randomKey } from '../../utils/constanst'
 
 
 const KycEcommerceForm = ({
-    state={}, 
-    setState=_=>{},
-    onCancel=_=>{},
-    onSubmit=_=>{},
-    activeSection=1,
-    fieldsValid=false, 
-    className='',
+    state = {},
+    setState = _ => { },
+    onCancel = _ => { },
+    onSubmit = _ => { },
+    activeSection = 1,
+    fieldsValid = false,
+    className = '',
 }) => {
     // Estados para almacenar las previsualizaciones de las imágenes a subir
     const [businessIdPreview, setBusinessIdPreview] = useState(null)
@@ -30,19 +32,27 @@ const KycEcommerceForm = ({
 
     const [legalRepresentative, setLegalRepresentative] = useState({})
 
-    const [isDiplomatic, setIsDiplomatic] = useState(null)
+    const inputKey = randomKey()
 
-     /**
-     * Captura el archivo seleccionado y crea un objectURL para generar una vista previa
-     * @param {Event} e 
-     * @param {React.setState} dispatch
-     */
+    /**
+    * Captura el archivo seleccionado y crea un objectURL para generar una vista previa
+    * @param {Event} e 
+    * @param {React.setState} dispatch
+    */
     const handleLoadPreview = async (e, dispatchPreview, dispatch) => {
         const file = e.target.files[0]
 
         dispatchPreview(URL.createObjectURL(file))
         dispatch(file)
     }
+
+    useEffect(_ => {
+        setState({ ...state, beneficialOwnerList: beneficialOwnerList })
+    }, [beneficialOwnerList])
+
+    useEffect(_ => {
+        setState({ ...state, legalRepresentative: legalRepresentative })
+    }, [legalRepresentative])
 
     return (
         <div className={`KycEcommerceForm ${className}`}>
@@ -67,8 +77,8 @@ const KycEcommerceForm = ({
                                     <input
                                         autoFocus
                                         value={state.name || ''}
-                                        onChange={e => 
-                                            setState({...state, name: e.target.value})
+                                        onChange={e =>
+                                            setState({ ...state, name: e.target.value })
                                         }
                                         type="text"
                                         className="text-input" />
@@ -76,42 +86,102 @@ const KycEcommerceForm = ({
 
                                 <div className="row">
                                     <span className="required">Correo electrónico</span>
-                                    <input 
+                                    <input
                                         value={state.email || ''}
-                                        onChange={e => 
-                                            setState({...state, email: e.target.value})
+                                        onChange={e =>
+                                            setState({ ...state, email: e.target.value })
                                         }
                                         type="text"
-                                        className="text-input"/>
+                                        className="text-input" />
                                 </div>
-                                
+
                                 <div className="row">
                                     <span className="required">Sitio web (opcional)</span>
-                                    <input 
+                                    <input
                                         value={state.website || ''}
-                                        onChange={e => 
-                                            setState({...state, website: e.target.value})
+                                        onChange={e =>
+                                            setState({ ...state, website: e.target.value })
                                         }
-                                        type="text" 
-                                        className="text-input"/>
+                                        type="text"
+                                        className="text-input" />
                                 </div>
                             </div>
 
+                            {/**
+                             * 
+                             * Sección de la información de contacto
+                             * 
+                             */}
+                            <div className="subsection">
+                                <h3 className="subtitle">2. Teléfono</h3>
+
+                                <div className="row">
+                                    <span className="required">Número de Teléfono</span>
+                                    <TelephoneField
+                                        value={state.mainTelephone || ''}
+                                        onChange={value =>
+                                            setState({
+                                                ...state,
+                                                mainTelephone: value
+                                            })
+                                        }
+                                        className="text-input" />
+                                </div>
+                            </div>
+
+                            <div className="subsection">
+                                <h3 className="subtitle">3. País / Región de actividad comercial</h3>
+
+                                <div className="row">
+                                    <span className="required">País</span>
+                                    <select
+                                        value={state.commercialActivityCountry || -1}
+                                        onChange={e =>
+                                            setState({ ...state, commercialActivityCountry: e.target.value })
+                                        }
+                                        className="picker">
+                                        <option value="-1" disabled hidden>
+                                            Seleccione un país
+                                        </option>
+
+                                        {
+                                            Countries.map(({ name }, index) => (
+                                                <option key={index} value={index}>
+                                                    {name}
+                                                </option>
+                                            ))
+                                        }
+                                    </select>
+                                </div>
+
+                                <div className="row">
+                                    <span className="required">Estado / Provincia / Región</span>
+                                    <input
+                                        value={state.commercialActivityRegion || ''}
+                                        onChange={e =>
+                                            setState({ ...state, commercialActivityRegion: e.target.value })
+                                        }
+                                        type="text"
+                                        className="text-input" />
+                                </div>
+                            </div>
+                        </div>
+
+                        <div className="content-item">
                             {/**
                              * 
                              * Sección de la entidad legal
                              * 
                              */}
                             <div className="subsection">
-                                <h3 className="subtitle">2. Información de la cuenta</h3>
+                                <h3 className="subtitle">4. Información de la cuenta</h3>
 
                                 <div className="row">
                                     <span className="required">Nombre de la entidad legal</span>
                                     <input
-                                        autoFocus
                                         value={state.nameLegalEntity || ''}
-                                        onChange={e => 
-                                            setState({...state, nameLegalEntity: e.target.value})
+                                        onChange={e =>
+                                            setState({ ...state, nameLegalEntity: e.target.value })
                                         }
                                         type="text"
                                         className="text-input" />
@@ -121,8 +191,8 @@ const KycEcommerceForm = ({
                                     <span className="required">Tipo</span>
                                     <select
                                         value={state.type || -1}
-                                        onChange={e => 
-                                            setState({...state, type: e.target.value})
+                                        onChange={e =>
+                                            setState({ ...state, type: e.target.value })
                                         }
                                         className="picker">
                                         <option value="-1" disabled hidden>
@@ -138,16 +208,16 @@ const KycEcommerceForm = ({
                                         }
                                     </select>
                                 </div>
-                                
+
                                 <div className="row">
                                     <span className="required">Número de identificación del negocio</span>
-                                    <input 
+                                    <input
                                         value={state.businessIdentification || ''}
-                                        onChange={e => 
-                                            setState({...state, businessIdentification: e.target.value})
+                                        onChange={e =>
+                                            setState({ ...state, businessIdentification: e.target.value })
                                         }
-                                        type="text" 
-                                        className="text-input"/>
+                                        type="text"
+                                        className="text-input" />
                                 </div>
 
                                 <div className="row horizontal upload-section">
@@ -157,211 +227,41 @@ const KycEcommerceForm = ({
                                         title="Subir archivo"
                                         htmlFor="profile-picture"
                                         className="upload">
-                                        <UploadIcon/>
+                                        <UploadIcon />
                                     </label>
                                     <input
                                         type="file"
                                         id="profile-picture"
-                                        onChange={e => 
+                                        onChange={e =>
                                             handleLoadPreview(
-                                                e, 
+                                                e,
                                                 setBusinessIdPreview,
                                                 file => setState({
-                                                    ...state, 
+                                                    ...state,
                                                     businessIdentificationPicture: file
                                                 })
                                             )}
-                                        />
+                                    />
                                 </div>
 
                                 {
                                     businessIdPreview !== null &&
                                     <div className="row centered">
-                                        <img src={businessIdPreview} alt="" className="img-preview"/>
+                                        <img src={businessIdPreview} alt="" className="img-preview" />
                                     </div>
                                 }
 
                                 <div className="row">
                                     <span className="required">Fecha de incorporación</span>
-                                    <input 
-                                        value={state.incorporationDate || moment(new Date()).format("YYYY-MM-DD")}
-                                        onChange={e => 
-                                            setState({...state, incorporationDate: e.target.value})
-                                        }
-                                        type="date" 
-                                        className="picker"/>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div className="content-item">
-                            {/**
-                             * 
-                             * Sección de la dirección permanente
-                             * 
-                             */}
-                            <div className="subsection">
-                                <h3 className="subtitle">3. Dirección permanente</h3>
-
-                                <div className="row">
-                                    <span className="required">País</span>
-                                    <select
-                                        value={state.country || -1}
-                                        onChange={e => 
-                                            setState({...state, country: e.target.value})
-                                        }
-                                        className="picker">
-                                        <option value="-1" disabled hidden>
-                                            Seleccione un país
-                                        </option>
-
-                                        {
-                                            Countries.map(({name}, index) => (
-                                                <option key={index} value={index}>
-                                                    {name}
-                                                </option>
-                                            ))
-                                        }
-                                    </select>
-                                </div>
-
-                                <div className="row">
-                                    <span className="required">Estado / Provincia / Región</span>
-                                    <input 
-                                        value={state.region || ''}
-                                        onChange={e => 
-                                            setState({...state, region: e.target.value})
-                                        }
-                                        type="text" 
-                                        className="text-input"/>
-                                </div>
-
-                                <div className="row">
-                                    <span className="required">Ciudad</span>
-                                    <input 
-                                        value={state.city || ''}
-                                        onChange={e => 
-                                            setState({...state, city: e.target.value})
-                                        }
-                                        type="text" 
-                                        className="text-input"/>
-                                </div>
-
-                                <div className="row">
-                                    <span className="required">Dirección (línea 1)</span>
                                     <input
-                                        value={state.direction1 || ''}
-                                        onChange={e => 
-                                            setState({...state, direction1: e.target.value})
+                                        value={state.incorporationDate || moment(new Date()).format("YYYY-MM-DD")}
+                                        onChange={e =>
+                                            setState({ ...state, incorporationDate: e.target.value })
                                         }
-                                        ype="text" 
-                                        className="text-input"/>
-                                </div>
-
-                                <div className="row">
-                                    <span>Dirección (línea 2)</span>
-                                    <input 
-                                        value={state.direction2 || ''}
-                                        onChange={e => 
-                                            setState({...state, direction2: e.target.value})
-                                        }
-                                        type="text" 
-                                        className="text-input"/>
-                                </div>
-
-                                <div className="row">
-                                    <span className="required">Código postal</span>
-                                    <input 
-                                        value={state.postalCode || ''}
-                                        onChange={e => 
-                                            setState({...state, postalCode: e.target.value})
-                                        }
-                                        type="text" 
-                                        className="text-input"/>
+                                        type="date"
+                                        className="picker" />
                                 </div>
                             </div>
-                        </div>
-
-                        <div className="content-item">
-                            {/**
-                             * 
-                             * Sección de la información de contacto
-                             * 
-                             */}
-                            <div className="subsection">
-                                <h3 className="subtitle">4. Teléfono</h3>
-
-                                <div className="row">
-                                    <span className="required">código del país</span>
-                                    <select
-                                        value={state.phoneCode || -1}
-                                        onChange={e => 
-                                            setState({...state, phoneCode: e.target.value})
-                                        }
-                                        className="picker">
-                                        <option value="-1" disabled hidden>
-                                            Seleccione un código de país
-                                        </option>
-
-                                        {
-                                            Countries.map(({name, phoneCode}, index) => (
-                                                <option key={index} value={phoneCode}>
-                                                    {name} ({phoneCode})
-                                                </option>
-                                            ))
-                                        }
-                                    </select>
-                                </div>
-
-                                <div className="row">
-                                    <span className="required">Número de teléfono principal</span>
-                                    <input 
-                                        value={state.mainTelephone || ''}
-                                        onChange={e => 
-                                            setState({...state, mainTelephone: e.target.value})
-                                        }
-                                        type="tel" 
-                                        className="text-input"/>
-                                </div>
-                            </div>
-
-                            <div className="subsection">
-                                <h3 className="subtitle">5. País / Región de actividad comercial</h3>
-
-                                <div className="row">
-                                    <span className="required">País</span>
-                                    <select
-                                        value={state.commercialActivityCountry || -1}
-                                        onChange={e => 
-                                            setState({...state, commercialActivityCountry: e.target.value})
-                                        }
-                                        className="picker">
-                                        <option value="-1" disabled hidden>
-                                            Seleccione un país
-                                        </option>
-
-                                        {
-                                            Countries.map(({name}, index) => (
-                                                <option key={index} value={index}>
-                                                    {name}
-                                                </option>
-                                            ))
-                                        }
-                                    </select>
-                                </div>
-
-                                <div className="row">
-                                    <span className="required">Estado / Provincia / Región</span>
-                                    <input 
-                                        value={state.commercialActivityRegion || ''}
-                                        onChange={e => 
-                                            setState({...state, commercialActivityRegion: e.target.value})
-                                        }
-                                        type="text" 
-                                        className="text-input"/>
-                                </div>
-                            </div>
-
 
                             {/**
                              * 
@@ -372,7 +272,7 @@ const KycEcommerceForm = ({
                                 false &&
                                 <div className="subsection">
                                     <div className="row horizontal">
-                                        <button 
+                                        <button
                                             onClick={onCancel}
                                             className="button cancel">
                                             Cancelar
@@ -388,6 +288,95 @@ const KycEcommerceForm = ({
                                 </div>
                             }
                         </div>
+
+                        <div className="content-item">
+                            {/**
+                             * 
+                             * Sección de la dirección permanente
+                             * 
+                             */}
+                            <div className="subsection">
+                                <h3 className="subtitle">5. Dirección permanente</h3>
+
+                                <div className="row">
+                                    <span className="required">País</span>
+                                    <select
+                                        value={state.country || -1}
+                                        onChange={e =>
+                                            setState({ ...state, country: e.target.value })
+                                        }
+                                        className="picker">
+                                        <option value="-1" disabled hidden>
+                                            Seleccione un país
+                                        </option>
+
+                                        {
+                                            Countries.map(({ name }, index) => (
+                                                <option key={index} value={index}>
+                                                    {name}
+                                                </option>
+                                            ))
+                                        }
+                                    </select>
+                                </div>
+
+                                <div className="row">
+                                    <span className="required">Estado / Provincia / Región</span>
+                                    <input
+                                        value={state.region || ''}
+                                        onChange={e =>
+                                            setState({ ...state, region: e.target.value })
+                                        }
+                                        type="text"
+                                        className="text-input" />
+                                </div>
+
+                                <div className="row">
+                                    <span className="required">Ciudad</span>
+                                    <input
+                                        value={state.city || ''}
+                                        onChange={e =>
+                                            setState({ ...state, city: e.target.value })
+                                        }
+                                        type="text"
+                                        className="text-input" />
+                                </div>
+
+                                <div className="row">
+                                    <span className="required">Dirección (línea 1)</span>
+                                    <input
+                                        value={state.direction1 || ''}
+                                        onChange={e =>
+                                            setState({ ...state, direction1: e.target.value })
+                                        }
+                                        ype="text"
+                                        className="text-input" />
+                                </div>
+
+                                <div className="row">
+                                    <span>Dirección (línea 2)</span>
+                                    <input
+                                        value={state.direction2 || ''}
+                                        onChange={e =>
+                                            setState({ ...state, direction2: e.target.value })
+                                        }
+                                        type="text"
+                                        className="text-input" />
+                                </div>
+
+                                <div className="row">
+                                    <span className="required">Código postal</span>
+                                    <input
+                                        value={state.postalCode || ''}
+                                        onChange={e =>
+                                            setState({ ...state, postalCode: e.target.value })
+                                        }
+                                        type="text"
+                                        className="text-input" />
+                                </div>
+                            </div>
+                        </div>
+
                     </div>
                 </div>
             }
@@ -413,9 +402,10 @@ const KycEcommerceForm = ({
                                             direccion, ciudad, region, codigo postal, pais
                                         </span>
                                         <span>
-                                            numero de pasaporte
+                                            numero identificacion personal
                                         </span>
                                         <span>
+                                            numero de pasaporte,
                                             pais de emision pasaporte
                                         </span>
                                         <span>
@@ -432,31 +422,38 @@ const KycEcommerceForm = ({
 
                                         {
                                             beneficialOwnerList.map(({
-                                                title, name, participation, birthDate, direction, city, region, postalCode, originCountry, passport, passportEmissionCountry, idTax
+                                                title, name, participation, birthDate, direction, city, region, postalCode, originCountry, passport, passportEmissionCountry, idTax, personalId
                                             }, index) => (
-                                                <div key={`bo-${index}`} className="row">
-                                                    <span>
-                                                        {
-                                                            `${title}, ${name}`
-                                                        }
-                                                    </span>
+                                                    <div key={`bo-${index}`} className="row">
+                                                        <span>
+                                                            {
+                                                                `${title}, ${name}`
+                                                            }
+                                                        </span>
 
-                                                    <span>{ participation } %</span>
+                                                        <span>{participation} %</span>
 
-                                                    <span>{ birthDate }</span>
+                                                        <span>{birthDate}</span>
 
-                                                    <span>
-                                                        {
-                                                            `${direction}, ${city}, ${region}, ${postalCode}, ${Countries[originCountry].name}`
-                                                        }
-                                                    </span>
+                                                        <span>
+                                                            {
+                                                                `${direction}, ${city}, ${region}, ${postalCode}, ${Countries[originCountry].name}`
+                                                            }
+                                                        </span>
 
-                                                    <span>{ passport }</span>
+                                                        <span>{personalId || 'No aplica'}</span>
 
-                                                    <span>{ Countries[passportEmissionCountry].name}</span>
-                                                    <span>{ idTax }</span>
-                                                </div>
-                                            ))
+                                                        <span>
+                                                            {
+                                                                passport && passportEmissionCountry
+                                                                    ? `${passport}, ${Countries[passportEmissionCountry].name}`
+
+                                                                    : 'No aplica'
+                                                            }
+                                                        </span>
+                                                        <span>{idTax || 'No aplica'}</span>
+                                                    </div>
+                                                ))
                                         }
                                     </div>
                                 </div>
@@ -464,10 +461,10 @@ const KycEcommerceForm = ({
                                 <KycEcommerceBeneficialOwner
                                     onSubmit={item => {
                                         setBeneficialOwnerList([
-                                            ...beneficialOwnerList, 
+                                            ...beneficialOwnerList,
                                             item
                                         ])
-                                    }}/>
+                                    }} />
                             </div>
 
                             <div className="subsection">
@@ -476,47 +473,67 @@ const KycEcommerceForm = ({
                                 </p>
 
                                 <label className="check-paragraph">
-                                    <input type="checkbox"/>
-                                    
+                                    <input
+                                        onClick={_ => {
+                                            setState({
+                                                ...state,
+                                                typeLegalRepresentative: 1
+                                            })
+                                        }}
+                                        name="typeLegalRepresentative"
+                                        type="radio" />
+
                                     <span>
                                         Un director ejecutivo o gerente senior (por ejemplo, director ejecutivo, director financiero, director de operaciones, miembro gerente, socio general, presidente, visepresidente, tesorero);
                                     </span>
                                 </label>
 
                                 <label className="check-paragraph">
-                                    <input type="checkbox"/>
+                                    <input
+                                        onClick={_ => {
+                                            setState({
+                                                ...state,
+                                                typeLegalRepresentative: 2
+                                            })
+                                        }}
+                                        name="typeLegalRepresentative"
+                                        type="radio" />
 
                                     <span>
                                         Cualquier otro individuo el cual realice labores similares regularmente.
                                     </span>
                                 </label>
 
-                                <KycEcommerceBeneficialOwner 
-                                    onChange={setLegalRepresentative}/>
+                                <KycEcommerceBeneficialOwner
+                                    onChange={setLegalRepresentative} />
 
                                 <p className="paragraph">
                                     b) ¿Alguno de los individuos enumerados anteriormente es una persona políticamente expuesta?
 
                                     <span className="radios-group">
                                         <label>
-                                            <input 
+                                            <input
                                                 onClick={_ => {
-                                                    console.log('true')
-                                                    setIsDiplomatic(true)
+                                                    setState({
+                                                        ...state,
+                                                        isDiplomatic: true
+                                                    })
                                                 }}
-                                                type="radio" 
-                                                name="isDiplomatic"/>
+                                                type="radio"
+                                                name="isDiplomatic" />
                                             Sí
                                         </label>
 
                                         <label>
-                                            <input 
-                                                ocClick={_ => {
-                                                    console.log('false')
-                                                    setIsDiplomatic(false)
+                                            <input
+                                                onClick={_ => {
+                                                    setState({
+                                                        ...state,
+                                                        isDiplomatic: false
+                                                    })
                                                 }}
-                                                type="radio" 
-                                                name="isDiplomatic"/>
+                                                type="radio"
+                                                name="isDiplomatic" />
                                             No
                                         </label>
                                     </span>
@@ -525,6 +542,199 @@ const KycEcommerceForm = ({
                                 <p className="paragraph-comment">
                                     * El término "Persona Políticamente Expuesta" incluye a cualquier individuo (incluidos los miembros de la familia inmediata y los asociados cercanos) que sea un figura política extranjera de  alto rango actual o anterior.
                                 </p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            }
+
+            {/**
+             * Tercera sección del kyc para las empresas
+             */
+                activeSection === 3 &&
+                <div className="section">
+                    <div className="content">
+                        <div className="content-item beneficiaries">
+                            <div className="subsection">
+                                <p className="paragraph">
+                                    7. Describa la fuente de los fondos: (pueden ser dividendos o ganancias de una determinada empresa. Indique qué empresa u otra fuente legítima de fondos)
+                                </p>
+
+                                <textarea
+                                    value={state.foundsDescription || ''}
+                                    onChange={e => {
+                                        setState({
+                                            ...state,
+                                            foundsDescription: e.target.value
+                                        })
+                                    }}
+                                    className="text-input"></textarea>
+                            </div>
+
+                            <div className="subsection">
+                                <p className="paragraph">
+                                    8. Transacciones mensuales esperadas
+                                </p>
+
+                                <div className="row-group transactions-section">
+                                    <div className="col">
+                                        <span>Número de transacciones</span>
+
+                                        <input
+                                            value={state.estimateTransactions || ''}
+                                            onChange={e => {
+                                                setState({
+                                                    ...state,
+                                                    estimateTrasactions: e.target.value
+                                                })
+                                            }}
+                                            type="text"
+                                            className="text-input" />
+                                    </div>
+
+                                    <div className="col">
+                                        <span>Valor total de transacciones en USD</span>
+
+                                        <input
+                                            value={state.estimateAmountTransactions || ''}
+                                            onChange={e => {
+                                                setState({
+                                                    ...state,
+                                                    estimateAmountTrasactions: e.target.value
+                                                })
+                                            }}
+                                            type="text"
+                                            className="text-input" />
+                                    </div>
+                                </div>
+
+                                <h3 className="subtitle">
+                                    Adjunte copias de los siguientes documentos de existencia comercial:
+                                </h3>
+
+                                {/**
+                                 * Sección para adjuntar los archivos legales
+                                 */}
+                                <div className="row legal-file">
+                                    <span className="required">Copia del certificado / incorporación / incumbencia</span>
+
+                                    <label
+                                        title="Subir archivo"
+                                        htmlFor={`estatutos-${inputKey}`}
+                                        className="upload">
+                                        <span className="filename">
+                                            {state.statusCertificate?.name || ''}
+                                        </span>
+                                        <UploadIcon />
+                                    </label>
+                                    <input
+                                        type="file"
+                                        id={`estatutos-${inputKey}`}
+                                        onChange={e =>
+                                            handleLoadPreview(
+                                                e,
+                                                _ => { },
+                                                file => setState({
+                                                    ...state,
+                                                    statusCertificate: file
+                                                })
+                                            )}
+                                    />
+                                </div>
+
+                                <div className="row legal-file">
+                                    <span className="required">Copia de la lista actualizada de directores y accionistas</span>
+
+                                    <label
+                                        title="Subir archivo"
+                                        htmlFor={`directorsList-${inputKey}`}
+                                        className="upload">
+                                        <span className="filename">
+                                            {state.directorsList?.name || ''}
+                                        </span>
+                                        <UploadIcon />
+                                    </label>
+                                    <input
+                                        type="file"
+                                        id={`directorsList-${inputKey}`}
+                                        onChange={e =>
+                                            handleLoadPreview(
+                                                e,
+                                                _ => { },
+                                                file => setState({
+                                                    ...state,
+                                                    directorsList: file
+                                                })
+                                            )}
+                                    />
+                                </div>
+
+                                <div className="row legal-file">
+                                    <span className="required">Información de los directores autorizados a firmar un acuerdo en nombre del proveedor y los documentos que confirman sus autoridades</span>
+
+                                    <label
+                                        title="Subir archivo"
+                                        htmlFor={`directorsAutorization-${inputKey}`}
+                                        className="upload">
+                                        <span className="filename">
+                                            {state.directorsAutorization?.name || ''}
+                                        </span>
+                                        <UploadIcon />
+                                    </label>
+                                    <input
+                                        type="file"
+                                        id={`directorsAutorization-${inputKey}`}
+                                        onChange={e =>
+                                            handleLoadPreview(
+                                                e,
+                                                _ => { },
+                                                file => setState({
+                                                    ...state,
+                                                    directorsAutorization: file
+                                                })
+                                            )}
+                                    />
+                                </div>
+
+                                <div className="row legal-file">
+                                    <span className="required">Certificado legal</span>
+
+                                    <label
+                                        title="Subir archivo"
+                                        htmlFor={`legalCertificate-${inputKey}`}
+                                        className="upload">
+                                        <span className="filename">
+                                            {state.legalCertificate?.name || ''}
+                                        </span>
+                                        <UploadIcon />
+                                    </label>
+                                    <input
+                                        type="file"
+                                        id={`legalCertificate-${inputKey}`}
+                                        onChange={e =>
+                                            handleLoadPreview(
+                                                e,
+                                                _ => { },
+                                                file => setState({
+                                                    ...state,
+                                                    legalCertificate: file
+                                                })
+                                            )}
+                                    />
+                                </div>
+
+                                <div className="row">
+                                    <p className="paragraph">
+                                        Yo, <strong className="name-legal-representative">{state.legalRepresentative?.name || 'harold espinoza'}</strong>, por la presente certifico, según mi saber y entender que la información proporcionada anteriormente es completa y correcta.
+                                    </p>
+                                </div>
+
+                                <div className="row">
+                                    <p className="paragraph">
+                                        Fecha: {moment(new Date()).format('dddd, Do MMMM YYYY')}
+                                    </p>
+                                </div>
+
                             </div>
                         </div>
                     </div>
