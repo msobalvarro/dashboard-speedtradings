@@ -64,7 +64,7 @@ const KycUserForm = ({
         }
 
         if (state.hasOwnProperty('birthDate')) {
-            calculateUserAge(state.birthDate)
+            calculateUserAge(state.birthday)
         }
     }, [])
 
@@ -96,38 +96,43 @@ const KycUserForm = ({
                         <div className="subsection">
                             <h3 className="subtitle">1. Información personal</h3>
 
-                            <div className="row">
-                                <span className="required">Nombre(s)</span>
-                                <input
-                                    autoFocus
-                                    value={state.name || ''}
-                                    onChange={e =>
-                                        setState({ ...state, name: e.target.value })
-                                    }
-                                    type="text"
-                                    className="text-input" />
-                            </div>
+                            {
+                                secondaryTypeForm !== 0 &&
+                                <>
+                                    <div className="row">
+                                        <span className="required">Nombre(s)</span>
+                                        <input
+                                            autoFocus
+                                            value={state.firstname || ''}
+                                            onChange={e =>
+                                                setState({ ...state, firstname: e.target.value })
+                                            }
+                                            type="text"
+                                            className="text-input" />
+                                    </div>
 
-                            <div className="row">
-                                <span className="required">Apellido(s)</span>
-                                <input
-                                    value={state.lastname || ''}
-                                    onChange={e =>
-                                        setState({ ...state, lastname: e.target.value })
-                                    }
-                                    type="text"
-                                    className="text-input" />
-                            </div>
+                                    <div className="row">
+                                        <span className="required">Apellido(s)</span>
+                                        <input
+                                            value={state.lastname || ''}
+                                            onChange={e =>
+                                                setState({ ...state, lastname: e.target.value })
+                                            }
+                                            type="text"
+                                            className="text-input" />
+                                    </div>
+                                </>
+                            }
 
                             <div className="row">
                                 <span className="required">Fecha de nacimiento</span>
                                 <input
-                                    value={state.birthDate || moment(new Date()).format("YYYY-MM-DD")}
+                                    value={state.birthday || moment(new Date()).format("YYYY-MM-DD")}
                                     onChange={e => {
                                         let { value } = e.target
 
                                         calculateUserAge(value)
-                                        setState({ ...state, birthDate: value })
+                                        setState({ ...state, birthday: value })
                                     }}
                                     type="date"
                                     className="picker" />
@@ -156,9 +161,9 @@ const KycUserForm = ({
                                     <div className="row toshow">
                                         <span className="required">Número de identificación</span>
                                         <input
-                                            value={state.identificationValue || ''}
+                                            value={state.identificationNumber || ''}
                                             onChange={e =>
-                                                setState({ ...state, identificationValue: e.target.value })
+                                                setState({ ...state, identificationNumber: e.target.value })
                                             }
                                             type="text"
                                             className="text-input" />
@@ -169,7 +174,7 @@ const KycUserForm = ({
                             {
                                 (secondaryTypeForm !== 0) &&
                                 <div className="row">
-                                    <span className="required">Parentezco</span>
+                                    <span className="required">Parentesco</span>
 
                                     <select
                                         value={state.relationship || -1}
@@ -178,10 +183,13 @@ const KycUserForm = ({
                                         }
                                         className="picker">
                                         <option value="-1" disabled hidden>
-                                            Selecciona un parentezco
+                                            Selecciona un parentesco
                                         </option>
-                                        <option value="1">Parentezco 1</option>
-                                        <option value="2">Parentezco 2</option>
+                                        <option value="1">Padre / Madre</option>
+                                        <option value="2">Hermano(a)</option>
+                                        <option value="3">Tío(a)</option>
+                                        <option value="4">Abuelo(a)</option>
+                                        <option value="5">Otro</option>
                                     </select>
                                 </div>
                             }
@@ -211,11 +219,11 @@ const KycUserForm = ({
                             <div className="row">
                                 <span className="required">Número de teléfono principal</span>
                                 <TelephoneField
-                                    value={state.mainTelephone || ''}
+                                    value={state.principalNumber || ''}
                                     onChange={value =>
                                         setState({
                                             ...state,
-                                            mainTelephone: value
+                                            principalNumber: value
                                         })
                                     }
                                     className="text-input" />
@@ -224,11 +232,11 @@ const KycUserForm = ({
                             <div className="row">
                                 <span>Número de teléfono alternativo</span>
                                 <TelephoneField
-                                    value={state.alternativeTelephone || ''}
+                                    value={state.alternativeNumber || ''}
                                     onChange={value =>
                                         setState({
                                             ...state,
-                                            alternativeTelephone: value
+                                            alternativeNumber: value
                                         })
                                     }
                                     className="text-input" />
@@ -248,9 +256,9 @@ const KycUserForm = ({
                             <div className="row">
                                 <span className="required">Nacionalidad</span>
                                 <select
-                                    value={state.originCountry || -1}
+                                    value={state.nationality || -1}
                                     onChange={e =>
-                                        setState({ ...state, originCountry: e.target.value })
+                                        setState({ ...state, nationality: e.target.value })
                                     }
                                     className="picker">
                                     <option value="-1" disabled hidden>
@@ -270,9 +278,9 @@ const KycUserForm = ({
                             <div className="row">
                                 <span className="required">País de residencia</span>
                                 <select
-                                    value={state.residentCountry || -1}
+                                    value={state.residence || -1}
                                     onChange={e =>
-                                        setState({ ...state, residentCountry: e.target.value })
+                                        setState({ ...state, residence: e.target.value })
                                     }
                                     className="picker">
                                     <option value="-1" disabled hidden>
@@ -292,9 +300,9 @@ const KycUserForm = ({
                             <div className="row">
                                 <span className="required">Estado / Provincia / Región</span>
                                 <input
-                                    value={state.region || ''}
+                                    value={state.province || ''}
                                     onChange={e =>
-                                        setState({ ...state, region: e.target.value })
+                                        setState({ ...state, province: e.target.value })
                                     }
                                     type="text"
                                     className="text-input" />
@@ -379,11 +387,11 @@ const KycUserForm = ({
                                     <span className="required">¿Cuál es el monto estimado a guardar mensualmente?</span>
 
                                     <input
-                                        value={state.estimateAmount || ''}
+                                        value={state.estimateMonthlyAmount || ''}
                                         onChange={e =>
                                             setState({
                                                 ...state,
-                                                estimateAmount: e.target.value
+                                                estimateMonthlyAmount: e.target.value
                                             })
                                         }
                                         type="text"

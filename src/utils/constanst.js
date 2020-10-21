@@ -22,7 +22,7 @@ export const commercialCategories = [
     'Bazar',
     'Cafetería',
     'Centro comercial',
-    'Charcutería',
+    'Heladería',
     'Discoteca',
     'Estación de servicio',
     'Ferretería',
@@ -112,8 +112,10 @@ export const amountMin = {
 }
 
 //export const urlServer = "https://ardent-medley-272823.appspot.com"
-export const urlServer = "http://192.168.1.238:9000"
+//export const urlServer = "http://192.168.1.238:9000"
 //export const urlServer = "http://192.168.1.224:8084"
+export const urlServer = "http://192.168.0.119:8084"
+
 
 
 /**

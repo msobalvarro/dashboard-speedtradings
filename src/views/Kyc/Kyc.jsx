@@ -10,6 +10,7 @@ import KycEcommerceForm from "../../components/KycEcommerceForm/KycEcommerceForm
 import { userValidations, ecommerceValidations } from "../../utils/kycFormValidations"
 
 // Import assets
+import Countries from "../../utils/countries.json"
 import { ReactComponent as BackIcon } from "../../static/icons/arrow-back.svg"
 import { ReactComponent as ForwardIcon } from "../../static/icons/arrow-forward.svg"
 import { ReactComponent as SaveIcon } from "../../static/icons/save.svg"
@@ -17,14 +18,15 @@ import { ReactComponent as InformationIcon } from "../../static/icons/informatio
 import { ReactComponent as EnterpriseIcon } from "../../static/icons/enterprise.svg"
 import { ReactComponent as UserIcon } from "../../static/icons/user.svg"
 import { ReactComponent as CancelIcon } from "../../static/icons/cancel.svg"
+import { calcAge } from "../../utils/constanst"
 
 
 const Kyc = () => {
     const [showIntro, setShowIntro] = useState(true)
     const [showKyc, setShowKyc] = useState(true)
     const [USERAGE, setUSERAGE] = useState(0)
-    const [isUser, setIsUser] = useState(false)
-    const [activeSection, setActiveSection] = useState(3)
+    const [isUser, setIsUser] = useState(true)
+    const [activeSection, setActiveSection] = useState(1)
 
     /**
      * Estados para los campos del formulario de KYC
@@ -117,6 +119,62 @@ const Kyc = () => {
                 ? activeSection
                 : section
         )
+    }
+
+    /**
+     * Función para realizar el submit de los datos del kyc
+     */
+    const onSubmit = _ => {
+        try {
+            // Se obtiene el name, phoneCode, y currency según la nacionalidad
+            const {
+                name: nationality,
+                phoneCode: phoneCodeNationality,
+                code: currencyNationality
+            } = Countries[userInfo.nationality]
+
+            // Se obtiene el name, phoneCode, y currency según la residencia
+            const {
+                name: residence,
+                phoneCode: phoneCodeResidence,
+                code: currencyResidence
+            } = Countries[userInfo.residence]
+
+            // Se construye el objeto a enviar al servidor
+            const dataSend = {
+                birthday: userInfo.birthday,
+                alternativeNumber: userInfo.alternativeNumber,
+                nationality,
+                phoneCodeNationality,
+                currencyNationality,
+                residence,
+                phoneCodeResidence,
+                currencyResidence,
+                province: userInfo.province,
+                city: userInfo.city,
+                direction1: userInfo.direction1,
+                direction2: userInfo.direction2,
+                postalCode: userInfo.postalCode,
+                profilePictureId: 2,
+                indetificationPictureId: 2,
+                ...(
+                    // Si es mayor de edad, se añaden los campos requeridos para estos
+                    calcAge(userInfo.birthday) >= 18
+                        ? {
+                            identificationType: userInfo.identificationType,
+                            identificationNumber: userInfo.identificationNumber,
+                            foundsOrigin: userInfo.foundsOrigin,
+                            estimateMonthlyAmount: userInfo.estimateMonthlyAmount,
+                            profession: userInfo.profession
+                        }
+                        : {}
+                )
+            }
+
+            console.log(dataSend)
+        } catch (error) {
+            console.error(error)
+        }
     }
 
     return (
@@ -251,7 +309,7 @@ const Kyc = () => {
                             {
                                 checkNextVisibility() &&
                                 <button
-                                    disabled={!checkSectionValid()}
+
                                     onClick={nextSection}
                                     style={{
                                         opacity: (activeSection === 3 && !isUser)
@@ -266,13 +324,13 @@ const Kyc = () => {
                             }
 
                             {
-                                (
+                                /*(
                                     (isUser && ((USERAGE >= 18 && !userInfo.addBeneficiary) || activeSection === 2)) ||
                                     (!isUser && activeSection === 3)
-                                ) &&
+                                ) &&*/
+                                /**disabled={!checkSectionValid()} */
                                 < button
-                                    disabled={!checkSectionValid()}
-                                    onClick={_ => { }}
+                                    onClick={onSubmit}
                                     className="forward">
                                     Guardar
                                     <SaveIcon className="icon" />

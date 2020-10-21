@@ -14,25 +14,22 @@ let now = moment(new Date(), 'YYYY-MM-DD').subtract(1, 'd')
  */
 const userValidations = {
     userInfo: (userData) => (
-        (userData.hasOwnProperty('name') && userData.name.length > 0) &&
-        (userData.hasOwnProperty('lastname') && userData.lastname.length > 0) &&
-        (userData.hasOwnProperty('birthDate') && calcAge(userData.birthDate) > 0) &&
+        (userData.hasOwnProperty('birthday') && calcAge(userData.birthday) > 0) &&
         (
             (calcAge(userData.birthDate) < 18)
                 ? true
                 : (
                     (userData.hasOwnProperty('identificationType') && userData.identificationType !== -1) &&
-                    (userData.hasOwnProperty('identificationValue') && userData.identificationValue.length > 0) &&
+                    (userData.hasOwnProperty('identificationNumber') && userData.identificationNumber.length > 0) &&
                     (userData.hasOwnProperty('foundsOrigin') && userData.foundsOrigin !== -1) &&
-                    (userData.hasOwnProperty('estimateAmount') && userData.estimateAmount.length > 0) &&
+                    (userData.hasOwnProperty('estimateMounthlyAmount') && userData.estimateMounthlyAmount.length > 0) &&
                     (userData.hasOwnProperty('profession') && userData.profession.length > 0)
                 )
         ) &&
-        (userData.hasOwnProperty('mainTelephone') && userData.mainTelephone.length > 0) &&
-        (userData.hasOwnProperty('alternativeTelephone') && userData.alternativeTelephone.length > 0) &&
-        (userData.hasOwnProperty('originCountry') && userData.originCountry !== -1) &&
-        (userData.hasOwnProperty('residentCountry') && userData.residentCountry !== -1) &&
-        (userData.hasOwnProperty('region') && userData.region.length > 0) &&
+        (userData.hasOwnProperty('alternativeNumber') && userData.alternativeNumber.length > 0) &&
+        (userData.hasOwnProperty('nationality') && userData.nationality !== -1) &&
+        (userData.hasOwnProperty('residence') && userData.residence !== -1) &&
+        (userData.hasOwnProperty('province') && userData.province.length > 0) &&
         (userData.hasOwnProperty('city') && userData.city.length > 0) &&
         (
             (userData.hasOwnProperty('direction1') && userData.direction1.length > 0) ||
@@ -44,17 +41,17 @@ const userValidations = {
     ),
 
     beneficiaryInfo: (beneficiaryData) => (
-        (beneficiaryData.hasOwnProperty('name') && beneficiaryData.name.length > 0) &&
+        (beneficiaryData.hasOwnProperty('firstname') && beneficiaryData.firstname.length > 0) &&
         (beneficiaryData.hasOwnProperty('lastname') && beneficiaryData.lastname.length > 0) &&
         (beneficiaryData.hasOwnProperty('identificationType') && beneficiaryData.identificationType !== -1) &&
-        (beneficiaryData.hasOwnProperty('identificationValue') && beneficiaryData.identificationValue.length > 0) &&
-        (beneficiaryData.hasOwnProperty('birthDate') && calcAge(beneficiaryData.birthDate) >= 18) &&
+        (beneficiaryData.hasOwnProperty('identificationNumber') && beneficiaryData.identificationNumber.length > 0) &&
+        (beneficiaryData.hasOwnProperty('birthday') && calcAge(beneficiaryData.birthday) >= 18) &&
         (beneficiaryData.hasOwnProperty('relationship') && beneficiaryData.relationship !== -1) &&
-        (beneficiaryData.hasOwnProperty('mainTelephone') && beneficiaryData.mainTelephone.length > 0) &&
-        (beneficiaryData.hasOwnProperty('alternativeTelephone') && beneficiaryData.alternativeTelephone.length > 0) &&
-        (beneficiaryData.hasOwnProperty('originCountry') && beneficiaryData.originCountry !== -1) &&
-        (beneficiaryData.hasOwnProperty('residentCountry') && beneficiaryData.residentCountry !== -1) &&
-        (beneficiaryData.hasOwnProperty('region') && beneficiaryData.region.length > 0) &&
+        (beneficiaryData.hasOwnProperty('principalNumber') && beneficiaryData.principalNumber.length > 0) &&
+        (beneficiaryData.hasOwnProperty('alternativeNumber') && beneficiaryData.alternativeNumber.length > 0) &&
+        (beneficiaryData.hasOwnProperty('nationality') && beneficiaryData.nationality !== -1) &&
+        (beneficiaryData.hasOwnProperty('residence') && beneficiaryData.residence !== -1) &&
+        (beneficiaryData.hasOwnProperty('province') && beneficiaryData.province.length > 0) &&
         (beneficiaryData.hasOwnProperty('city') && beneficiaryData.city.length > 0) &&
         (
             (beneficiaryData.hasOwnProperty('direction1') && beneficiaryData.direction1.length > 0) ||
