@@ -111,6 +111,23 @@
         padding: 1rem 2rem;
         background-color: rgba(0, 0, 0, .4);
         border-radius: 10px;
+
+        .header {
+            display: flex;
+            flex-direction: row;
+            justify-content: space-between;
+            align-items: center;
+            width: 100%;
+            margin-bottom: 1rem;
+
+            .logo {
+                height: 4rem;
+            }
+
+            h1 {
+                color: $colorSecondary;
+            }
+        }
     }
 
     .icon {
@@ -229,6 +246,18 @@
                 //transform: scale(0);
                 opacity: 0;
             }
+        }
+    }
+
+    .content-modal {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+
+        .message {
+            color: $colorSecondary;
+            margin-bottom: 1rem;
         }
     }
 }

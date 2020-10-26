@@ -1,16 +1,20 @@
-import React, { useState, useEffect } from "react"
-import moment from "moment"
+import React, { useState } from "react"
+import { useSelector } from "react-redux"
+import Swal from "sweetalert2"
 import "./Kyc.scss"
 
 // Import components
+import ActivityIndicator from "../../components/ActivityIndicator/Activityindicator"
+import Modal from "../../components/Modal/Modal"
 import KycUserForm from "../../components/KycUserForm/KycUserForm"
 import KycEcommerceForm from "../../components/KycEcommerceForm/KycEcommerceForm"
 
 // Import utils
 import { userValidations, ecommerceValidations } from "../../utils/kycFormValidations"
+import { kycUserData, kycUserBeneficiaryData } from "../../model/kycUser.model"
+import { LogOut, Petition } from "../../utils/constanst"
 
 // Import assets
-import Countries from "../../utils/countries.json"
 import { ReactComponent as BackIcon } from "../../static/icons/arrow-back.svg"
 import { ReactComponent as ForwardIcon } from "../../static/icons/arrow-forward.svg"
 import { ReactComponent as SaveIcon } from "../../static/icons/save.svg"
@@ -18,14 +22,25 @@ import { ReactComponent as InformationIcon } from "../../static/icons/informatio
 import { ReactComponent as EnterpriseIcon } from "../../static/icons/enterprise.svg"
 import { ReactComponent as UserIcon } from "../../static/icons/user.svg"
 import { ReactComponent as CancelIcon } from "../../static/icons/cancel.svg"
-import { calcAge } from "../../utils/constanst"
+import Logo from "../../static/images/logo.png"
 
 
 const Kyc = () => {
+    const storage = useSelector(({ globalStorage }) => globalStorage)
+    // constant header petition
+    const credentials = {
+        headers: {
+            "x-auth-token": storage.token
+        }
+    }
+
+    // Estado para controlar la visibilidad del indicador de carga
+    const [loader, setLoader] = useState(false)
+
     const [showIntro, setShowIntro] = useState(true)
-    const [showKyc, setShowKyc] = useState(true)
+    const [showKyc, setShowKyc] = useState(false)
     const [USERAGE, setUSERAGE] = useState(0)
-    const [isUser, setIsUser] = useState(true)
+    const [isUser, setIsUser] = useState(false)
     const [activeSection, setActiveSection] = useState(1)
 
     /**
@@ -124,56 +139,30 @@ const Kyc = () => {
     /**
      * Función para realizar el submit de los datos del kyc
      */
-    const onSubmit = _ => {
+    const onSubmit = async _ => {
         try {
-            // Se obtiene el name, phoneCode, y currency según la nacionalidad
-            const {
-                name: nationality,
-                phoneCode: phoneCodeNationality,
-                code: currencyNationality
-            } = Countries[userInfo.nationality]
+            setLoader(true)
 
-            // Se obtiene el name, phoneCode, y currency según la residencia
-            const {
-                name: residence,
-                phoneCode: phoneCodeResidence,
-                code: currencyResidence
-            } = Countries[userInfo.residence]
+            // Se construye el objeto a enviar al servidor con la info del usuario
+            const dataSend = await kycUserData(userInfo, credentials)
 
-            // Se construye el objeto a enviar al servidor
-            const dataSend = {
-                birthday: userInfo.birthday,
-                alternativeNumber: userInfo.alternativeNumber,
-                nationality,
-                phoneCodeNationality,
-                currencyNationality,
-                residence,
-                phoneCodeResidence,
-                currencyResidence,
-                province: userInfo.province,
-                city: userInfo.city,
-                direction1: userInfo.direction1,
-                direction2: userInfo.direction2,
-                postalCode: userInfo.postalCode,
-                profilePictureId: 2,
-                indetificationPictureId: 2,
-                ...(
-                    // Si es mayor de edad, se añaden los campos requeridos para estos
-                    calcAge(userInfo.birthday) >= 18
-                        ? {
-                            identificationType: userInfo.identificationType,
-                            identificationNumber: userInfo.identificationNumber,
-                            foundsOrigin: userInfo.foundsOrigin,
-                            estimateMonthlyAmount: userInfo.estimateMonthlyAmount,
-                            profession: userInfo.profession
-                        }
-                        : {}
-                )
+            if (userInfo.addBeneficiary || USERAGE < 18) {
+                // Se añade la información del tutor/beneficiario a la data a enviar al server
+                dataSend.beneficiary = await kycUserBeneficiaryData(beneficiaryInfo, USERAGE, credentials)
             }
 
-            console.log(dataSend)
+            const { data } = await Petition.post('/kyc/user', dataSend, credentials)
+
+            if (data.error) {
+                throw String(data.message)
+            }
+
+            Swal.fire("Felicidades", "Información actualizada con éxito", "success")
         } catch (error) {
             console.error(error)
+            Swal.fire("Ha ocurrido un error", error.toString(), "error")
+        } finally {
+            setLoader(false)
         }
     }
 
@@ -191,7 +180,9 @@ const Kyc = () => {
                             </p>
 
                             <div className="action-buttons">
-                                <button className="button back">
+                                <button
+                                    onClick={_ => LogOut()}
+                                    className="button back">
                                     Cerrar sesion
                                 </button>
 
@@ -239,6 +230,20 @@ const Kyc = () => {
             {
                 showKyc &&
                 <div className="container">
+                    <header className="header">
+                        <img src={Logo} alt="logo" className="logo" />
+
+                        {
+                            isUser &&
+                            <h1>Kyc Personal</h1>
+                        }
+
+                        {
+                            !isUser &&
+                            <h1>Kyc Empresarial</h1>
+                        }
+                    </header>
+
                     {
                         isUser &&
                         <>
@@ -286,8 +291,12 @@ const Kyc = () => {
                                 activeSection === 1 &&
                                 < button
                                     onClick={_ => {
+                                        // Reicia los estados a su valor inicial
                                         setShowIntro(true)
                                         setShowKyc(false)
+                                        setUserInfo({})
+                                        setBeneficiaryInfo({})
+                                        setEcommerceInfo({})
                                     }}
                                     className="back cancel">
                                     <CancelIcon className="icon" />
@@ -309,7 +318,7 @@ const Kyc = () => {
                             {
                                 checkNextVisibility() &&
                                 <button
-
+                                    disabled={!checkSectionValid()}
                                     onClick={nextSection}
                                     style={{
                                         opacity: (activeSection === 3 && !isUser)
@@ -324,12 +333,12 @@ const Kyc = () => {
                             }
 
                             {
-                                /*(
+                                (
                                     (isUser && ((USERAGE >= 18 && !userInfo.addBeneficiary) || activeSection === 2)) ||
                                     (!isUser && activeSection === 3)
-                                ) &&*/
-                                /**disabled={!checkSectionValid()} */
+                                ) &&
                                 < button
+                                    disabled={!checkSectionValid()}
                                     onClick={onSubmit}
                                     className="forward">
                                     Guardar
@@ -339,6 +348,16 @@ const Kyc = () => {
                         </div>
                     </div>
                 </div>
+            }
+
+            {
+                loader &&
+                <Modal persist={true} onlyChildren>
+                    <div className="content-modal">
+                        <h3 className="message">Guardando información</h3>
+                        <ActivityIndicator size={64} />
+                    </div>
+                </Modal>
             }
         </div >
     )

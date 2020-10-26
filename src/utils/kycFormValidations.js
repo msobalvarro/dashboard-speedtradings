@@ -16,7 +16,7 @@ const userValidations = {
     userInfo: (userData) => (
         (userData.hasOwnProperty('birthday') && calcAge(userData.birthday) > 0) &&
         (
-            (calcAge(userData.birthDate) < 18)
+            (calcAge(userData.birthday) < 18)
                 ? true
                 : (
                     (userData.hasOwnProperty('identificationType') && userData.identificationType !== -1) &&
@@ -59,7 +59,7 @@ const userValidations = {
         ) &&
         (beneficiaryData.hasOwnProperty('postalCode') && beneficiaryData.postalCode.length > 3) &&
         (beneficiaryData.hasOwnProperty('foundsOrigin') && beneficiaryData.foundsOrigin !== -1) &&
-        (beneficiaryData.hasOwnProperty('estimateAmount') && beneficiaryData.estimateAmount.length > 0) &&
+        (beneficiaryData.hasOwnProperty('estimateMonthlyAmount') && beneficiaryData.estimateMonthlyAmount.length > 0) &&
         (beneficiaryData.hasOwnProperty('profession') && beneficiaryData.profession.length > 0) &&
         (beneficiaryData.hasOwnProperty('profilePicture') && beneficiaryData.profilePicture !== null) &&
         (beneficiaryData.hasOwnProperty('IDPicture') && beneficiaryData.IDPicture !== null)

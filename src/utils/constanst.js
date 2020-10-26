@@ -3,6 +3,8 @@ import Axios from "axios"
 import Swal from "sweetalert2"
 import moment from "moment"
 
+import Countries from "./countries.json"
+
 // Constanst
 const keySecret = "testDevelop"
 const keyStorage = "@storage"
@@ -112,9 +114,9 @@ export const amountMin = {
 }
 
 //export const urlServer = "https://ardent-medley-272823.appspot.com"
-//export const urlServer = "http://192.168.1.238:9000"
+export const urlServer = "http://192.168.1.238:8084"
 //export const urlServer = "http://192.168.1.224:8084"
-export const urlServer = "http://192.168.0.119:8084"
+//export const urlServer = "http://192.168.0.119:8084"
 
 
 
@@ -264,16 +266,20 @@ export const copyData = async (str = "", msg = "Copiado a portapapeles") => {
 }
 
 /**
- * Función para calcular una edad a partir de una fecha de nacimiento
- * @param {Date || String} birthDate - Fecha a evaluar
+ * Función para almacenar en el servidor
+ * @param {File} file - Foto a almacenar
  */
-export const getAge = (birthDate) => {
-    // Se obtiene la fecha actual
-    let now = moment(new Date(), "YYYY-MM-DD")
-    let fromDate = moment(birthDate, "YYYY-MM-DD")
+export const uploadFile = async (file, credentials) => {
+    return new Promise((resolve, reject) => {
+        const dataSend = new FormData()
 
-    // Se calcula la edad del usuario
-    return Math.floor(moment.duration(now.diff(fromDate)).asYears())
+        dataSend.append('image', file)
+
+        Petition.post('/file/', dataSend, credentials)
+            .then(({ data }) => {
+                resolve(data)
+            }).catch(error => resolve({ error: true, message: error.toString() }))
+    })
 }
 
 /**
