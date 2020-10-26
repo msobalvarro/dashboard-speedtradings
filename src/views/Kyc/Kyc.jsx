@@ -12,7 +12,7 @@ import KycEcommerceForm from "../../components/KycEcommerceForm/KycEcommerceForm
 // Import utils
 import { userValidations, ecommerceValidations } from "../../utils/kycFormValidations"
 import { kycUserData, kycUserBeneficiaryData } from "../../model/kycUser.model"
-import { LogOut, Petition } from "../../utils/constanst"
+import { LogOut, Petition, getStorage, setStorage } from "../../utils/constanst"
 
 // Import assets
 import { ReactComponent as BackIcon } from "../../static/icons/arrow-back.svg"
@@ -137,6 +137,22 @@ const Kyc = () => {
     }
 
     /**
+     * Función que realiza la redirección a la vista principal una vez que el usuario
+     * haya completado su formulario kyc
+     */
+    const redirectToDashboard = () => {
+        // Añade el atributo verificando el tipo de kyc a los datos guardados localmente del usuario
+        setStorage({
+            ...getStorage(),
+            kyc_type: isUser ? 1 : 2
+        })
+
+        // Recarga el sitio
+        window.location.hash = '/'
+        window.location.reload()
+    }
+
+    /**
      * Función para realizar el submit de los datos del kyc
      */
     const onSubmit = async _ => {
@@ -158,6 +174,7 @@ const Kyc = () => {
             }
 
             Swal.fire("Felicidades", "Información actualizada con éxito", "success")
+                .then(_ => redirectToDashboard())
         } catch (error) {
             console.error(error)
             Swal.fire("Ha ocurrido un error", error.toString(), "error")
