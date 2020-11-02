@@ -68,26 +68,26 @@ const userValidations = {
 
 const ecommerceValidations = {
     commerceBasicInfo: (commerceData) => (
-        (commerceData.hasOwnProperty('name') && commerceData.name.length > 0) &&
-        (commerceData.hasOwnProperty('email') && commerceData.email.length > 0) &&
-        (commerceData.hasOwnProperty('website') && commerceData.website.length > 0) &&
-        (commerceData.hasOwnProperty('nameLegalEntity') && commerceData.nameLegalEntity.length > 0) &&
-        (commerceData.hasOwnProperty('type') && commerceData.type !== -1) &&
-        (commerceData.hasOwnProperty('businessIdentification') && commerceData.businessIdentification.length > 0) &&
-        (commerceData.hasOwnProperty('businessIdentificationPicture') && commerceData.businessIdentificationPicture !== null) &&
+        //(commerceData.hasOwnProperty('name') && commerceData.name.length > 0) &&
+        //(commerceData.hasOwnProperty('email') && commerceData.email.length > 0) &&
+        //(commerceData.hasOwnProperty('commerceWebsite') && commerceData.commerceWebsite.length > 0) &&
+        (commerceData.hasOwnProperty('commerceName') && commerceData.commerceName.length > 0) &&
+        (commerceData.hasOwnProperty('commerceType') && commerceData.commerceType !== -1) &&
+        (commerceData.hasOwnProperty('commerceIdentificationNumber') && commerceData.commerceIdentificationNumber.length > 0) &&
+        (commerceData.hasOwnProperty('commerceIdentificationPicture') && commerceData.commerceIdentificationPicture !== null) &&
         (commerceData.hasOwnProperty('incorporationDate') && Math.floor(moment.duration(moment(commerceData.incorporationDate).diff(now)).asDays()) < 0) &&
         (commerceData.hasOwnProperty('country') && commerceData.country !== -1) &&
-        (commerceData.hasOwnProperty('region') && commerceData.region.length > 0) &&
-        (commerceData.hasOwnProperty('city') && commerceData.city.length > 0) &&
+        (commerceData.hasOwnProperty('permanentProvince') && commerceData.permanentProvince.length > 0) &&
+        (commerceData.hasOwnProperty('commerceCity') && commerceData.commerceCity.length > 0) &&
         (
-            (commerceData.hasOwnProperty('direction1') && commerceData.direction1.length > 0) ||
-            (commerceData.hasOwnProperty('direction2') && commerceData.direction2.length > 0)
+            (commerceData.hasOwnProperty('commerceDirection') && commerceData.commerceDirection.length > 0) ||
+            (commerceData.hasOwnProperty('commerceDirection2') && commerceData.commerceDirection2.length > 0)
         ) &&
-        (commerceData.hasOwnProperty('postalCode') && commerceData.postalCode.length > 0) &&
-        (commerceData.hasOwnProperty('mainTelephone') && commerceData.mainTelephone.length > 0) &&
+        (commerceData.hasOwnProperty('commercePostalCode') && commerceData.commercePostalCode.length > 0) &&
+        (commerceData.hasOwnProperty('commerceTelephone') && commerceData.commerceTelephone.length > 0) &&
 
         (commerceData.hasOwnProperty('commercialActivityCountry') && commerceData.commercialActivityCountry !== -1) &&
-        (commerceData.hasOwnProperty('commercialActivityRegion') && commerceData.commercialActivityRegion.length > 0)
+        (commerceData.hasOwnProperty('comercialProvince') && commerceData.comercialProvince.length > 0)
     ),
 
     commerceBeneficialInfo: (commerceData) => {
@@ -98,28 +98,28 @@ const ecommerceValidations = {
 
         return (
             (beneficialOwnerList && beneficialOwnerList.length > 0) &&
-            (commerceData.hasOwnProperty('typeLegalRepresentative')) &&
+            (commerceData.hasOwnProperty('representativeType')) &&
             (legalRepresentative && (
-                legalRepresentative.title && legalRepresentative.title.length > 0 &&
-                legalRepresentative.name && legalRepresentative.name.length > 0 &&
+                legalRepresentative.chargeTitle && legalRepresentative.chargeTitle.length > 0 &&
+                legalRepresentative.fullname && legalRepresentative.fullname.length > 0 &&
                 (
                     (
-                        (legalRepresentative.passport && legalRepresentative.passport.length > 0) &&
+                        (legalRepresentative.passportNumber && legalRepresentative.passportNumber.length > 0) &&
                         (legalRepresentative.passportEmissionCountry && legalRepresentative.passportEmissionCountry !== -1)
                     ) ||
-                    (legalRepresentative.personalId && legalRepresentative.personalId.length > 0)
+                    (legalRepresentative.identificationNumber && legalRepresentative.identificationNumber.length > 0)
                 ) &&
                 (legalRepresentative.originCountry && legalRepresentative.originCountry !== -1) &&
                 (legalRepresentative.direction && legalRepresentative.direction.length > 0) &&
-                (legalRepresentative.telephone && legalRepresentative.telephone.length > 0) &&
+                (legalRepresentative.telephoneNumber && legalRepresentative.telephoneNumber.length > 0) &&
                 (
                     (
-                        legalRepresentative.passport &&
+                        legalRepresentative.passportNumber &&
                         (legalRepresentative.passportPicture && legalRepresentative.passportPicture !== null)
                     ) ||
                     (
-                        legalRepresentative.personalId &&
-                        (legalRepresentative.personalIdPicture && legalRepresentative.personalIdPicture !== null)
+                        legalRepresentative.identificationNumber &&
+                        (legalRepresentative.identificationPicture && legalRepresentative.identificationPicture !== null)
                     )
                 )
             )) &&
@@ -128,37 +128,47 @@ const ecommerceValidations = {
     },
 
     beneficialOwnerItemInfo: (BOData) => (
-        (BOData.hasOwnProperty('title') && BOData.title.length > 0) &&
-        (BOData.hasOwnProperty('name') && BOData.name.length > 0) &&
-        (BOData.hasOwnProperty('birthDate') && Math.floor(moment.duration(moment(BOData.birthDate).diff(now)).asDays()) < 0) &&
+        (BOData.hasOwnProperty('chargeTitle') && BOData.chargeTitle.length > 0) &&
+        (BOData.hasOwnProperty('fullname') && BOData.fullname.length > 0) &&
+        (BOData.hasOwnProperty('birthday') && Math.floor(moment.duration(moment(BOData.birthday).diff(now)).asDays()) < 0) &&
         (
             (
-                (BOData.hasOwnProperty('passport') && BOData.passport.length > 0) &&
+                (BOData.hasOwnProperty('passportNumber') && BOData.passportNumber.length > 0) &&
                 (BOData.hasOwnProperty('passportEmissionCountry') && BOData.passportEmissionCountry !== -1)
             ) ||
-            (BOData.hasOwnProperty('personalId') && BOData.personalId.length > 0)
+            (BOData.hasOwnProperty('identificationNumber') && BOData.identificationNumber.length > 0)
         ) &&
         (BOData.hasOwnProperty('originCountry') && BOData.originCountry !== -1) &&
-        (BOData.hasOwnProperty('region') && BOData.region !== -1) &&
+        (BOData.hasOwnProperty('province') && BOData.province.length > 0) &&
         (BOData.hasOwnProperty('city') && BOData.city.length > 0) &&
         (BOData.hasOwnProperty('direction') && BOData.direction.length > 0) &&
         (BOData.hasOwnProperty('postalCode') && BOData.postalCode.length > 0) &&
-        (BOData.hasOwnProperty('participation') && BOData.participation.length > 0) &&
+        (BOData.hasOwnProperty('participationPercentage') && BOData.participationPercentage.length > 0) &&
         //(BOData.hasOwnProperty('idTax') && BOData.idTax.length > 0) &&
         (
             (
-                BOData.hasOwnProperty('passport') &&
+                BOData.hasOwnProperty('passportNumber') &&
                 (BOData.hasOwnProperty('passportPicture') && BOData.passportPicture !== null)
             ) ||
             (
-                BOData.hasOwnProperty('personalId') &&
-                (BOData.hasOwnProperty('personalIdPicture') && BOData.personalIdPicture !== null)
+                BOData.hasOwnProperty('identificationNumber') &&
+                (BOData.hasOwnProperty('identificationPicture') && BOData.identificationPicture !== null)
             )
         )
     ),
 
     beneficialOwnerSectionInfo: (BOSInfo) => (
         (BOSInfo.beneficialOwnerList.length > 0)
+    ),
+
+    tradeIncomingInfo: (commerceData) => (
+        commerceData.hasOwnProperty('commerceNote') && commerceData.commerceNote.length > 0 &&
+        commerceData.hasOwnProperty('commerceEstimateTransactions') && commerceData.commerceEstimateTransactions.length > 0 &&
+        commerceData.hasOwnProperty('commerceEstimateTransactionsAmount') && commerceData.commerceEstimateTransactionsAmount.length > 0 &&
+        commerceData.hasOwnProperty('commerceCertificatePicture') && commerceData.commerceCertificatePicture !== null &&
+        commerceData.hasOwnProperty('commerceDirectorsPicture') && commerceData.commerceDirectorsPicture !== null &&
+        commerceData.hasOwnProperty('commerceDirectorsInfoPicture') && commerceData.commerceDirectorsInfoPicture !== null &&
+        commerceData.hasOwnProperty('commerceLegalCertificate') && commerceData.commerceLegalCertificate !== null
     )
 }
 

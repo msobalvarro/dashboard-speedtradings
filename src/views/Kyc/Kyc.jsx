@@ -11,7 +11,8 @@ import KycEcommerceForm from "../../components/KycEcommerceForm/KycEcommerceForm
 
 // Import utils
 import { userValidations, ecommerceValidations } from "../../utils/kycFormValidations"
-import { kycUserData, kycUserBeneficiaryData } from "../../model/kycUser.model"
+import { kycUserData, kycUserBeneficiaryData } from "../../services/kycUser.service"
+import { kycEcommerceData } from "../../services/kycEcommerce.service"
 import { LogOut, Petition, getStorage, setStorage } from "../../utils/constanst"
 
 // Import assets
@@ -74,7 +75,7 @@ const Kyc = () => {
 
             // Validaciones para la sección 3
             case 3:
-                return false
+                return ecommerceValidations.tradeIncomingInfo(ecommerceInfo)
 
             default:
                 return false
@@ -160,21 +161,28 @@ const Kyc = () => {
             setLoader(true)
 
             // Se construye el objeto a enviar al servidor con la info del usuario
-            const dataSend = await kycUserData(userInfo, credentials)
+            if (isUser) {
+                const dataSend = await kycUserData(userInfo, credentials)
 
-            if (userInfo.addBeneficiary || USERAGE < 18) {
-                // Se añade la información del tutor/beneficiario a la data a enviar al server
-                dataSend.beneficiary = await kycUserBeneficiaryData(beneficiaryInfo, USERAGE, credentials)
+                if (userInfo.addBeneficiary || USERAGE < 18) {
+                    // Se añade la información del tutor/beneficiario a la data a enviar al server
+                    dataSend.beneficiary = await kycUserBeneficiaryData(beneficiaryInfo, USERAGE, credentials)
+                }
+
+                console.log(dataSend)
+            } else {
+                const dataSend = await kycEcommerceData(ecommerceInfo, credentials)
+                console.log(dataSend)
             }
 
-            const { data } = await Petition.post('/kyc/user', dataSend, credentials)
+            /*const { data } = await Petition.post('/kyc/user', dataSend, credentials)
 
             if (data.error) {
                 throw String(data.message)
-            }
+            }*/
 
             Swal.fire("Felicidades", "Información actualizada con éxito", "success")
-                .then(_ => redirectToDashboard())
+            //.then(_ => redirectToDashboard())
         } catch (error) {
             console.error(error)
             Swal.fire("Ha ocurrido un error", error.toString(), "error")

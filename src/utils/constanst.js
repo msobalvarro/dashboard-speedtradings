@@ -114,9 +114,9 @@ export const amountMin = {
 }
 
 //export const urlServer = "https://ardent-medley-272823.appspot.com"
-export const urlServer = "http://192.168.1.238:8084"
+//export const urlServer = "http://192.168.1.238:8084"
 //export const urlServer = "http://192.168.1.224:8084"
-//export const urlServer = "http://192.168.0.119:8084"
+export const urlServer = "http://192.168.0.119:8084"
 
 
 
@@ -278,7 +278,7 @@ export const uploadFile = async (file, credentials) => {
         Petition.post('/file/', dataSend, credentials)
             .then(({ data }) => {
                 resolve(data)
-            }).catch(error => resolve({ error: true, message: error.toString() }))
+            }).catch(error => resolve({ error: true, message: error }))
     })
 }
 
@@ -307,7 +307,8 @@ export const Petition = Axios.create({
     // },
     validateStatus: (status) => {
         if (status === 401) {
-            LogOut()
+            console.error("logout")
+            //LogOut()
         }
 
         return status >= 200 && status < 300

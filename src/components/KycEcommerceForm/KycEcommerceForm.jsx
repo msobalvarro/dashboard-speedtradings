@@ -72,6 +72,7 @@ const KycEcommerceForm = ({
                             <div className="subsection">
                                 <h3 className="subtitle">1. Información de la cuenta</h3>
 
+                                {/*
                                 <div className="row">
                                     <span className="required">Nombre de usuario</span>
                                     <input
@@ -93,14 +94,15 @@ const KycEcommerceForm = ({
                                         }
                                         type="text"
                                         className="text-input" />
-                                </div>
+                                    </div>
+                                */}
 
                                 <div className="row">
                                     <span className="required">Sitio web (opcional)</span>
                                     <input
-                                        value={state.website || ''}
+                                        value={state.commerceWebsite || ''}
                                         onChange={e =>
-                                            setState({ ...state, website: e.target.value })
+                                            setState({ ...state, commerceWebsite: e.target.value })
                                         }
                                         type="text"
                                         className="text-input" />
@@ -118,11 +120,11 @@ const KycEcommerceForm = ({
                                 <div className="row">
                                     <span className="required">Número de Teléfono</span>
                                     <TelephoneField
-                                        value={state.mainTelephone || ''}
+                                        value={state.commerceTelephone || ''}
                                         onChange={value =>
                                             setState({
                                                 ...state,
-                                                mainTelephone: value
+                                                commerceTelephone: value
                                             })
                                         }
                                         className="text-input" />
@@ -157,9 +159,9 @@ const KycEcommerceForm = ({
                                 <div className="row">
                                     <span className="required">Estado / Provincia / Región</span>
                                     <input
-                                        value={state.commercialActivityRegion || ''}
+                                        value={state.comercialProvince || ''}
                                         onChange={e =>
-                                            setState({ ...state, commercialActivityRegion: e.target.value })
+                                            setState({ ...state, comercialProvince: e.target.value })
                                         }
                                         type="text"
                                         className="text-input" />
@@ -179,9 +181,9 @@ const KycEcommerceForm = ({
                                 <div className="row">
                                     <span className="required">Nombre de la entidad legal</span>
                                     <input
-                                        value={state.nameLegalEntity || ''}
+                                        value={state.commerceName || ''}
                                         onChange={e =>
-                                            setState({ ...state, nameLegalEntity: e.target.value })
+                                            setState({ ...state, commerceName: e.target.value })
                                         }
                                         type="text"
                                         className="text-input" />
@@ -190,9 +192,9 @@ const KycEcommerceForm = ({
                                 <div className="row">
                                     <span className="required">Tipo</span>
                                     <select
-                                        value={state.type || -1}
+                                        value={state.commerceType || -1}
                                         onChange={e =>
-                                            setState({ ...state, type: e.target.value })
+                                            setState({ ...state, commerceType: e.target.value })
                                         }
                                         className="picker">
                                         <option value="-1" disabled hidden>
@@ -212,9 +214,9 @@ const KycEcommerceForm = ({
                                 <div className="row">
                                     <span className="required">Número de identificación del negocio</span>
                                     <input
-                                        value={state.businessIdentification || ''}
+                                        value={state.commerceIdentificationNumber || ''}
                                         onChange={e =>
-                                            setState({ ...state, businessIdentification: e.target.value })
+                                            setState({ ...state, commerceIdentificationNumber: e.target.value })
                                         }
                                         type="text"
                                         className="text-input" />
@@ -238,7 +240,7 @@ const KycEcommerceForm = ({
                                                 setBusinessIdPreview,
                                                 file => setState({
                                                     ...state,
-                                                    businessIdentificationPicture: file
+                                                    commerceIdentificationPicture: file
                                                 })
                                             )}
                                     />
@@ -262,31 +264,6 @@ const KycEcommerceForm = ({
                                         className="picker" />
                                 </div>
                             </div>
-
-                            {/**
-                             * 
-                             * Sección para mostrar el botón de submit
-                             * 
-                             */}
-                            {
-                                false &&
-                                <div className="subsection">
-                                    <div className="row horizontal">
-                                        <button
-                                            onClick={onCancel}
-                                            className="button cancel">
-                                            Cancelar
-                                        </button>
-
-                                        <button
-                                            disabled={!fieldsValid}
-                                            onClick={onSubmit}
-                                            className="button">
-                                            Registrar
-                                        </button>
-                                    </div>
-                                </div>
-                            }
                         </div>
 
                         <div className="content-item">
@@ -323,9 +300,9 @@ const KycEcommerceForm = ({
                                 <div className="row">
                                     <span className="required">Estado / Provincia / Región</span>
                                     <input
-                                        value={state.region || ''}
+                                        value={state.permanentProvince || ''}
                                         onChange={e =>
-                                            setState({ ...state, region: e.target.value })
+                                            setState({ ...state, permanentProvince: e.target.value })
                                         }
                                         type="text"
                                         className="text-input" />
@@ -334,9 +311,9 @@ const KycEcommerceForm = ({
                                 <div className="row">
                                     <span className="required">Ciudad</span>
                                     <input
-                                        value={state.city || ''}
+                                        value={state.commerceCity || ''}
                                         onChange={e =>
-                                            setState({ ...state, city: e.target.value })
+                                            setState({ ...state, commerceCity: e.target.value })
                                         }
                                         type="text"
                                         className="text-input" />
@@ -345,9 +322,9 @@ const KycEcommerceForm = ({
                                 <div className="row">
                                     <span className="required">Dirección (línea 1)</span>
                                     <input
-                                        value={state.direction1 || ''}
+                                        value={state.commerceDirection || ''}
                                         onChange={e =>
-                                            setState({ ...state, direction1: e.target.value })
+                                            setState({ ...state, commerceDirection: e.target.value })
                                         }
                                         ype="text"
                                         className="text-input" />
@@ -356,9 +333,9 @@ const KycEcommerceForm = ({
                                 <div className="row">
                                     <span>Dirección (línea 2)</span>
                                     <input
-                                        value={state.direction2 || ''}
+                                        value={state.commerceDirection2 || ''}
                                         onChange={e =>
-                                            setState({ ...state, direction2: e.target.value })
+                                            setState({ ...state, commerceDirection2: e.target.value })
                                         }
                                         type="text"
                                         className="text-input" />
@@ -367,9 +344,9 @@ const KycEcommerceForm = ({
                                 <div className="row">
                                     <span className="required">Código postal</span>
                                     <input
-                                        value={state.postalCode || ''}
+                                        value={state.commercePostalCode || ''}
                                         onChange={e =>
-                                            setState({ ...state, postalCode: e.target.value })
+                                            setState({ ...state, commercePostalCode: e.target.value })
                                         }
                                         type="text"
                                         className="text-input" />
@@ -422,36 +399,36 @@ const KycEcommerceForm = ({
 
                                         {
                                             beneficialOwnerList.map(({
-                                                title, name, participation, birthDate, direction, city, region, postalCode, originCountry, passport, passportEmissionCountry, idTax, personalId
+                                                chargeTitle, fullname, participationPercentage, birthday, direction, city, province, postalCode, originCountry, passportNumber, passportEmissionCountry, identificationTaxNumber, identificationNumber
                                             }, index) => (
                                                     <div key={`bo-${index}`} className="row">
                                                         <span>
                                                             {
-                                                                `${title}, ${name}`
+                                                                `${chargeTitle}, ${fullname}`
                                                             }
                                                         </span>
 
-                                                        <span>{participation} %</span>
+                                                        <span>{participationPercentage} %</span>
 
-                                                        <span>{birthDate}</span>
+                                                        <span>{birthday}</span>
 
                                                         <span>
                                                             {
-                                                                `${direction}, ${city}, ${region}, ${postalCode}, ${Countries[originCountry].name}`
+                                                                `${direction}, ${city}, ${province}, ${postalCode}, ${Countries[originCountry].name}`
                                                             }
                                                         </span>
 
-                                                        <span>{personalId || 'No aplica'}</span>
+                                                        <span>{identificationNumber || 'No aplica'}</span>
 
                                                         <span>
                                                             {
-                                                                passport && passportEmissionCountry
-                                                                    ? `${passport}, ${Countries[passportEmissionCountry].name}`
+                                                                passportNumber && passportEmissionCountry
+                                                                    ? `${passportNumber}, ${Countries[passportEmissionCountry].name}`
 
                                                                     : 'No aplica'
                                                             }
                                                         </span>
-                                                        <span>{idTax || 'No aplica'}</span>
+                                                        <span>{identificationTaxNumber || 'No aplica'}</span>
                                                     </div>
                                                 ))
                                         }
@@ -477,7 +454,7 @@ const KycEcommerceForm = ({
                                         onClick={_ => {
                                             setState({
                                                 ...state,
-                                                typeLegalRepresentative: 1
+                                                representativeType: 1
                                             })
                                         }}
                                         name="typeLegalRepresentative"
@@ -493,7 +470,7 @@ const KycEcommerceForm = ({
                                         onClick={_ => {
                                             setState({
                                                 ...state,
-                                                typeLegalRepresentative: 2
+                                                representativeType: 2
                                             })
                                         }}
                                         name="typeLegalRepresentative"
@@ -561,11 +538,11 @@ const KycEcommerceForm = ({
                                 </p>
 
                                 <textarea
-                                    value={state.foundsDescription || ''}
+                                    value={state.commerceNote || ''}
                                     onChange={e => {
                                         setState({
                                             ...state,
-                                            foundsDescription: e.target.value
+                                            commerceNote: e.target.value
                                         })
                                     }}
                                     className="text-input"></textarea>
@@ -581,11 +558,11 @@ const KycEcommerceForm = ({
                                         <span>Número de transacciones</span>
 
                                         <input
-                                            value={state.estimateTransactions || ''}
+                                            value={state.commerceEstimateTransactions || ''}
                                             onChange={e => {
                                                 setState({
                                                     ...state,
-                                                    estimateTrasactions: e.target.value
+                                                    commerceEstimateTransactions: e.target.value
                                                 })
                                             }}
                                             type="text"
@@ -596,11 +573,11 @@ const KycEcommerceForm = ({
                                         <span>Valor total de transacciones en USD</span>
 
                                         <input
-                                            value={state.estimateAmountTransactions || ''}
+                                            value={state.commerceEstimateTransactionsAmount || ''}
                                             onChange={e => {
                                                 setState({
                                                     ...state,
-                                                    estimateAmountTrasactions: e.target.value
+                                                    commerceEstimateTransactionsAmount: e.target.value
                                                 })
                                             }}
                                             type="text"
@@ -623,7 +600,7 @@ const KycEcommerceForm = ({
                                         htmlFor={`estatutos-${inputKey}`}
                                         className="upload">
                                         <span className="filename">
-                                            {state.statusCertificate?.name || ''}
+                                            {state.commerceCertificatePicture?.name || ''}
                                         </span>
                                         <UploadIcon />
                                     </label>
@@ -636,7 +613,7 @@ const KycEcommerceForm = ({
                                                 _ => { },
                                                 file => setState({
                                                     ...state,
-                                                    statusCertificate: file
+                                                    commerceCertificatePicture: file
                                                 })
                                             )}
                                     />
@@ -650,7 +627,7 @@ const KycEcommerceForm = ({
                                         htmlFor={`directorsList-${inputKey}`}
                                         className="upload">
                                         <span className="filename">
-                                            {state.directorsList?.name || ''}
+                                            {state.commerceDirectorsPicture?.name || ''}
                                         </span>
                                         <UploadIcon />
                                     </label>
@@ -663,7 +640,7 @@ const KycEcommerceForm = ({
                                                 _ => { },
                                                 file => setState({
                                                     ...state,
-                                                    directorsList: file
+                                                    commerceDirectorsPicture: file
                                                 })
                                             )}
                                     />
@@ -677,7 +654,7 @@ const KycEcommerceForm = ({
                                         htmlFor={`directorsAutorization-${inputKey}`}
                                         className="upload">
                                         <span className="filename">
-                                            {state.directorsAutorization?.name || ''}
+                                            {state.commerceDirectorsInfoPicture?.name || ''}
                                         </span>
                                         <UploadIcon />
                                     </label>
@@ -690,7 +667,7 @@ const KycEcommerceForm = ({
                                                 _ => { },
                                                 file => setState({
                                                     ...state,
-                                                    directorsAutorization: file
+                                                    commerceDirectorsInfoPicture: file
                                                 })
                                             )}
                                     />
@@ -704,7 +681,7 @@ const KycEcommerceForm = ({
                                         htmlFor={`legalCertificate-${inputKey}`}
                                         className="upload">
                                         <span className="filename">
-                                            {state.legalCertificate?.name || ''}
+                                            {state.commerceLegalCertificate?.name || ''}
                                         </span>
                                         <UploadIcon />
                                     </label>
@@ -717,7 +694,7 @@ const KycEcommerceForm = ({
                                                 _ => { },
                                                 file => setState({
                                                     ...state,
-                                                    legalCertificate: file
+                                                    commerceLegalCertificate: file
                                                 })
                                             )}
                                     />
@@ -725,7 +702,7 @@ const KycEcommerceForm = ({
 
                                 <div className="row">
                                     <p className="paragraph">
-                                        Yo, <strong className="name-legal-representative">{state.legalRepresentative?.name || 'harold espinoza'}</strong>, por la presente certifico, según mi saber y entender que la información proporcionada anteriormente es completa y correcta.
+                                        Yo, <strong className="name-legal-representative">{state.legalRepresentative?.fullname || 'harold espinoza'}</strong>, por la presente certifico, según mi saber y entender que la información proporcionada anteriormente es completa y correcta.
                                     </p>
                                 </div>
 

@@ -48,9 +48,9 @@ const KycEcommerceBeneficialOwner = ({ onSubmit = _ => { }, onChange = null }) =
             <div className="item">
                 <span>Título del cargo</span>
                 <input
-                    value={state.title || ''}
+                    value={state.chargeTitle || ''}
                     onChange={e =>
-                        setState({ ...state, title: e.target.value })
+                        setState({ ...state, chargeTitle: e.target.value })
                     }
                     type="text"
                     className="text-input" />
@@ -59,9 +59,9 @@ const KycEcommerceBeneficialOwner = ({ onSubmit = _ => { }, onChange = null }) =
             <div className="item">
                 <span>Nombre completo</span>
                 <input
-                    value={state.name || ''}
+                    value={state.fullname || ''}
                     onChange={e =>
-                        setState({ ...state, name: e.target.value })
+                        setState({ ...state, fullname: e.target.value })
                     }
                     type="text"
                     className="text-input" />
@@ -72,9 +72,9 @@ const KycEcommerceBeneficialOwner = ({ onSubmit = _ => { }, onChange = null }) =
                 <div className="item">
                     <span>Fecha de nacimiento</span>
                     <input
-                        value={state.birthDate || moment(new Date()).format("YYYY-MM-DD")}
+                        value={state.birthday || moment(new Date()).format("YYYY-MM-DD")}
                         onChange={e =>
-                            setState({ ...state, birthDate: e.target.value })
+                            setState({ ...state, birthday: e.target.value })
                         }
                         type="date"
                         className="picker" />
@@ -84,9 +84,9 @@ const KycEcommerceBeneficialOwner = ({ onSubmit = _ => { }, onChange = null }) =
             <div className="item">
                 <span>No. identificación personal</span>
                 <input
-                    value={state.personalId || ''}
+                    value={state.identificationNumber || ''}
                     onChange={e =>
-                        setState({ ...state, personalId: e.target.value })
+                        setState({ ...state, identificationNumber: e.target.value })
                     }
                     type="text"
                     className="text-input" />
@@ -95,16 +95,16 @@ const KycEcommerceBeneficialOwner = ({ onSubmit = _ => { }, onChange = null }) =
             <div className="item">
                 <span>Número de pasaporte</span>
                 <input
-                    value={state.passport || ''}
+                    value={state.passportNumber || ''}
                     onChange={e =>
-                        setState({ ...state, passport: e.target.value })
+                        setState({ ...state, passportNumber: e.target.value })
                     }
                     type="text"
                     className="text-input" />
             </div>
 
             {
-                state.passport && state.passport.length > 0 &&
+                state.passportNumber && state.passportNumber.length > 0 &&
                 < div className="item toshow">
                     <span>País de emisión pasaporte</span>
                     <select
@@ -156,9 +156,9 @@ const KycEcommerceBeneficialOwner = ({ onSubmit = _ => { }, onChange = null }) =
                     <div className="item">
                         <span>Estado / Provincia / Región</span>
                         <input
-                            value={state.region || ''}
+                            value={state.province || ''}
                             onChange={e =>
-                                setState({ ...state, region: e.target.value })
+                                setState({ ...state, province: e.target.value })
                             }
                             type="text"
                             className="text-input" />
@@ -205,9 +205,9 @@ const KycEcommerceBeneficialOwner = ({ onSubmit = _ => { }, onChange = null }) =
                     <div className="item">
                         <span>Participación (%)</span>
                         <input
-                            value={state.participation || ''}
+                            value={state.participationPercentage || ''}
                             onChange={e =>
-                                setState({ ...state, participation: e.target.value })
+                                setState({ ...state, participationPercentage: e.target.value })
                             }
                             type="text"
                             className="text-input" />
@@ -218,9 +218,9 @@ const KycEcommerceBeneficialOwner = ({ onSubmit = _ => { }, onChange = null }) =
             <div className="item">
                 <span>No. identificación tributaria (opcional)</span>
                 <input
-                    value={state.idTax || ''}
+                    value={state.identificationTaxNumber || ''}
                     onChange={e =>
-                        setState({ ...state, idTax: e.target.value })
+                        setState({ ...state, identificationTaxNumber: e.target.value })
                     }
                     type="text"
                     className="text-input" />
@@ -231,9 +231,9 @@ const KycEcommerceBeneficialOwner = ({ onSubmit = _ => { }, onChange = null }) =
                 <div className="item">
                     <span>Teléfono</span>
                     <TelephoneField
-                        value={state.telephone || ''}
+                        value={state.telephoneNumber || ''}
                         onChange={value =>
-                            setState({ ...state, telephone: value })
+                            setState({ ...state, telephoneNumber: value })
                         } />
                 </div>
             }
@@ -241,7 +241,7 @@ const KycEcommerceBeneficialOwner = ({ onSubmit = _ => { }, onChange = null }) =
             <div className="footer">
                 <div className="uploads-container">
                     {
-                        state.personalId && state.personalId.length > 0 &&
+                        state.identificationNumber && state.identificationNumber.length > 0 &&
                         <div className="upload-section toshow">
                             <div className="item horizontal">
                                 <span className="required">Adjunte una foto su indetificación personal</span>
@@ -261,7 +261,7 @@ const KycEcommerceBeneficialOwner = ({ onSubmit = _ => { }, onChange = null }) =
                                             setPersonalIdPreview,
                                             file => setState({
                                                 ...state,
-                                                personalIdPicture: file
+                                                identificationPicture: file
                                             })
                                         )}
                                 />
@@ -275,7 +275,7 @@ const KycEcommerceBeneficialOwner = ({ onSubmit = _ => { }, onChange = null }) =
                     }
 
                     {
-                        state.passport && state.passport.length > 0 &&
+                        state.passportNumber && state.passportNumber.length > 0 &&
                         <div className="upload-section toshow">
                             <div className="item horizontal">
                                 <span className="required">Adjunte una foto del pasaporte</span>
