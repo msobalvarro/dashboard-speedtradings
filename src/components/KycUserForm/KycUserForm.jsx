@@ -1,9 +1,16 @@
 import React, { useState, useEffect } from 'react'
 import moment from 'moment'
+import Swal from "sweetalert2"
 import './KycUserForm.scss'
 
 // Import utils
-import { calcAge } from "../../utils/constanst"
+import { calcAge, MAX_FILE_SIZE } from "../../utils/constanst"
+import {
+    nameRegex,
+    identificationRegex,
+    postalCodeRegex,
+    floatRegex
+} from '../../utils/regexPatterns'
 
 // Import asset's
 import { ReactComponent as UploadIcon } from "../../static/icons/upload.svg"
@@ -30,6 +37,11 @@ const KycUserForm = ({
      */
     const handleChangeProfileFile = async (e) => {
         const file = e.target.files[0]
+        console.log(file)
+        if (file && file.size > MAX_FILE_SIZE) {
+            Swal.fire('Archivo demasiado grande', '¡Ups! El archivo que intentas subir es demasiado grande, nuestro límite es de 7MB', 'error')
+            return
+        }
 
         setProfileFileURL(URL.createObjectURL(file))
         setState({ ...state, profilePicture: file })
@@ -41,6 +53,11 @@ const KycUserForm = ({
      */
     const handleChangeIdFile = async (e) => {
         const file = e.target.files[0]
+
+        if (file.size > MAX_FILE_SIZE) {
+            Swal.fire('Archivo demasiado grande', '¡Ups! El archivo que intentas subir es demasiado grande, nuestro límite es de 7MB', 'error')
+            return
+        }
 
         setIdFileURL(URL.createObjectURL(file))
         setState({ ...state, IDPicture: file })
@@ -105,7 +122,8 @@ const KycUserForm = ({
                                             autoFocus
                                             value={state.firstname || ''}
                                             onChange={e =>
-                                                setState({ ...state, firstname: e.target.value })
+                                                nameRegex(e.target.value)
+                                                    .then(value => setState({ ...state, firstname: value }))
                                             }
                                             type="text"
                                             className="text-input" />
@@ -116,7 +134,8 @@ const KycUserForm = ({
                                         <input
                                             value={state.lastname || ''}
                                             onChange={e =>
-                                                setState({ ...state, lastname: e.target.value })
+                                                nameRegex(e.target.value)
+                                                    .then(value => setState({ ...state, lastname: value }))
                                             }
                                             type="text"
                                             className="text-input" />
@@ -163,7 +182,8 @@ const KycUserForm = ({
                                         <input
                                             value={state.identificationNumber || ''}
                                             onChange={e =>
-                                                setState({ ...state, identificationNumber: e.target.value })
+                                                identificationRegex(e.target.value)
+                                                    .then(value => setState({ ...state, identificationNumber: value }))
                                             }
                                             type="text"
                                             className="text-input" />
@@ -216,18 +236,21 @@ const KycUserForm = ({
                                 </div>
                             */}
 
-                            <div className="row">
-                                <span className="required">Número de teléfono principal</span>
-                                <TelephoneField
-                                    value={state.principalNumber || ''}
-                                    onChange={value =>
-                                        setState({
-                                            ...state,
-                                            principalNumber: value
-                                        })
-                                    }
-                                    className="text-input" />
-                            </div>
+                            {
+                                secondaryTypeForm !== 0 &&
+                                <div className="row">
+                                    <span className="required">Número de teléfono principal</span>
+                                    <TelephoneField
+                                        value={state.principalNumber || ''}
+                                        onChange={value =>
+                                            setState({
+                                                ...state,
+                                                principalNumber: value
+                                            })
+                                        }
+                                        className="text-input" />
+                                </div>
+                            }
 
                             <div className="row">
                                 <span>Número de teléfono alternativo</span>
@@ -302,7 +325,8 @@ const KycUserForm = ({
                                 <input
                                     value={state.province || ''}
                                     onChange={e =>
-                                        setState({ ...state, province: e.target.value })
+                                        nameRegex(e.target.value)
+                                            .then(value => setState({ ...state, province: value }))
                                     }
                                     type="text"
                                     className="text-input" />
@@ -313,7 +337,8 @@ const KycUserForm = ({
                                 <input
                                     value={state.city || ''}
                                     onChange={e =>
-                                        setState({ ...state, city: e.target.value })
+                                        nameRegex(e.target.value)
+                                            .then(value => setState({ ...state, city: value }))
                                     }
                                     type="text"
                                     className="text-input" />
@@ -346,7 +371,8 @@ const KycUserForm = ({
                                 <input
                                     value={state.postalCode || ''}
                                     onChange={e =>
-                                        setState({ ...state, postalCode: e.target.value })
+                                        postalCodeRegex(e.target.value)
+                                            .then(value => setState({ ...state, postalCode: value }))
                                     }
                                     type="text"
                                     className="text-input" />
@@ -387,12 +413,12 @@ const KycUserForm = ({
                                     <span className="required">¿Cuál es el monto estimado a guardar mensualmente?</span>
 
                                     <input
-                                        value={state.estimateMonthlyAmount || ''}
-                                        onChange={e =>
-                                            setState({
-                                                ...state,
-                                                estimateMonthlyAmount: e.target.value
-                                            })
+                                        value={state.estimateMonthlyAmount || ''} onChange={e =>
+                                            floatRegex(e.target.value)
+                                                .then(value => setState({
+                                                    ...state,
+                                                    estimateMonthlyAmount: value
+                                                }))
                                         }
                                         type="text"
                                         className="text-input" />
@@ -404,10 +430,11 @@ const KycUserForm = ({
                                     <input
                                         value={state.profession || ''}
                                         onChange={e =>
-                                            setState({
-                                                ...state,
-                                                profession: e.target.value
-                                            })
+                                            nameRegex(e.target.value)
+                                                .then(value => setState({
+                                                    ...state,
+                                                    profession: value
+                                                }))
                                         }
                                         type="text"
                                         className="text-input" />
@@ -443,6 +470,7 @@ const KycUserForm = ({
                                 <input
                                     type="file"
                                     id="profile-picture"
+                                    accept=".jpeg,.jpg,.jpe,.png"
                                     onChange={handleChangeProfileFile} />
                             </div>
 
@@ -478,6 +506,7 @@ const KycUserForm = ({
                                 <input
                                     type="file"
                                     id="id-picture"
+                                    accept=".jpeg,.jpg,.jpe,.png"
                                     onChange={handleChangeIdFile} />
                             </div>
 

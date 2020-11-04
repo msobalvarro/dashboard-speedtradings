@@ -37,6 +37,7 @@ const Kyc = () => {
 
     // Estado para controlar la visibilidad del indicador de carga
     const [loader, setLoader] = useState(false)
+    const [showWaitMessage, setShowWaitMessage] = useState(false)
 
     const [showIntro, setShowIntro] = useState(true)
     const [showKyc, setShowKyc] = useState(false)
@@ -159,35 +160,38 @@ const Kyc = () => {
     const onSubmit = async _ => {
         try {
             setLoader(true)
+            let dataSend = {}
+            let endpointKyc = ''
 
             // Se construye el objeto a enviar al servidor con la info del usuario
             if (isUser) {
-                const dataSend = await kycUserData(userInfo, credentials)
+                endpointKyc = '/kyc/user'
+                dataSend = await kycUserData(userInfo, credentials)
 
                 if (userInfo.addBeneficiary || USERAGE < 18) {
                     // Se añade la información del tutor/beneficiario a la data a enviar al server
                     dataSend.beneficiary = await kycUserBeneficiaryData(beneficiaryInfo, USERAGE, credentials)
                 }
 
-                console.log(dataSend)
             } else {
-                const dataSend = await kycEcommerceData(ecommerceInfo, credentials)
-                console.log(dataSend)
+                endpointKyc = '/kyc/ecommerce'
+                dataSend = await kycEcommerceData(ecommerceInfo, credentials)
             }
 
-            /*const { data } = await Petition.post('/kyc/user', dataSend, credentials)
+            const { data } = await Petition.post(endpointKyc, dataSend, credentials)
 
             if (data.error) {
                 throw String(data.message)
-            }*/
+            }
 
             Swal.fire("Felicidades", "Información actualizada con éxito", "success")
-            //.then(_ => redirectToDashboard())
+                .then(_ => redirectToDashboard())
         } catch (error) {
             console.error(error)
             Swal.fire("Ha ocurrido un error", error.toString(), "error")
         } finally {
             setLoader(false)
+            setShowWaitMessage(false)
         }
     }
 
@@ -379,7 +383,20 @@ const Kyc = () => {
                 loader &&
                 <Modal persist={true} onlyChildren>
                     <div className="content-modal">
-                        <h3 className="message">Guardando información</h3>
+                        {
+                            (window.setTimeout(_ => setShowWaitMessage(true), 5000)) &&
+                            <></>
+                        }
+                        <h2 className="message">Guardando información</h2>
+                        {
+                            !showWaitMessage &&
+                            <p>Esto proceso puede demorar un momento...</p>
+                        }
+
+                        {
+                            showWaitMessage &&
+                            <p>Ya casi terminamos...</p>
+                        }
                         <ActivityIndicator size={64} />
                     </div>
                 </Modal>

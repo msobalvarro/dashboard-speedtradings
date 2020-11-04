@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react'
 import moment from 'moment'
+import Swal from "sweetalert2"
 import 'moment/locale/es'
 import './KycEcommerceForm.scss'
 
@@ -12,7 +13,14 @@ import Countries from '../../utils/countries.json'
 import { ReactComponent as UploadIcon } from '../../static/icons/upload.svg'
 
 // Import constants & utils
-import { commercialCategories, randomKey } from '../../utils/constanst'
+import { commercialCategories, randomKey, MAX_FILE_SIZE } from '../../utils/constanst'
+import {
+    nameRegex,
+    identificationRegex,
+    floatRegex,
+    integerRegex,
+    postalCodeRegex
+} from '../../utils/regexPatterns'
 
 
 const KycEcommerceForm = ({
@@ -21,7 +29,6 @@ const KycEcommerceForm = ({
     onCancel = _ => { },
     onSubmit = _ => { },
     activeSection = 1,
-    fieldsValid = false,
     className = '',
 }) => {
     // Estados para almacenar las previsualizaciones de las imágenes a subir
@@ -41,6 +48,11 @@ const KycEcommerceForm = ({
     */
     const handleLoadPreview = async (e, dispatchPreview, dispatch) => {
         const file = e.target.files[0]
+
+        if (file.size > MAX_FILE_SIZE) {
+            Swal.fire('Archivo demasiado grande', '¡Ups! El archivo que intentas subir es demasiado grande, nuestro límite es de 7MB', 'error')
+            return
+        }
 
         dispatchPreview(URL.createObjectURL(file))
         dispatch(file)
@@ -161,7 +173,10 @@ const KycEcommerceForm = ({
                                     <input
                                         value={state.comercialProvince || ''}
                                         onChange={e =>
-                                            setState({ ...state, comercialProvince: e.target.value })
+                                            nameRegex(e.target.value)
+                                                .then(value =>
+                                                    setState({ ...state, comercialProvince: value })
+                                                )
                                         }
                                         type="text"
                                         className="text-input" />
@@ -216,7 +231,8 @@ const KycEcommerceForm = ({
                                     <input
                                         value={state.commerceIdentificationNumber || ''}
                                         onChange={e =>
-                                            setState({ ...state, commerceIdentificationNumber: e.target.value })
+                                            identificationRegex(e.target.value)
+                                                .then(value => setState({ ...state, commerceIdentificationNumber: value }))
                                         }
                                         type="text"
                                         className="text-input" />
@@ -234,6 +250,7 @@ const KycEcommerceForm = ({
                                     <input
                                         type="file"
                                         id="profile-picture"
+                                        accept=".jpeg,.jpg,.jpe,.png"
                                         onChange={e =>
                                             handleLoadPreview(
                                                 e,
@@ -302,7 +319,8 @@ const KycEcommerceForm = ({
                                     <input
                                         value={state.permanentProvince || ''}
                                         onChange={e =>
-                                            setState({ ...state, permanentProvince: e.target.value })
+                                            nameRegex(e.target.value)
+                                                .then(value => setState({ ...state, permanentProvince: value }))
                                         }
                                         type="text"
                                         className="text-input" />
@@ -313,7 +331,8 @@ const KycEcommerceForm = ({
                                     <input
                                         value={state.commerceCity || ''}
                                         onChange={e =>
-                                            setState({ ...state, commerceCity: e.target.value })
+                                            nameRegex(e.target.value)
+                                                .then(value => setState({ ...state, commerceCity: value }))
                                         }
                                         type="text"
                                         className="text-input" />
@@ -346,7 +365,8 @@ const KycEcommerceForm = ({
                                     <input
                                         value={state.commercePostalCode || ''}
                                         onChange={e =>
-                                            setState({ ...state, commercePostalCode: e.target.value })
+                                            postalCodeRegex(e.target.value)
+                                                .then(value => setState({ ...state, commercePostalCode: value }))
                                         }
                                         type="text"
                                         className="text-input" />
@@ -559,12 +579,13 @@ const KycEcommerceForm = ({
 
                                         <input
                                             value={state.commerceEstimateTransactions || ''}
-                                            onChange={e => {
-                                                setState({
-                                                    ...state,
-                                                    commerceEstimateTransactions: e.target.value
-                                                })
-                                            }}
+                                            onChange={e =>
+                                                integerRegex(e.target.value)
+                                                    .then(value => setState({
+                                                        ...state,
+                                                        commerceEstimateTransactions: value
+                                                    }))
+                                            }
                                             type="text"
                                             className="text-input" />
                                     </div>
@@ -574,12 +595,13 @@ const KycEcommerceForm = ({
 
                                         <input
                                             value={state.commerceEstimateTransactionsAmount || ''}
-                                            onChange={e => {
-                                                setState({
-                                                    ...state,
-                                                    commerceEstimateTransactionsAmount: e.target.value
-                                                })
-                                            }}
+                                            onChange={e =>
+                                                floatRegex(e.target.value)
+                                                    .then(value => setState({
+                                                        ...state,
+                                                        commerceEstimateTransactionsAmount: value
+                                                    }))
+                                            }
                                             type="text"
                                             className="text-input" />
                                     </div>
@@ -607,6 +629,7 @@ const KycEcommerceForm = ({
                                     <input
                                         type="file"
                                         id={`estatutos-${inputKey}`}
+                                        accept=".jpeg,.jpg,.jpe,.png,.pdf"
                                         onChange={e =>
                                             handleLoadPreview(
                                                 e,
@@ -633,6 +656,7 @@ const KycEcommerceForm = ({
                                     </label>
                                     <input
                                         type="file"
+                                        accept=".jpeg,.jpg,.jpe,.png,.pdf"
                                         id={`directorsList-${inputKey}`}
                                         onChange={e =>
                                             handleLoadPreview(
@@ -660,6 +684,7 @@ const KycEcommerceForm = ({
                                     </label>
                                     <input
                                         type="file"
+                                        accept=".jpeg,.jpg,.jpe,.png,.pdf"
                                         id={`directorsAutorization-${inputKey}`}
                                         onChange={e =>
                                             handleLoadPreview(
@@ -687,6 +712,7 @@ const KycEcommerceForm = ({
                                     </label>
                                     <input
                                         type="file"
+                                        accept=".jpeg,.jpg,.jpe,.png,.pdf"
                                         id={`legalCertificate-${inputKey}`}
                                         onChange={e =>
                                             handleLoadPreview(

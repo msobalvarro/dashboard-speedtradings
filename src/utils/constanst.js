@@ -118,7 +118,8 @@ export const amountMin = {
 //export const urlServer = "http://192.168.1.224:8084"
 export const urlServer = "http://192.168.0.119:8084"
 
-
+// Límite de subida de los archivos e bytes
+export const MAX_FILE_SIZE = 5 * 1024 * 1024
 
 /**
  * Constante que almacena key secret para recaptcha
@@ -302,13 +303,18 @@ export const readFile = (file) => {
 
 export const Petition = Axios.create({
     baseURL: urlServer,
-    // headers: {
-    //     "Content-Type": "application/json"
-    // },
+    headers: {
+        "ignore-release-date": true,
+        "release-date": '2020-11-02'
+    },
     validateStatus: (status) => {
         if (status === 401) {
             console.error("logout")
-            //LogOut()
+            LogOut()
+        }
+
+        if (status === 426) {
+            console.log("actualizar")
         }
 
         return status >= 200 && status < 300

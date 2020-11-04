@@ -40,6 +40,15 @@ const App = () => {
       : _ => (<Redirect to="/kyc" />)
   }
 
+  /**
+   * Deshabilita el acceso a la vista del kyc cuando este ya eha sido completado
+   */
+  const checkKycAccess = () => {
+    return !completedKyc
+      ? _ => (<Kyc />)
+      : _ => (<Redirect to="/" />)
+  }
+
   useEffect(() => {
     const payload = getStorage()
 
@@ -75,7 +84,7 @@ const App = () => {
             <Route path="/" exact component={checkKycComplete(Dashboard)} />
             <Route path="/sponsors" component={checkKycComplete(Sponsors)} />
             <Route path="/profile" component={checkKycComplete(Profile)} />
-            <Route path="/kyc" component={Kyc} />
+            <Route path="/kyc" component={checkKycAccess()} />
             <Route path="*" component={checkKycComplete(NotFound)} />
           </Switch>
 

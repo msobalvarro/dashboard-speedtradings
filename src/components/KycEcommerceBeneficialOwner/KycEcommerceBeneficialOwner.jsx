@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react'
 import moment from 'moment'
+import Swal from "sweetalert2"
 import './KycEcommerceBeneficialOwner.scss'
 
 // Import components
@@ -12,7 +13,13 @@ import { ReactComponent as AddIcon } from '../../static/icons/add.svg'
 
 // Import utils
 import { ecommerceValidations } from '../../utils/kycFormValidations'
-import { randomKey } from '../../utils/constanst'
+import { randomKey, MAX_FILE_SIZE } from '../../utils/constanst'
+import {
+    nameRegex,
+    identificationRegex,
+    postalCodeRegex,
+    floatRegex
+} from '../../utils/regexPatterns'
 
 
 const KycEcommerceBeneficialOwner = ({ onSubmit = _ => { }, onChange = null }) => {
@@ -33,6 +40,11 @@ const KycEcommerceBeneficialOwner = ({ onSubmit = _ => { }, onChange = null }) =
     const handleLoadPreview = async (e, dispatchPreview, dispatch) => {
         const file = e.target.files[0]
 
+        if (file.size > MAX_FILE_SIZE) {
+            Swal.fire('Archivo demasiado grande', '¡Ups! El archivo que intentas subir es demasiado grande, nuestro límite es de 7MB', 'error')
+            return
+        }
+
         dispatchPreview(URL.createObjectURL(file))
         dispatch(file)
     }
@@ -50,7 +62,8 @@ const KycEcommerceBeneficialOwner = ({ onSubmit = _ => { }, onChange = null }) =
                 <input
                     value={state.chargeTitle || ''}
                     onChange={e =>
-                        setState({ ...state, chargeTitle: e.target.value })
+                        nameRegex(e.target.value)
+                            .then(value => setState({ ...state, chargeTitle: value }))
                     }
                     type="text"
                     className="text-input" />
@@ -61,7 +74,8 @@ const KycEcommerceBeneficialOwner = ({ onSubmit = _ => { }, onChange = null }) =
                 <input
                     value={state.fullname || ''}
                     onChange={e =>
-                        setState({ ...state, fullname: e.target.value })
+                        nameRegex(e.target.value)
+                            .then(value => setState({ ...state, fullname: value }))
                     }
                     type="text"
                     className="text-input" />
@@ -86,7 +100,8 @@ const KycEcommerceBeneficialOwner = ({ onSubmit = _ => { }, onChange = null }) =
                 <input
                     value={state.identificationNumber || ''}
                     onChange={e =>
-                        setState({ ...state, identificationNumber: e.target.value })
+                        identificationRegex(e.target.value)
+                            .then(value => setState({ ...state, identificationNumber: value }))
                     }
                     type="text"
                     className="text-input" />
@@ -97,7 +112,8 @@ const KycEcommerceBeneficialOwner = ({ onSubmit = _ => { }, onChange = null }) =
                 <input
                     value={state.passportNumber || ''}
                     onChange={e =>
-                        setState({ ...state, passportNumber: e.target.value })
+                        identificationRegex(e.target.value)
+                            .then(value => setState({ ...state, passportNumber: value }))
                     }
                     type="text"
                     className="text-input" />
@@ -158,7 +174,8 @@ const KycEcommerceBeneficialOwner = ({ onSubmit = _ => { }, onChange = null }) =
                         <input
                             value={state.province || ''}
                             onChange={e =>
-                                setState({ ...state, province: e.target.value })
+                                nameRegex(e.target.value)
+                                    .then(value => setState({ ...state, province: value }))
                             }
                             type="text"
                             className="text-input" />
@@ -169,7 +186,8 @@ const KycEcommerceBeneficialOwner = ({ onSubmit = _ => { }, onChange = null }) =
                         <input
                             value={state.city || ''}
                             onChange={e =>
-                                setState({ ...state, city: e.target.value })
+                                nameRegex(e.target.value)
+                                    .then(value => setState({ ...state, city: value }))
                             }
                             type="text"
                             className="text-input" />
@@ -196,7 +214,8 @@ const KycEcommerceBeneficialOwner = ({ onSubmit = _ => { }, onChange = null }) =
                         <input
                             value={state.postalCode || ''}
                             onChange={e =>
-                                setState({ ...state, postalCode: e.target.value })
+                                postalCodeRegex(e.target.value)
+                                    .then(value => setState({ ...state, postalCode: value }))
                             }
                             type="text"
                             className="text-input" />
@@ -207,7 +226,8 @@ const KycEcommerceBeneficialOwner = ({ onSubmit = _ => { }, onChange = null }) =
                         <input
                             value={state.participationPercentage || ''}
                             onChange={e =>
-                                setState({ ...state, participationPercentage: e.target.value })
+                                floatRegex(e.target.value)
+                                    .then(value => setState({ ...state, participationPercentage: value }))
                             }
                             type="text"
                             className="text-input" />
@@ -220,7 +240,8 @@ const KycEcommerceBeneficialOwner = ({ onSubmit = _ => { }, onChange = null }) =
                 <input
                     value={state.identificationTaxNumber || ''}
                     onChange={e =>
-                        setState({ ...state, identificationTaxNumber: e.target.value })
+                        identificationRegex(e.target.value)
+                            .then(value => setState({ ...state, identificationTaxNumber: value }))
                     }
                     type="text"
                     className="text-input" />
@@ -254,6 +275,7 @@ const KycEcommerceBeneficialOwner = ({ onSubmit = _ => { }, onChange = null }) =
                                 </label>
                                 <input
                                     type="file"
+                                    accept=".jpeg,.jpg,.jpe,.png"
                                     id={`personalId-picture-${inputFileId}`}
                                     onChange={e =>
                                         handleLoadPreview(
@@ -288,6 +310,7 @@ const KycEcommerceBeneficialOwner = ({ onSubmit = _ => { }, onChange = null }) =
                                 </label>
                                 <input
                                     type="file"
+                                    accept=".jpeg,.jpg,.jpe,.png"
                                     id={`passport-picture-${inputFileId}`}
                                     onChange={e =>
                                         handleLoadPreview(
