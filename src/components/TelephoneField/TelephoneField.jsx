@@ -4,7 +4,12 @@ import "./TelephoneField.scss"
 // Import assets
 import Countries from "../../utils/countries.json"
 
-const TelephoneField = ({ value = '', onChange = _ => { } }) => {
+const TelephoneField = ({
+    value = '',
+    onChange = _ => { },
+    onBlur = _ => { },
+    readOnly = false
+}) => {
     const [phone, setPhone] = useState('')
     const [phoneCode, setPhoneCode] = useState(-1)
     const [phoneCodeFocus, setPhoneCodeFocus] = useState(false)
@@ -25,8 +30,11 @@ const TelephoneField = ({ value = '', onChange = _ => { } }) => {
                 setPhoneCode(-1)
                 setPhone(value)
             }
+        } else {
+            setPhoneCode(-1)
+            setPhone('')
         }
-    }, [])
+    }, [value])
 
     useEffect(_ => {
         // Si se escoge un código de país, se emiten los cambios según la entrada del usuario
@@ -38,6 +46,7 @@ const TelephoneField = ({ value = '', onChange = _ => { } }) => {
     return (
         <div className="TelephoneField">
             <select
+                disabled={readOnly}
                 value={phoneCode}
                 onFocus={_ => setPhoneCodeFocus(true)}
                 onBlur={_ => setPhoneCodeFocus(false)}
@@ -47,7 +56,7 @@ const TelephoneField = ({ value = '', onChange = _ => { } }) => {
                 }}
                 className="picker">
                 <option value="-1" disabled hidden>
-                    Código
+                    +000
                 </option>
                 {
                     Countries.map(({ name, phoneCode }, index) => (
@@ -61,6 +70,8 @@ const TelephoneField = ({ value = '', onChange = _ => { } }) => {
             <input
                 ref={inputRef}
                 value={phone}
+                readOnly={readOnly}
+                onBlur={onBlur}
                 onChange={e => {
                     // Se verifica que el valor ingresado coincida el patron de un teléfono
                     let regex = /^[(]{0,1}[0-9]{1,3}[)]{0,1}[-\s\./0-9]*$/g,
