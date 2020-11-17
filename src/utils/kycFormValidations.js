@@ -1,7 +1,8 @@
 import moment from 'moment'
+import validator from 'validator'
 
 // Import utils
-import { calcAge } from "./constanst"
+import { calcAge, commercialCategories } from "./constanst"
 
 let now = moment(new Date(), 'YYYY-MM-DD').subtract(1, 'd')
 
@@ -47,6 +48,7 @@ const userValidations = {
         (beneficiaryData.hasOwnProperty('identificationNumber') && beneficiaryData.identificationNumber.length > 6) &&
         (beneficiaryData.hasOwnProperty('birthday') && calcAge(beneficiaryData.birthday) >= 18) &&
         (beneficiaryData.hasOwnProperty('relationship') && beneficiaryData.relationship !== -1) &&
+        (beneficiaryData.hasOwnProperty('email') && beneficiaryData.email.length > 0 && validator.isEmail(beneficiaryData.email)) &&
         (beneficiaryData.hasOwnProperty('principalNumber') && beneficiaryData.principalNumber.length > 6) &&
         (beneficiaryData.hasOwnProperty('alternativeNumber') && beneficiaryData.alternativeNumber.length > 6) &&
         (beneficiaryData.hasOwnProperty('nationality') && beneficiaryData.nationality !== -1) &&
@@ -87,7 +89,12 @@ const ecommerceValidations = {
         (commerceData.hasOwnProperty('commerceTelephone') && commerceData.commerceTelephone.length > 6) &&
 
         (commerceData.hasOwnProperty('commercialActivityCountry') && commerceData.commercialActivityCountry !== -1) &&
-        (commerceData.hasOwnProperty('comercialProvince') && commerceData.comercialProvince.length > 3)
+        (commerceData.hasOwnProperty('comercialProvince') && commerceData.comercialProvince.length > 3) &&
+        (
+            commerceData.commerceType == (commercialCategories.length - 1)
+                ? commerceData.hasOwnProperty('commerceTypeDescription') && commerceData.commerceTypeDescription.length > 4
+                : true
+        )
     ),
 
     commerceBeneficialInfo: (commerceData) => {
@@ -112,6 +119,7 @@ const ecommerceValidations = {
                 (legalRepresentative.originCountry && legalRepresentative.originCountry !== -1) &&
                 (legalRepresentative.direction && legalRepresentative.direction.length > 0) &&
                 (legalRepresentative.telephoneNumber && legalRepresentative.telephoneNumber.length > 6) &&
+                (legalRepresentative.email && validator.isEmail(legalRepresentative.email)) &&
                 (
                     (
                         legalRepresentative.passportNumber &&
@@ -144,6 +152,7 @@ const ecommerceValidations = {
         (BOData.hasOwnProperty('direction') && BOData.direction.length > 0) &&
         (BOData.hasOwnProperty('postalCode') && BOData.postalCode.length > 0) &&
         (BOData.hasOwnProperty('participationPercentage') && BOData.participationPercentage.length > 0) &&
+        (BOData.hasOwnProperty('email') && validator.isEmail(BOData.email)) &&
         //(BOData.hasOwnProperty('idTax') && BOData.idTax.length > 0) &&
         (
             (

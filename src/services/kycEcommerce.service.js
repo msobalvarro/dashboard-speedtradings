@@ -1,5 +1,5 @@
 import Countries from "../utils/countries.json"
-import { uploadFile } from "../utils/constanst"
+import { uploadFile, commercialCategories } from "../utils/constanst"
 
 
 /**
@@ -44,6 +44,7 @@ export const kycEcommerceBeneficiariesData = async (beneficiariesData, credentia
                 chargeTitle: beneficiary.chargeTitle,
                 fullname: beneficiary.fullname,
                 birthday: beneficiary.birthday,
+                email: beneficiary.email,
                 identificationNumber: beneficiary.identificationNumber || null,
                 passportNumber: beneficiary.passportNumber || null,
                 passportCountry: passportOrigin.name,
@@ -125,7 +126,8 @@ export const kycEcommerceLegalRepresentative = async (legalRepresentativeData, c
             telephoneNumber: legalRepresentativeData.telephoneNumber,
             passportPicture: uploadPassportPicture.fileId,
             identificationPicture: uploadIdentificationPicture.fileId,
-            politicallyExposed: legalRepresentativeData.politicallyExposed
+            politicallyExposed: legalRepresentativeData.politicallyExposed,
+            email: legalRepresentativeData.email
         }
     } catch (error) {
         console.error("legal", error)
@@ -210,7 +212,10 @@ export const kycEcommerceData = async (commerceInfo, credentials) => {
             permanentCurrency: ecommercePermanent.code,
             permanentProvince: commerceInfo.permanentProvince,
             commerceName: commerceInfo.commerceName,
-            commerceType: commerceInfo.commerceType,
+            commerceType: commerceInfo.commerceType != (commercialCategories.length - 1)
+                ? commerceInfo.commerceType
+                : commerceInfo.commerceTypeDescription
+            ,
             commerceTelephone: commerceInfo.commerceTelephone,
             commerceIdentificationNumber: commerceInfo.commerceIdentificationNumber,
             commerceIdentificationPicture: uploadIdentificationPicture.fileId,

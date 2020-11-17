@@ -3,7 +3,6 @@ import Axios from "axios"
 import Swal from "sweetalert2"
 import moment from "moment"
 
-import Countries from "./countries.json"
 
 // Constanst
 const keySecret = "testDevelop"
@@ -36,7 +35,8 @@ export const commercialCategories = [
     'Repostería',
     'Restaurante',
     'Tienda',
-    'Venta minorista'
+    'Venta minorista',
+    'Otro (especifique)'
 ]
 
 /**
@@ -117,6 +117,7 @@ export const amountMin = {
 //export const urlServer = "http://192.168.1.238:8084"
 //export const urlServer = "http://192.168.1.224:8084"
 export const urlServer = "http://192.168.0.119:8084"
+//export const urlServer = "http://192.168.0.116:3000"
 
 // Límite de subida de los archivos e bytes
 export const MAX_FILE_SIZE = 5 * 1024 * 1024
@@ -270,11 +271,15 @@ export const copyData = async (str = "", msg = "Copiado a portapapeles") => {
  * Función para almacenar en el servidor
  * @param {File} file - Foto a almacenar
  */
-export const uploadFile = async (file, credentials) => {
+export const uploadFile = async (file, credentials, update = null) => {
     return new Promise((resolve, reject) => {
         const dataSend = new FormData()
 
         dataSend.append('image', file)
+
+        if (update !== null) {
+            dataSend.append('idFile', update)
+        }
 
         Petition.post('/file/', dataSend, credentials)
             .then(({ data }) => {
@@ -287,25 +292,24 @@ export const uploadFile = async (file, credentials) => {
  * Función para leer un archivo y retornarlo en base64
  * @param {File} file - Archivo a leer y retornar en base64 
  */
-export const readFile = (file) => {
-    return new Promise((resolve, reject) => {
-        let reader = new FileReader()
-
-        reader.onload = () => {
-            resolve(reader.result)
-        }
-
-        reader.onerror = reject
-
-        reader.readAsDataURL(file)
+export const readFile = (fileId, credentials) => new Promise(async (resolve, _) => {
+    Petition.get(`/file/${fileId}`, {
+        responseType: 'arraybuffer',
+        ...credentials
     })
-}
+        .then(({ data, headers }) => {
+            const blob = new Blob([data], { type: headers['content-type'] })
+
+            resolve(blob)
+        }).catch(error => resolve({ error: true, message: error }))
+})
+
+
 
 export const Petition = Axios.create({
     baseURL: urlServer,
     headers: {
-        "ignore-release-date": true,
-        "release-date": '2020-11-02'
+        "ignore-release-date": true
     },
     validateStatus: (status) => {
         if (status === 401) {

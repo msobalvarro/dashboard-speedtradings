@@ -31,6 +31,17 @@ const KycEcommerceBeneficialOwner = ({ onSubmit = _ => { }, onChange = null }) =
     const [state, setState] = useState({})
 
     const inputFileId = randomKey()
+    const [emitOnChange, setEmitOnChange] = useState(true)
+
+    // Se emiten los cambios en el state cuando se usa el componente para completar la
+    // info del representante legal
+    const dispatchOnChange = {
+        onBlur: _ => {
+            if (onChange !== null) {
+                setEmitOnChange(!emitOnChange)
+            }
+        }
+    }
 
     /**
      * Captura el archivo seleccionado y crea un objectURL para generar una vista previa
@@ -47,13 +58,17 @@ const KycEcommerceBeneficialOwner = ({ onSubmit = _ => { }, onChange = null }) =
 
         dispatchPreview(URL.createObjectURL(file))
         dispatch(file)
+
+        if (onChange !== null) {
+            setEmitOnChange(!emitOnChange)
+        }
     }
 
     useEffect(_ => {
         if (onChange !== null) {
             onChange(state)
         }
-    }, [state])
+    }, [emitOnChange])
 
     return (
         <div className="KycEcommerceBeneficialOwner">
@@ -61,6 +76,7 @@ const KycEcommerceBeneficialOwner = ({ onSubmit = _ => { }, onChange = null }) =
                 <span>Título del cargo</span>
                 <input
                     value={state.chargeTitle || ''}
+                    {...dispatchOnChange}
                     onChange={e =>
                         nameRegex(e.target.value)
                             .then(value => setState({ ...state, chargeTitle: value }))
@@ -73,6 +89,7 @@ const KycEcommerceBeneficialOwner = ({ onSubmit = _ => { }, onChange = null }) =
                 <span>Nombre completo</span>
                 <input
                     value={state.fullname || ''}
+                    {...dispatchOnChange}
                     onChange={e =>
                         nameRegex(e.target.value)
                             .then(value => setState({ ...state, fullname: value }))
@@ -86,10 +103,15 @@ const KycEcommerceBeneficialOwner = ({ onSubmit = _ => { }, onChange = null }) =
                 <div className="item">
                     <span>Fecha de nacimiento</span>
                     <input
+                        {...dispatchOnChange}
                         value={state.birthday || moment(new Date()).format("YYYY-MM-DD")}
-                        onChange={e =>
-                            setState({ ...state, birthday: e.target.value })
-                        }
+                        onChange={e => {
+                            const { value } = e.target
+
+                            if (value) {
+                                setState({ ...state, birthday: value })
+                            }
+                        }}
                         type="date"
                         className="picker" />
                 </div>
@@ -98,6 +120,7 @@ const KycEcommerceBeneficialOwner = ({ onSubmit = _ => { }, onChange = null }) =
             <div className="item">
                 <span>No. identificación personal</span>
                 <input
+                    {...dispatchOnChange}
                     value={state.identificationNumber || ''}
                     onChange={e =>
                         identificationRegex(e.target.value)
@@ -110,6 +133,7 @@ const KycEcommerceBeneficialOwner = ({ onSubmit = _ => { }, onChange = null }) =
             <div className="item">
                 <span>Número de pasaporte</span>
                 <input
+                    {...dispatchOnChange}
                     value={state.passportNumber || ''}
                     onChange={e =>
                         identificationRegex(e.target.value)
@@ -124,6 +148,7 @@ const KycEcommerceBeneficialOwner = ({ onSubmit = _ => { }, onChange = null }) =
                 < div className="item toshow">
                     <span>País de emisión pasaporte</span>
                     <select
+                        {...dispatchOnChange}
                         value={state.passportEmissionCountry || -1}
                         onChange={e =>
                             setState({ ...state, passportEmissionCountry: e.target.value })
@@ -147,6 +172,7 @@ const KycEcommerceBeneficialOwner = ({ onSubmit = _ => { }, onChange = null }) =
             <div className="item">
                 <span>País de origen</span>
                 <select
+                    {...dispatchOnChange}
                     value={state.originCountry || -1}
                     onChange={e =>
                         setState({ ...state, originCountry: e.target.value })
@@ -172,6 +198,7 @@ const KycEcommerceBeneficialOwner = ({ onSubmit = _ => { }, onChange = null }) =
                     <div className="item">
                         <span>Estado / Provincia / Región</span>
                         <input
+                            {...dispatchOnChange}
                             value={state.province || ''}
                             onChange={e =>
                                 nameRegex(e.target.value)
@@ -184,6 +211,7 @@ const KycEcommerceBeneficialOwner = ({ onSubmit = _ => { }, onChange = null }) =
                     <div className="item">
                         <span>Ciudad</span>
                         <input
+                            {...dispatchOnChange}
                             value={state.city || ''}
                             onChange={e =>
                                 nameRegex(e.target.value)
@@ -198,6 +226,7 @@ const KycEcommerceBeneficialOwner = ({ onSubmit = _ => { }, onChange = null }) =
             <div className="item">
                 <span>Dirección</span>
                 <input
+                    {...dispatchOnChange}
                     value={state.direction || ''}
                     onChange={e =>
                         setState({ ...state, direction: e.target.value })
@@ -212,6 +241,7 @@ const KycEcommerceBeneficialOwner = ({ onSubmit = _ => { }, onChange = null }) =
                     <div className="item">
                         <span>Código postal</span>
                         <input
+                            {...dispatchOnChange}
                             value={state.postalCode || ''}
                             onChange={e =>
                                 postalCodeRegex(e.target.value)
@@ -224,6 +254,7 @@ const KycEcommerceBeneficialOwner = ({ onSubmit = _ => { }, onChange = null }) =
                     <div className="item">
                         <span>Participación (%)</span>
                         <input
+                            {...dispatchOnChange}
                             value={state.participationPercentage || ''}
                             onChange={e =>
                                 floatRegex(e.target.value)
@@ -238,6 +269,7 @@ const KycEcommerceBeneficialOwner = ({ onSubmit = _ => { }, onChange = null }) =
             <div className="item">
                 <span>No. identificación tributaria (opcional)</span>
                 <input
+                    {...dispatchOnChange}
                     value={state.identificationTaxNumber || ''}
                     onChange={e =>
                         identificationRegex(e.target.value)
@@ -247,12 +279,25 @@ const KycEcommerceBeneficialOwner = ({ onSubmit = _ => { }, onChange = null }) =
                     className="text-input" />
             </div>
 
+            <div className="item">
+                <span>Correo</span>
+                <input
+                    {...dispatchOnChange}
+                    type="email"
+                    className="text-input"
+                    value={state.email || ''}
+                    onChange={e =>
+                        setState({ ...state, email: e.target.value })
+                    } />
+            </div>
+
             {
                 onChange !== null &&
                 <div className="item">
                     <span>Teléfono</span>
                     <TelephoneField
                         value={state.telephoneNumber || ''}
+                        {...dispatchOnChange}
                         onChange={value =>
                             setState({ ...state, telephoneNumber: value })
                         } />

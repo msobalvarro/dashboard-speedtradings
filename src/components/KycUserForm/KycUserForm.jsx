@@ -24,6 +24,7 @@ const KycUserForm = ({
     setState = _ => { },
     onChangeUserAge = _ => { },
     secondaryTypeForm = 0,
+    isReadOnly = false,
     className = ''
 }) => {
     const [idFileURL, setIdFileURL] = useState(null)
@@ -37,7 +38,6 @@ const KycUserForm = ({
      */
     const handleChangeProfileFile = async (e) => {
         const file = e.target.files[0]
-        console.log(file)
         if (file && file.size > MAX_FILE_SIZE) {
             Swal.fire('Archivo demasiado grande', '¡Ups! El archivo que intentas subir es demasiado grande, nuestro límite es de 7MB', 'error')
             return
@@ -80,27 +80,65 @@ const KycUserForm = ({
             setIdFileURL(URL.createObjectURL(state.IDPicture))
         }
 
-        if (state.hasOwnProperty('birthDate')) {
+        if (state.hasOwnProperty('birthday')) {
             calculateUserAge(state.birthday)
         }
-    }, [])
+    }, [state.profilePicture, state.IDPicture])
+
+    useEffect(_ => {
+        if (
+            state.nationality && isNaN(parseInt(state.nationality))
+        ) {
+            const index = Countries.findIndex(item => item.phoneCode === state.nationality)
+            setState({ ...state, nationality: index })
+        }
+
+        if (state.residence && isNaN(parseInt(state.residence))) {
+            const index = Countries.findIndex(item => item.phoneCode === state.residence)
+            setState({ ...state, residence: index })
+            console.log('inside')
+        }
+    }, [state.nationality, state.residence])
+
+    useEffect(_ => {
+        const dateRegex = /^([\d]{4})+[\-]+([\d]{2})+[\-]+([\d]{2})$/
+        if (isReadOnly && Object.keys(state).length > 0) {
+            console.log(!dateRegex.test(state.birthday))
+            if (!dateRegex.test(state.birthday)) {
+                let value = moment(new Date(state.birthday)).format("YYYY-MM-DD")
+                setState({ ...state, birthday: value })
+            }
+        }
+    }, [state.birthday])
 
     return (
         <div className={`KycUserForm ${className}`}>
             <div className="section">
                 {
-                    (secondaryTypeForm === 0) &&
-                    <h2 className="title">Ingrese su información personal</h2>
+                    !isReadOnly &&
+                    <>
+                        {
+                            (secondaryTypeForm === 0) &&
+                            <h2 className="title">Ingrese su información personal</h2>
+                        }
+
+                        {
+                            secondaryTypeForm === 1 &&
+                            <h2 className="title">Ingrese la información de su tutor o representante legal</h2>
+                        }
+
+                        {
+                            secondaryTypeForm === 2 &&
+                            <h2 className="title">Ingrese la información de su beneficiario</h2>
+                        }
+                    </>
                 }
 
                 {
-                    secondaryTypeForm === 1 &&
-                    <h2 className="title">Ingrese la información de su tutor o representante legal</h2>
-                }
-
-                {
-                    secondaryTypeForm === 2 &&
-                    <h2 className="title">Ingrese la información de su beneficiario</h2>
+                    isReadOnly &&
+                    <h2 className="title">
+                        Información beneficiario
+                    </h2>
                 }
 
                 <div className="content">
@@ -120,6 +158,7 @@ const KycUserForm = ({
                                         <span className="required">Nombre(s)</span>
                                         <input
                                             autoFocus
+                                            readOnly={isReadOnly}
                                             value={state.firstname || ''}
                                             onChange={e =>
                                                 nameRegex(e.target.value)
@@ -133,6 +172,7 @@ const KycUserForm = ({
                                         <span className="required">Apellido(s)</span>
                                         <input
                                             value={state.lastname || ''}
+                                            readOnly={isReadOnly}
                                             onChange={e =>
                                                 nameRegex(e.target.value)
                                                     .then(value => setState({ ...state, lastname: value }))
@@ -146,12 +186,15 @@ const KycUserForm = ({
                             <div className="row">
                                 <span className="required">Fecha de nacimiento</span>
                                 <input
-                                    value={state.birthday || moment(new Date()).format("YYYY-MM-DD")}
+                                    disabled={isReadOnly}
+                                    value={state.birthday || moment(new Date()).format('YYYY-MM-DD')}
                                     onChange={e => {
                                         let { value } = e.target
 
-                                        calculateUserAge(value)
-                                        setState({ ...state, birthday: value })
+                                        if (value) {
+                                            calculateUserAge(value)
+                                            setState({ ...state, birthday: value })
+                                        }
                                     }}
                                     type="date"
                                     className="picker" />
@@ -164,6 +207,7 @@ const KycUserForm = ({
                                         <span className="required">Tipo de identificación</span>
 
                                         <select
+                                            disabled={isReadOnly}
                                             value={state.identificationType || -1}
                                             onChange={e => {
                                                 setState({ ...state, identificationType: e.target.value })
@@ -180,6 +224,7 @@ const KycUserForm = ({
                                     <div className="row toshow">
                                         <span className="required">Número de identificación</span>
                                         <input
+                                            readOnly={isReadOnly}
                                             value={state.identificationNumber || ''}
                                             onChange={e =>
                                                 identificationRegex(e.target.value)
@@ -197,6 +242,7 @@ const KycUserForm = ({
                                     <span className="required">Parentesco</span>
 
                                     <select
+                                        disabled={isReadOnly}
                                         value={state.relationship || -1}
                                         onChange={e =>
                                             setState({ ...state, relationship: e.target.value })
@@ -223,7 +269,8 @@ const KycUserForm = ({
                         <div className="subsection">
                             <h3 className="subtitle">2. Información de contacto</h3>
 
-                            {/**
+                            {
+                                secondaryTypeForm !== 0 &&
                                 <div className="row">
                                     <span className="required">Correo electrónico</span>
                                     <input
@@ -234,13 +281,14 @@ const KycUserForm = ({
                                         type="email"
                                         className="text-input" />
                                 </div>
-                            */}
+                            }
 
                             {
                                 secondaryTypeForm !== 0 &&
                                 <div className="row">
                                     <span className="required">Número de teléfono principal</span>
                                     <TelephoneField
+                                        readOnly={isReadOnly}
                                         value={state.principalNumber || ''}
                                         onChange={value =>
                                             setState({
@@ -255,6 +303,7 @@ const KycUserForm = ({
                             <div className="row">
                                 <span>Número de teléfono alternativo</span>
                                 <TelephoneField
+                                    readOnly={isReadOnly}
                                     value={state.alternativeNumber || ''}
                                     onChange={value =>
                                         setState({
@@ -279,6 +328,7 @@ const KycUserForm = ({
                             <div className="row">
                                 <span className="required">Nacionalidad</span>
                                 <select
+                                    disabled={isReadOnly}
                                     value={state.nationality || -1}
                                     onChange={e =>
                                         setState({ ...state, nationality: e.target.value })
@@ -301,6 +351,7 @@ const KycUserForm = ({
                             <div className="row">
                                 <span className="required">País de residencia</span>
                                 <select
+                                    disabled={isReadOnly}
                                     value={state.residence || -1}
                                     onChange={e =>
                                         setState({ ...state, residence: e.target.value })
@@ -323,6 +374,7 @@ const KycUserForm = ({
                             <div className="row">
                                 <span className="required">Estado / Provincia / Región</span>
                                 <input
+                                    readOnly={isReadOnly}
                                     value={state.province || ''}
                                     onChange={e =>
                                         nameRegex(e.target.value)
@@ -335,6 +387,7 @@ const KycUserForm = ({
                             <div className="row">
                                 <span className="required">Ciudad</span>
                                 <input
+                                    readOnly={isReadOnly}
                                     value={state.city || ''}
                                     onChange={e =>
                                         nameRegex(e.target.value)
@@ -347,6 +400,7 @@ const KycUserForm = ({
                             <div className="row">
                                 <span className="required">Dirección (línea 1)</span>
                                 <input
+                                    readOnly={isReadOnly}
                                     value={state.direction1 || ''}
                                     onChange={e =>
                                         setState({ ...state, direction1: e.target.value })
@@ -358,6 +412,7 @@ const KycUserForm = ({
                             <div className="row">
                                 <span>Dirección (línea 2)</span>
                                 <input
+                                    readOnly={isReadOnly}
                                     value={state.direction2 || ''}
                                     onChange={e =>
                                         setState({ ...state, direction2: e.target.value })
@@ -369,6 +424,7 @@ const KycUserForm = ({
                             <div className="row">
                                 <span className="required">Código postal</span>
                                 <input
+                                    readOnly={isReadOnly}
                                     value={state.postalCode || ''}
                                     onChange={e =>
                                         postalCodeRegex(e.target.value)
@@ -393,6 +449,7 @@ const KycUserForm = ({
                                 <div className="row">
                                     <span className="required">¿De dónde provienen tus ingresos?</span>
                                     <select
+                                        disabled={isReadOnly}
                                         value={state.foundsOrigin || -1}
                                         onChange={e =>
                                             setState({ ...state, foundsOrigin: e.target.value })
@@ -413,6 +470,7 @@ const KycUserForm = ({
                                     <span className="required">¿Cuál es el monto estimado a guardar mensualmente?</span>
 
                                     <input
+                                        readOnly={isReadOnly}
                                         value={state.estimateMonthlyAmount || ''} onChange={e =>
                                             floatRegex(e.target.value)
                                                 .then(value => setState({
@@ -428,6 +486,7 @@ const KycUserForm = ({
                                     <span className="required">¿Cuál es su profesión actual?</span>
 
                                     <input
+                                        readOnly={isReadOnly}
                                         value={state.profession || ''}
                                         onChange={e =>
                                             nameRegex(e.target.value)
@@ -458,21 +517,31 @@ const KycUserForm = ({
                                 <h3 className=" subtitle">5. Foto de perfil y verificación</h3>
                             }
 
-                            <div className="row horizontal upload-section">
-                                <span className="required">Adjuntar foto de perfil</span>
+                            {
+                                !isReadOnly &&
+                                <div className="row horizontal upload-section">
+                                    <span className="required">Adjuntar foto de perfil</span>
 
-                                <label
-                                    title="Subir archivo"
-                                    htmlFor="profile-picture"
-                                    className="upload">
-                                    <UploadIcon />
-                                </label>
-                                <input
-                                    type="file"
-                                    id="profile-picture"
-                                    accept=".jpeg,.jpg,.jpe,.png"
-                                    onChange={handleChangeProfileFile} />
-                            </div>
+                                    <label
+                                        title="Subir archivo"
+                                        htmlFor="profile-picture"
+                                        className="upload">
+                                        <UploadIcon />
+                                    </label>
+                                    <input
+                                        type="file"
+                                        id="profile-picture"
+                                        accept=".jpeg,.jpg,.jpe,.png"
+                                        onChange={handleChangeProfileFile} />
+                                </div>
+                            }
+
+                            {
+                                isReadOnly &&
+                                <div className="row horizontal upload-section">
+                                    <span>Foto de perfil</span>
+                                </div>
+                            }
 
                             {
                                 profileFileURL !== null &&
@@ -483,31 +552,56 @@ const KycUserForm = ({
 
                             <div className="row horizontal upload-section">
                                 {
-                                    (userAge < 18 && secondaryTypeForm === 0) &&
-                                    <span className="required">Adjuntar foto certificado nacimiento</span>
+                                    !isReadOnly &&
+                                    <>
+                                        {
+                                            (userAge < 18 && secondaryTypeForm === 0) &&
+                                            <span className="required">Adjuntar foto certificado nacimiento</span>
+                                        }
+
+                                        {
+                                            (userAge >= 18 || secondaryTypeForm !== 0) && state.identificationType != 2 &&
+                                            <span className="required">Adjuntar foto identificación personal</span>
+                                        }
+
+                                        {
+                                            (userAge >= 18 || secondaryTypeForm !== 0) && state.identificationType == 2 &&
+                                            <span className="required">Adjuntar foto pasaporte</span>
+                                        }
+                                    </>
                                 }
 
                                 {
-                                    (userAge >= 18 || secondaryTypeForm !== 0) && state.identificationType != 2 &&
-                                    <span className="required">Adjuntar foto identificación personal</span>
+                                    isReadOnly &&
+                                    <>
+                                        {
+                                            state.identificationType != 2 &&
+                                            <span>Foto identificación personal</span>
+                                        }
+
+                                        {
+                                            state.identificationType == 2 &&
+                                            <span>Foto pasaporte</span>
+                                        }
+                                    </>
                                 }
 
                                 {
-                                    (userAge >= 18 || secondaryTypeForm !== 0) && state.identificationType == 2 &&
-                                    <span className="required">Adjuntar foto pasaporte</span>
+                                    !isReadOnly &&
+                                    <>
+                                        <label
+                                            title="Subir archivo"
+                                            htmlFor="id-picture"
+                                            className="upload">
+                                            <UploadIcon />
+                                        </label>
+                                        <input
+                                            type="file"
+                                            id="id-picture"
+                                            accept=".jpeg,.jpg,.jpe,.png"
+                                            onChange={handleChangeIdFile} />
+                                    </>
                                 }
-
-                                <label
-                                    title="Subir archivo"
-                                    htmlFor="id-picture"
-                                    className="upload">
-                                    <UploadIcon />
-                                </label>
-                                <input
-                                    type="file"
-                                    id="id-picture"
-                                    accept=".jpeg,.jpg,.jpe,.png"
-                                    onChange={handleChangeIdFile} />
                             </div>
 
                             {

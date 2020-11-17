@@ -55,7 +55,7 @@ export const telephoneRegex = (value) => new Promise((resolve, reject) => {
 
 // Verificador para correos
 export const emailRegex = (value) => new Promise((resolve, reject) => {
-    const regex = /^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/
+    const regex = /^[\w\-\_\.]{0,}$/
 
     if (regex.test(value) || value.length === 0) {
         resolve(value)

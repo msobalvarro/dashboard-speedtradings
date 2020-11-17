@@ -1,12 +1,43 @@
 @import "../../utils/constants.scss";
 
+$green: #2E8B12;
+
 .container-profile {
+  .add-beneficiary {
+    padding: 2rem;
+  }
+
   .header-profile {
     background-color: rgba($color: #000000, $alpha: 0.8);
     border-radius: 10px;
     margin: 0 25px;
     margin-top: 25px;
     overflow: hidden;
+
+    .verified-account {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      background-color: rgba($green, .3);
+      border: 1px solid $green;
+      color: lighten($green, 20);
+      border-radius: 25px;
+      padding: .2rem .5rem;
+      font-size: .75rem;
+      margin-bottom: .5rem;
+      text-transform: capitalize;
+
+      svg {
+        height: 1rem;
+        margin-right: .25rem;
+        transition: transform .25s;
+
+        path {
+          fill: lighten($green, 20);
+          stroke: lighten($green, 20);
+        }
+      }
+    }
 
     .main-row {
       align-items: center;
@@ -43,6 +74,11 @@
             flex-direction: column;
             width: 20%;
 
+            &.centered {
+              justify-content: center;
+              align-items: center;
+            }
+
             span.label {
               color: $colorYellow;
               font-size: 0.6em;
@@ -64,6 +100,11 @@
 
         .row {
           display: flex;
+
+          &.right {
+            justify-content: flex-end;
+            padding-right: 1rem;
+          } 
 
           &.info {
             border-radius: 5px;
@@ -127,6 +168,37 @@
               color: #fff;
             }
           }
+        }
+      }
+    }
+  }
+
+  .beneficiary {
+    width: calc(100% - 3rem);
+    margin-bottom: 1.5rem;
+
+    .row {
+      width: calc(100% - 1rem);
+      padding-right: 0;
+
+      .KycUserForm {
+        min-height: 100%;
+        margin: 0 !important;
+        padding: 0 !important;
+        transform: translateX(1rem);
+      }
+    }
+
+    .buttons-row {
+      display: flex;
+      flex-direction: row;
+      justify-content: flex-end;
+
+      .button {
+        margin-left: 1rem;
+
+        &.cancel {
+          background-color: $colorRed;
         }
       }
     }

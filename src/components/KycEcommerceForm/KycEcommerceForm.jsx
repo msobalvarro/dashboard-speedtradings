@@ -226,6 +226,20 @@ const KycEcommerceForm = ({
                                     </select>
                                 </div>
 
+                                {
+                                    state.commerceType == (commercialCategories.length - 1) &&
+                                    <div className="row">
+                                        <span className="required">Tipo de comercio</span>
+                                        <input
+                                            value={state.commerceTypeDescription || ''}
+                                            onChange={e => {
+                                                setState({ ...state, commerceTypeDescription: e.target.value })
+                                            }}
+                                            type="text"
+                                            className="text-input" />
+                                    </div>
+                                }
+
                                 <div className="row">
                                     <span className="required">Número de identificación del negocio</span>
                                     <input
@@ -629,7 +643,7 @@ const KycEcommerceForm = ({
                                     <input
                                         type="file"
                                         id={`estatutos-${inputKey}`}
-                                        accept=".jpeg,.jpg,.jpe,.png,.pdf"
+                                        accept=".pdf"
                                         onChange={e =>
                                             handleLoadPreview(
                                                 e,
@@ -656,7 +670,7 @@ const KycEcommerceForm = ({
                                     </label>
                                     <input
                                         type="file"
-                                        accept=".jpeg,.jpg,.jpe,.png,.pdf"
+                                        accept=".pdf"
                                         id={`directorsList-${inputKey}`}
                                         onChange={e =>
                                             handleLoadPreview(
@@ -684,7 +698,7 @@ const KycEcommerceForm = ({
                                     </label>
                                     <input
                                         type="file"
-                                        accept=".jpeg,.jpg,.jpe,.png,.pdf"
+                                        accept=".pdf"
                                         id={`directorsAutorization-${inputKey}`}
                                         onChange={e =>
                                             handleLoadPreview(
@@ -712,7 +726,7 @@ const KycEcommerceForm = ({
                                     </label>
                                     <input
                                         type="file"
-                                        accept=".jpeg,.jpg,.jpe,.png,.pdf"
+                                        accept=".pdf"
                                         id={`legalCertificate-${inputKey}`}
                                         onChange={e =>
                                             handleLoadPreview(
