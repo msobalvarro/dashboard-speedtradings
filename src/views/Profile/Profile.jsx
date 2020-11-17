@@ -426,6 +426,7 @@ const Profile = () => {
             {
                 Object.keys(beneficiary).length === 0 &&
                 !createBeneficiary &&
+                globalStorage.kyc_type === 1 &&
                 <div className="row add-beneficiary">
                     <button
                         onClick={_ => {
