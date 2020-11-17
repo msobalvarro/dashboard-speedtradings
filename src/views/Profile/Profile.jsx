@@ -8,6 +8,7 @@ import NavigationBar from "../../components/NavigationBar/NavigationBar"
 import ActivityIndicator from "../../components/ActivityIndicator/Activityindicator"
 import Modal from "../../components/Modal/Modal"
 import KycUserForm from "../../components/KycUserForm/KycUserForm"
+import ModalTerms from "../../components/ModalTerms/ModalTerms"
 
 // Import service
 import { kycUserBeneficiaryData } from "../../services/kycUser.service"
@@ -82,6 +83,8 @@ const Profile = () => {
     const [createBeneficiary, setCreateBeneficiary] = useState(false)
 
     const [existBeneficiary, setExistBeneficiary] = useState(true)
+
+    const [showTerms, setShowTerms] = useState(false)
 
     // Credenciales de acceso
     const credentials = {
@@ -537,6 +540,14 @@ const Profile = () => {
 
                 </div>
             }
+
+            <span
+                className="terms-label"
+                onClick={_ => setShowTerms(true)}>
+                Términos y condiciones
+            </span>
+
+            <ModalTerms isVisible={showTerms} onClose={_ => setShowTerms(false)} />
         </div>
     )
 }
