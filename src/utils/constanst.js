@@ -36,7 +36,7 @@ export const commercialCategories = [
     'Restaurante',
     'Tienda',
     'Venta minorista',
-    'Otro'
+    'Otro (especifique)'
 ]
 
 /**
