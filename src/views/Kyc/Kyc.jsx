@@ -367,7 +367,7 @@ const Kyc = () => {
                                     (!isUser && activeSection === 3)
                                 ) &&
                                 < button
-                                    disabled={!checkSectionValid()}
+
                                     onClick={onSubmit}
                                     className="forward">
                                     Guardar

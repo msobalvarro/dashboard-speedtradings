@@ -40,7 +40,7 @@ export const kycUserData = async (userInfo, credentials, update = false) => {
 
         // Se construye el objeto a enviar al servidor con la info del usuario
         return {
-            birthday: new Date(userInfo.birthday),
+            birthday: userInfo.birthday,
             alternativeNumber: userInfo.alternativeNumber,
             nationality: userNationality.name,
             phoneCodeNationality: userNationality.phoneCode,
