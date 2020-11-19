@@ -1,54 +1,59 @@
 import React, { useState } from "react"
-import moment from "moment"
+import { useSelector } from "react-redux"
+import Swal from "sweetalert2"
 import "./Kyc.scss"
 
 // Import components
-import NavigationBar from "../../components/NavigationBar/NavigationBar"
+import ActivityIndicator from "../../components/ActivityIndicator/Activityindicator"
+import Modal from "../../components/Modal/Modal"
+import KycUserForm from "../../components/KycUserForm/KycUserForm"
+import KycEcommerceForm from "../../components/KycEcommerceForm/KycEcommerceForm"
+
+// Import utils
+import { userValidations, ecommerceValidations } from "../../utils/kycFormValidations"
+import { kycUserData, kycUserBeneficiaryData } from "../../services/kycUser.service"
+import { kycEcommerceData } from "../../services/kycEcommerce.service"
+import { LogOut, Petition, getStorage, setStorage } from "../../utils/constanst"
 
 // Import assets
-import { ReactComponent as UploadIcon } from "../../static/icons/upload.svg"
-import Countries from "../../utils/countries.json"
+import { ReactComponent as BackIcon } from "../../static/icons/arrow-back.svg"
+import { ReactComponent as ForwardIcon } from "../../static/icons/arrow-forward.svg"
+import { ReactComponent as SaveIcon } from "../../static/icons/save.svg"
+import { ReactComponent as InformationIcon } from "../../static/icons/information.svg"
+import { ReactComponent as EnterpriseIcon } from "../../static/icons/enterprise.svg"
+import { ReactComponent as UserIcon } from "../../static/icons/user.svg"
+import { ReactComponent as CancelIcon } from "../../static/icons/cancel.svg"
+import Logo from "../../static/images/logo.png"
 
 
 const Kyc = () => {
-    const [activeSection, setActiveSection] = useState(1)
+    const storage = useSelector(({ globalStorage }) => globalStorage)
+    // constant header petition
+    const credentials = {
+        headers: {
+            "x-auth-token": storage.token
+        }
+    }
 
-    const [profileFileURL, setProfileFileURL] = useState(null)
-    const [IDFileURL, setIDFileURL] = useState(null)
+    // Estado para controlar la visibilidad del indicador de carga
+    const [loader, setLoader] = useState(false)
+    const [showWaitMessage, setShowWaitMessage] = useState(false)
+
+    const [showIntro, setShowIntro] = useState(true)
+    const [showKyc, setShowKyc] = useState(false)
+    const [USERAGE, setUSERAGE] = useState(0)
+    const [isUser, setIsUser] = useState(false)
+    const [activeSection, setActiveSection] = useState(1)
 
     /**
      * Estados para los campos del formulario de KYC
      */
-    // Section 1
-    const [name, setName] = useState('')
-    const [lastname, setLastname] = useState('')
-    const [identificationType, setIdentificationType] = useState(-1)
-    const [identificationValue, setIdenficationValue] = useState('')
-    const [birthDate, setBirthDate] = useState(moment(new Date()).format("YYYY-MM-DD"))
+    // Estados para almacenar la infromación de un usuario natural
+    const [userInfo, setUserInfo] = useState({})
+    const [beneficiaryInfo, setBeneficiaryInfo] = useState({})
 
-    // Section 2
-    const [email, setEmail] = useState('')
-    const [mainTelephone, setMainTelephone] = useState('')
-    const [alternativeTelephone, setAlternativeTelephone] = useState('')
-
-    const [originCountry, setOriginCountry] = useState(-1)
-    const [residentCountry, setResidentCountry] = useState(-1)
-
-    /**
-     * Captura el archivo seleccionado y crea un objectURL para generar una vista previa
-     * @param {Event} e 
-     */
-    const handleChangeProfileFile = (e) => {
-        setProfileFileURL(URL.createObjectURL(e.target.files[0]))
-    }
-
-    /**
-     * Captura el archivo seleccionado y crea un objectURL para generar una vista previa
-     * @param {Event} e 
-     */
-    const handleChangeIdFile = (e) => {
-        setIDFileURL(URL.createObjectURL(e.target.files[0]))
-    }
+    // Estados para almacenar la información de un comercio
+    const [ecommerceInfo, setEcommerceInfo] = useState({})
 
     /**
      * Verifica que los campos de la sección activa estén completos
@@ -56,29 +61,44 @@ const Kyc = () => {
      * @return {Boolean}
      */
     const checkSectionValid = _ => {
-        switch(activeSection) {
+        switch (activeSection) {
             // Validaciones para la sección 1
-            case 1: 
-                let now = moment(new Date(), "YYYY-MM-DD").subtract(1, 'd')
-
-                return (
-                    name.length > 0 &&
-                    lastname.length > 0 &&
-                    setIdentificationType !== -1 &&
-                    identificationValue.length > 0 &&
-                    Math.floor(moment.duration(moment(birthDate).diff(now)).asDays()) < 0
-                )
+            case 1:
+                return isUser
+                    ? userValidations.userInfo(userInfo)
+                    : ecommerceValidations.commerceBasicInfo(ecommerceInfo)
 
             // Validaciones para la sección 2
             case 2:
-                return (
-                    email.length > 0 &&
-                    mainTelephone.length > 0 &&
-                    alternativeTelephone.length > 0
-                )
+                return isUser
+                    ? userValidations.beneficiaryInfo(beneficiaryInfo)
+                    : ecommerceValidations.commerceBeneficialInfo(ecommerceInfo)
+
+            // Validaciones para la sección 3
+            case 3:
+                return ecommerceValidations.tradeIncomingInfo(ecommerceInfo)
 
             default:
-                return true
+                return false
+        }
+    }
+
+    const checkNextVisibility = () => {
+        switch (activeSection) {
+            case 1:
+                return isUser
+                    ? (USERAGE < 18 || userInfo.addBeneficiary)
+                    : true
+
+            case 2:
+                /**
+                 * Si no es el formulario de usuario, se muestra el botón de siguiente
+                 * cuando se está en la segunda sección
+                 */
+                return !isUser
+
+            default:
+                return false
         }
     }
 
@@ -87,10 +107,18 @@ const Kyc = () => {
      * botón 'siguiente' 
      */
     const nextSection = _ => {
-        setActiveSection(
-            (activeSection === 4)
-            ? activeSection
+        /**
+         * Sí el usuario es menor de edad (es menor de 18 años) se habilita el formulario 
+         * del tutor
+         */
+        let section = (activeSection === 1 && USERAGE < 18)
+            ? activeSection + 1
             : activeSection + 1
+
+        setActiveSection(
+            (activeSection === 3)
+                ? activeSection
+                : section
         )
     }
 
@@ -99,313 +127,281 @@ const Kyc = () => {
      * botón 'siguiente' 
      */
     const prevSection = _ => {
+        let section = (activeSection === 3 && USERAGE < 18)
+            ? activeSection - 1
+            : activeSection - 1
+
         setActiveSection(
             (activeSection === 1)
-            ? activeSection
-            : activeSection - 1
+                ? activeSection
+                : section
         )
+    }
+
+    /**
+     * Función que realiza la redirección a la vista principal una vez que el usuario
+     * haya completado su formulario kyc
+     */
+    const redirectToDashboard = () => {
+        // Añade el atributo verificando el tipo de kyc a los datos guardados localmente del usuario
+        setStorage({
+            ...getStorage(),
+            kyc_type: isUser ? 1 : 2
+        })
+
+        // Recarga el sitio
+        window.location.hash = '/'
+        window.location.reload()
+    }
+
+    /**
+     * Función para realizar el submit de los datos del kyc
+     */
+    const onSubmit = async _ => {
+        try {
+            setLoader(true)
+            let dataSend = {}
+            let endpointKyc = ''
+
+            // Se construye el objeto a enviar al servidor con la info del usuario
+            if (isUser) {
+                endpointKyc = '/kyc/user'
+                dataSend = await kycUserData(userInfo, credentials)
+
+                if (userInfo.addBeneficiary || USERAGE < 18) {
+                    // Se añade la información del tutor/beneficiario a la data a enviar al server
+                    dataSend.beneficiary = await kycUserBeneficiaryData(beneficiaryInfo, USERAGE, credentials)
+                }
+
+            } else {
+                endpointKyc = '/kyc/ecommerce'
+                dataSend = await kycEcommerceData(ecommerceInfo, credentials)
+            }
+
+            const { data } = await Petition.post(endpointKyc, dataSend, credentials)
+
+            if (data.error) {
+                throw String(data.message)
+            }
+
+            Swal.fire("Felicidades", "Información actualizada con éxito", "success")
+                .then(_ => redirectToDashboard())
+        } catch (error) {
+            console.error(error)
+            Swal.fire("Ha ocurrido un error", error.toString(), "error")
+        } finally {
+            setLoader(false)
+            setShowWaitMessage(false)
+        }
     }
 
     return (
         <div className="Kyc">
-            <NavigationBar/>
+            {
+                !showKyc &&
+                <div className="welcome">
+                    {
+                        showIntro &&
+                        <div className="toshow">
+                            <InformationIcon className="indicator" />
+                            <p>
+                                Para brindarle un mejor servicio y seguriidad a nuestros usuarios, hemos agregado el formulario kyc. Para poder seguir disfutando de <strong>Speed Tradings Bank</strong>, por favor completar la siguiente información
+                            </p>
 
-            <div className="container">
-                <h2>Completa el formulario</h2>
+                            <div className="action-buttons">
+                                <button
+                                    onClick={_ => LogOut()}
+                                    className="button back">
+                                    Cerrar sesion
+                                </button>
 
-                <div className="content">
-                    {   
-                        /* Sección 1 - Información personal */
-                        activeSection === 1 &&
-                        <div className="section">
-                            <h3>Información personal</h3>
-
-                            <div className="row">
-                                <span className="required">Nombre(s)</span>
-                                <input
-                                    autoFocus
-                                    value={name}
-                                    onChange={e => setName(e.target.value)}
-                                    type="text"
-                                    className="text-input" />
-                            </div>
-
-                            <div className="row">
-                                <span className="required">Apellido(s)</span>
-                                <input 
-                                    value={lastname}
-                                    onChange={e => setLastname(e.target.value)}
-                                    type="text"
-                                    className="text-input"/>
-                            </div>
-
-                            <div className="row-group">
-                                <div className="col">
-                                    <span className="required">Tipo de identificación</span>
-
-                                    <select 
-                                        value={identificationType}
-                                        onChange={e => setIdentificationType(e.target.value)}
-                                        className="picker">
-                                        <option value="-1" disabled hidden>
-                                            Selecciona un tipo de identificación
-                                        </option>
-                                        <option value="1">Cédula</option>
-                                        <option value="2">Pasaporte</option>
-                                    </select>
-                                </div>
-
-                                <div className="col">
-                                    <span className="required">Número de identificación</span>
-                                    <input 
-                                        value={identificationValue}
-                                        onChange={e => setIdenficationValue(e.target.value)}
-                                        type="text" 
-                                        className="text-input"/>
-                                </div>
-                            </div>
-
-                            <div className="row">
-                                <span className="required">Fecha de nacimiento</span>
-                                <input 
-                                    value={birthDate}
-                                    onChange={e => setBirthDate(e.target.value)}
-                                    type="date" 
-                                    className="picker"/>
+                                <button
+                                    onClick={_ => setShowIntro(false)}
+                                    className="button forward">
+                                    Continuar
+                                    <ForwardIcon className="icon" />
+                                </button>
                             </div>
                         </div>
                     }
 
                     {
-                        /* Sección 2 - Información de cotacto */
-                        activeSection === 2 &&
-                        <div className="section">
-                            <h3>Información de contacto</h3>
+                        !showIntro &&
+                        <div className="toshow">
+                            <p className="selector-title">Seleccione su tipo de cuenta</p>
 
-                            <div className="row">
-                                <span className="required">Correo electrónico</span>
-                                <input 
-                                    autoFocus 
-                                    value={email}
-                                    onChange={e => setEmail(e.target.value)}
-                                    type="email" 
-                                    className="text-input"/>
-                            </div>
+                            <div className="action-buttons center">
+                                <button
+                                    onClick={_ => {
+                                        setIsUser(false)
+                                        setShowKyc(true)
+                                    }}
+                                    className="selector">
+                                    <EnterpriseIcon className="icon" />
+                                    Empresarial
+                                </button>
 
-                            <div className="row">
-                                <span className="required">Número de teléfono principal</span>
-                                <input 
-                                    valule={mainTelephone}
-                                    onChange={e => setMainTelephone(e.target.value)}
-                                    type="tel" 
-                                    className="text-input"/>
-                            </div>
-
-                            <div className="row">
-                                <span>Número de teléfono alternativo</span>
-                                <input 
-                                    value={alternativeTelephone}
-                                    onChange={e => setAlternativeTelephone(e.target.value)}
-                                    type="tel" 
-                                    className="text-input"/>
+                                <button
+                                    onClick={_ => {
+                                        setIsUser(true)
+                                        setShowKyc(true)
+                                    }}
+                                    className="selector">
+                                    <UserIcon className="icon" />
+                                    Personal
+                                </button>
                             </div>
                         </div>
                     }
-                    
+                </div>
+            }
+
+            {
+                showKyc &&
+                <div className="container">
+                    <header className="header">
+                        <img src={Logo} alt="logo" className="logo" />
+
+                        {
+                            isUser &&
+                            <h1>Kyc Personal</h1>
+                        }
+
+                        {
+                            !isUser &&
+                            <h1>Kyc Empresarial</h1>
+                        }
+                    </header>
 
                     {
-                        /* Sección 3 - Nacionalidad y residencia */
-                        activeSection === 3 &&
-                        <div className="section">
-                            <h3>Nacionalidad y residencia</h3>
-
-                            <div className="row">
-                                <span className="required">Nacionalidad</span>
-                                <select
-                                    autoFocus
-                                    value={originCountry}
-                                    onChange={e => setOriginCountry(e.target.value)}
-                                    className="picker">
-                                    <option value="-1" disabled hidden>
-                                        Seleccione un país
-                                    </option>
-
-                                    {
-                                        Countries.map(({name}, index) => (
-                                            <option key={index} value={index}>
-                                                {name}
-                                            </option>
-                                        ))
-                                    }
-                                </select>
-                            </div>
-
-                            <div className="row">
-                                <span className="required">País de residencia</span>
-                                <select
-                                    value={residentCountry}
-                                    onChange={e => setResidentCountry(e.target.value)}
-                                    className="picker">
-                                    <option value="-1" disabled hidden>
-                                        Seleccione un país
-                                    </option>
-
-                                    {
-                                        Countries.map(({name}, index) => (
-                                            <option key={index} value={index}>
-                                                {name}
-                                            </option>
-                                        ))
-                                    }
-                                </select>
-                            </div>
-
-                            <div className="row">
-                                <span className="required">Estado / Provincia / Región</span>
-                                <input type="text" className="text-input"/>
-                            </div>
-
-                            <div className="row">
-                                <span className="required">Ciudad</span>
-                                <input type="text" className="text-input"/>
-                            </div>
-
-                            <div className="row">
-                                <span className="required">Dirección (línea 1)</span>
-                                <input type="text" className="text-input"/>
-                            </div>
-
-                            <div className="row">
-                                <span>Dirección (línea 2)</span>
-                                <input type="text" className="text-input"/>
-                            </div>
-
-                            <div className="row">
-                                <span className="required">Código postal</span>
-                                <input type="text" className="text-input"/>
-                            </div>
-                        </div>
-                    }
-
-
-                    {
-                        /* Sección 4 - Preguntas de control */
-                        activeSection === 4 &&
-                        <div className="section">
-                            <h3>Preguntas de control</h3>
-
-                            <div className="row">
-                                <span className="required">¿De dónde provienen tus ingresos?</span>
-                                <select autoFocus defaultValue={-1} className="picker">
-                                    <option value="-1" disabled hidden>
-                                        Seleccione un origen de ingreso
-                                    </option>
-                                    <option value="">Ahorros</option>
-                                    <option value="">Herencia</option>
-                                    <option value="">Pensión</option>
-                                    <option value="">Salario</option>
-                                    <option value="">Otro (especifique)</option>
-                                </select>
-                            </div>
-
-                            <div className="row radio-section">
-                                <span className="required">¿Eres mayor de edad?</span>
-
-                                <div className="row-group">
-                                    <label>
-                                        Sí
-                                        <input type="radio" name="age-radio"/>
-                                    </label>
-                                
-                                    <label>
-                                        No
-                                        <input type="radio" name="age-radio"/>
-                                    </label>
-                                </div>
-                            </div>
-
-                            <div className="row radio-section">
-                                <span className="required">¿Deseas agregar un beneficiario?</span>
-
-                                <div className="row-group">
-                                    <label>
-                                        Sí
-                                        <input type="radio" name="benefic-radio"/>
-                                    </label>
-                                
-                                    <label>
-                                        No
-                                        <input type="radio" name="benefic-radio"/>
-                                    </label>
-                                </div>
-                            </div>
-
-                            <h3 className="uploads-section">
-                                Foto de perfil y verificación
-                            </h3>
-
-                            <div className="row horizontal">
-                                <span className="required">Sube una foto de perfil</span>
-
-                                <label
-                                    title="Subir archivo"
-                                    htmlFor="profile-picture"
-                                    className="upload">
-                                    <UploadIcon/>
-                                </label>
-                                <input
-                                    type="file"
-                                    id="profile-picture"
-                                    onChange={handleChangeProfileFile}/>
-                            </div>
+                        isUser &&
+                        <>
+                            {
+                                activeSection === 1 &&
+                                <KycUserForm
+                                    state={userInfo}
+                                    setState={setUserInfo}
+                                    onChangeUserAge={setUSERAGE} />
+                            }
 
                             {
-                                profileFileURL !== null &&
-                                <div className="row centered">
-                                    <img src={profileFileURL} alt="" className="img-preview"/>
+                                activeSection === 2 &&
+                                <KycUserForm
+                                    state={beneficiaryInfo}
+                                    setState={setBeneficiaryInfo}
+                                    secondaryTypeForm={USERAGE < 18 ? 1 : 2} />
+                            }
+                        </>
+                    }
+
+                    {
+                        !isUser &&
+                        <KycEcommerceForm
+                            state={ecommerceInfo}
+                            setState={setEcommerceInfo}
+                            activeSection={activeSection} />
+                    }
+
+                    <div className="footer">
+                        <div className="pager">
+                            {
+                                activeSection !== 1 &&
+                                <button
+                                    onClick={prevSection}
+                                    style={{ opacity: activeSection === 1 ? 0 : 1 }}
+                                    className="back"
+                                    title="Sección anterior">
+                                    <BackIcon className="icon" />
+                                    Regresar
+                                </button>
+                            }
+
+                            {
+                                activeSection === 1 &&
+                                < button
+                                    onClick={_ => {
+                                        // Reicia los estados a su valor inicial
+                                        setShowIntro(true)
+                                        setShowKyc(false)
+                                        setUserInfo({})
+                                        setBeneficiaryInfo({})
+                                        setEcommerceInfo({})
+                                    }}
+                                    className="back cancel">
+                                    <CancelIcon className="icon" />
+                                    Cancelar
+                                </button>
+                            }
+
+                            {
+                                !isUser &&
+                                <div className="pager-dotted">
+                                    {
+                                        Array(3).fill(1).map((_, index) => (
+                                            <div key={index} className={`dotted ${activeSection === (index + 1) ? 'active' : ''}`}></div>
+                                        ))
+                                    }
                                 </div>
                             }
 
-                            <div className="row horizontal">
-                                <span className="required">Sube una foto frontal de tu documento de identificación</span>
-
-                                <label
-                                    title="Subir archivo"
-                                    htmlFor="id-picture"
-                                    className="upload">
-                                    <UploadIcon/>
-                                </label>
-                                <input
-                                    type="file"
-                                    id="id-picture"
-                                    onChange={handleChangeIdFile}/>
-                            </div>
+                            {
+                                checkNextVisibility() &&
+                                <button
+                                    disabled={!checkSectionValid()}
+                                    onClick={nextSection}
+                                    style={{
+                                        opacity: (activeSection === 3 && !isUser)
+                                            ? 0
+                                            : 1
+                                    }}
+                                    className="forward"
+                                    title="Siguiente sección">
+                                    Siguiente
+                                    <ForwardIcon className="icon" />
+                                </button>
+                            }
 
                             {
-                                IDFileURL !== null &&
-                                <div className="row centered">
-                                    <img src={IDFileURL} alt="" className="img-preview"/>
-                                </div>
+                                (
+                                    (isUser && ((USERAGE >= 18 && !userInfo.addBeneficiary) || activeSection === 2)) ||
+                                    (!isUser && activeSection === 3)
+                                ) &&
+                                < button
+                                    disabled={!checkSectionValid()}
+                                    onClick={onSubmit}
+                                    className="forward">
+                                    Guardar
+                                    <SaveIcon className="icon" />
+                                </button>
                             }
                         </div>
-                    }
-                    
+                    </div>
                 </div>
+            }
 
-                <div className="buttons-group">
-                    <button
-                        onClick={prevSection}
-                        style={{ opacity: activeSection === 1 ? 0 : 1 }}>
-                        Anterior
-                    </button>
-                    <button
-                        disabled={!checkSectionValid()}
-                        onClick={nextSection}>
-                        Siguiente
-                    </button>
-                </div>
-            </div>
-        </div>
+            {
+                loader &&
+                <Modal persist={true} onlyChildren>
+                    <div className="content-modal">
+                        {
+                            (window.setTimeout(_ => setShowWaitMessage(true), 5000)) &&
+                            <></>
+                        }
+                        <h2 className="message">Guardando información</h2>
+                        {
+                            !showWaitMessage &&
+                            <p>Esto proceso puede demorar un momento...</p>
+                        }
+
+                        {
+                            showWaitMessage &&
+                            <p>Ya casi terminamos...</p>
+                        }
+                        <ActivityIndicator size={64} />
+                    </div>
+                </Modal>
+            }
+        </div >
     )
 }
 

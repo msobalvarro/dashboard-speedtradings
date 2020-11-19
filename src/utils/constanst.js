@@ -1,6 +1,8 @@
 import jwt from "jwt-simple"
 import Axios from "axios"
 import Swal from "sweetalert2"
+import moment from "moment"
+
 
 // Constanst
 const keySecret = "testDevelop"
@@ -12,6 +14,30 @@ export const wallets = {
     userCoinbase: '@SpeedTradingsBank',
     airtm: 'tradingspeed4@gmail.com',
 }
+
+// Lista preliminar de los tipos de comercios que se mostrarán dentro del kyc
+export const commercialCategories = [
+    'Abarrotería',
+    'Agencia de viaje',
+    'Bar',
+    'Bazar',
+    'Cafetería',
+    'Centro comercial',
+    'Heladería',
+    'Discoteca',
+    'Estación de servicio',
+    'Ferretería',
+    'Almacén',
+    'Hotel / Hospedaje',
+    'Joyería',
+    'Librería',
+    'Mercado',
+    'Repostería',
+    'Restaurante',
+    'Tienda',
+    'Venta minorista',
+    'Otro'
+]
 
 /**
 * Método que obtiene los hash de las wallets desde la API,
@@ -28,7 +54,7 @@ export const getWallets = async (walletState) => {
         // Si la entrada contiene subentradas, también se recorren
         if (coinName.toLowerCase() === 'alypay') {
             let alypay_wallets = Object.entries(wallet_hash).map(subentrie => {
-                const [subCoinName, subWallet_hash] = subentrie;
+                const [subCoinName, subWallet_hash] = subentrie
 
                 return [getCoinSymbol(subCoinName), subWallet_hash]
             })
@@ -41,7 +67,7 @@ export const getWallets = async (walletState) => {
 
     walletsData = fromEntries(walletsData)
 
-    walletState(walletsData);
+    walletState(walletsData)
 }
 
 // Construye un objeto a partir de las entradas de uno existente
@@ -50,10 +76,10 @@ const fromEntries = (data) => {
 
     for (let i = 0; i < data.length; i++) {
         let [key, value] = data[i]
-        result[key] = value;
+        result[key] = value
     }
 
-    return result;
+    return result
 }
 
 /**
@@ -75,7 +101,7 @@ const getCoinSymbol = (coinName) => {
             return 'alypay'
 
         default:
-            return coinName;
+            return coinName
     }
 }
 
@@ -90,6 +116,8 @@ export const amountMin = {
 export const urlServer = "https://ardent-medley-272823.appspot.com"
 //export const urlServer = "http://10.70.12.18:8080"
 
+// Límite de subida de los archivos e bytes
+export const MAX_FILE_SIZE = 5 * 1024 * 1024
 
 /**
  * Constante que almacena key secret para recaptcha
@@ -126,6 +154,11 @@ export const getMobileOperatingSystem = () => {
 export const WithDecimals = (number = 0) => number.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")
 
 export const Round = (number = 0) => Math.round(number * 100) / 100
+
+/**
+ * Return a unique string to use how component key into react
+ * */
+export const randomKey = _ => ('_' + Math.random().toString(36).substr(2, 9))
 
 /**
  * Creates a function like `round`. Extract from lodash library
@@ -198,37 +231,94 @@ export const calculateCryptoPriceWithoutFee = (price = 0, amount = 0) => {
 }
 
 /**
+ * Calcula la edad según una fecha
+ * @param {String | Date} birthDate - Fecha a evaluar
+ */
+export const calcAge = (birthDate) => {
+    let NOW = moment(new Date(), 'YYYY-MM-DD')
+    let fromDate = moment(birthDate, "YYYY-MM-DD")
+    // Se calcula la edad
+    let age = moment.duration(NOW.diff(fromDate)).asYears()
+
+    return age
+}
+
+/**
  * Copy string
  * @param {String} str
 */
-export const copyData = async (str = "", msg="Copiado a portapapeles") => {
-    let input = document.createElement('input');
+export const copyData = async (str = "", msg = "Copiado a portapapeles") => {
+    let input = document.createElement('input')
 
-    input.setAttribute('value', str);
-    document.body.appendChild(input);
-    input.select();
+    input.setAttribute('value', str)
+    document.body.appendChild(input)
+    input.select()
 
-    let result = document.execCommand('copy');
-    document.body.removeChild(input);
+    let result = document.execCommand('copy')
+    document.body.removeChild(input)
 
-    if(result) {
+    if (result) {
         Swal.fire("¡Listo!", msg, "success")
     } else {
         Swal.fire("¡Opps!", "Error al copiar al portapapeles", "error")
     }
 }
 
+/**
+ * Función para almacenar en el servidor
+ * @param {File} file - Foto a almacenar
+ */
+export const uploadFile = async (file, credentials, update = null) => {
+    return new Promise((resolve, reject) => {
+        const dataSend = new FormData()
+
+        dataSend.append('image', file)
+
+        if (update !== null) {
+            dataSend.append('idFile', update)
+        }
+
+        Petition.post('/file/', dataSend, credentials)
+            .then(({ data }) => {
+                resolve(data)
+            }).catch(error => resolve({ error: true, message: error }))
+    })
+}
+
+/**
+ * Función para leer un archivo y retornarlo en base64
+ * @param {File} file - Archivo a leer y retornar en base64 
+ */
+export const readFile = (fileId, credentials) => new Promise(async (resolve, _) => {
+    Petition.get(`/file/${fileId}`, {
+        responseType: 'arraybuffer',
+        ...credentials
+    })
+        .then(({ data, headers }) => {
+            const blob = new Blob([data], { type: headers['content-type'] })
+
+            resolve(blob)
+        }).catch(error => resolve({ error: true, message: error }))
+})
+
+
+
 export const Petition = Axios.create({
     baseURL: urlServer,
-    // headers: {
-    //     "Content-Type": "application/json"
-    // },
+    headers: {
+        "ignore-release-date": true
+    },
     validateStatus: (status) => {
         if (status === 401) {
+            console.error("logout")
             LogOut()
         }
 
-        return status >= 200 && status < 300;
+        if (status === 426) {
+            console.log("actualizar")
+        }
+
+        return status >= 200 && status < 300
     }
 })
 

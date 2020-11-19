@@ -1,12 +1,12 @@
 import React, { useState, useEffect } from 'react'
-import { HashRouter, Route, Switch } from "react-router-dom"
+import { HashRouter, Route, Switch, Redirect } from "react-router-dom"
 import { useDispatch } from "react-redux"
 
 // Import Assets
 import "@sweetalert2/theme-dark"
 
 // Redux configurations
-import { getStorage} from '../utils/constanst'
+import { getStorage } from '../utils/constanst'
 import { DELETESTORAGE, SETSTORAGE } from '../store/ActionTypes'
 
 // Import Components
@@ -25,6 +25,29 @@ import Kyc from './Kyc/Kyc'
 const App = () => {
   const dispatch = useDispatch()
   const [loged, setLogin] = useState(false)
+  // Estado que almacena la verificación cuando un usuario ha completado o no el kyc
+  const [completedKyc, setCompletedKyc] = useState(false)
+
+  /**
+   * Función que verifica sí un usuario completo la informaciónd el kyc, y sí no lo ha
+   * hecho, le indica que debe hacerlo
+   * @param {React.Component} child - componente a renderizar en caso de haber completado
+   * el formulario kyc
+   */
+  const checkKycComplete = (child) => {
+    return completedKyc
+      ? child
+      : _ => (<Redirect to="/kyc" />)
+  }
+
+  /**
+   * Deshabilita el acceso a la vista del kyc cuando este ya eha sido completado
+   */
+  const checkKycAccess = () => {
+    return !completedKyc
+      ? _ => (<Kyc />)
+      : _ => (<Redirect to="/" />)
+  }
 
   useEffect(() => {
     const payload = getStorage()
@@ -37,6 +60,11 @@ const App = () => {
         type: SETSTORAGE,
         payload
       })
+
+      // Verificamos sí el usuario completó
+      if (payload.kyc_type && payload.kyc_type !== null) {
+        setCompletedKyc(true)
+      }
 
       // Le decimos que el usuario esta logueado
       setLogin(true)
@@ -53,11 +81,11 @@ const App = () => {
         {
           loged &&
           <Switch>
-            <Route path="/" exact component={Dashboard} />
-            <Route path="/sponsors" component={Sponsors} />
-            <Route path="/profile" component={Profile} />
-            <Route path="/kyc" component={Kyc}/>
-            <Route path="*" component={NotFound} />
+            <Route path="/" exact component={checkKycComplete(Dashboard)} />
+            <Route path="/sponsors" component={checkKycComplete(Sponsors)} />
+            <Route path="/profile" component={checkKycComplete(Profile)} />
+            <Route path="/kyc" component={checkKycAccess()} />
+            <Route path="*" component={checkKycComplete(NotFound)} />
           </Switch>
 
         }

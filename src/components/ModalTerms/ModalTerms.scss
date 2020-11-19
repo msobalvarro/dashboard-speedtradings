@@ -16,12 +16,19 @@
   height: 100vh;
   width: 100%;
 
+  .content {
+    background-color: #000;
+    width: 75%;
+    text-align: center;
+    padding: 1.5rem 3rem;
+  }
+
   button {
     border: none;
     border-radius: 5px;
     cursor: pointer;
-    font-size: 1.2em;
-    padding: 15px;
+    font-size: 1em;
+    padding: 7px;
     position: absolute;
     outline: none;
     top: 5%;
@@ -39,7 +46,7 @@
   }
 
   p {
-    width: 80%;
+    //width: 80%;
 
     ol,
     ul {

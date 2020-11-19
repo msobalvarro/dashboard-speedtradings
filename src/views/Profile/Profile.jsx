@@ -6,14 +6,29 @@ import reduxStorage from "../../store/store"
 // Import Components
 import NavigationBar from "../../components/NavigationBar/NavigationBar"
 import ActivityIndicator from "../../components/ActivityIndicator/Activityindicator"
+import Modal from "../../components/Modal/Modal"
+import KycUserForm from "../../components/KycUserForm/KycUserForm"
+import ModalTerms from "../../components/ModalTerms/ModalTerms"
+
+// Import service
+import { kycUserBeneficiaryData } from "../../services/kycUser.service"
 
 // Import Assets
 import "./Profile.scss"
 import ImagePlaceholder from "../../static/images/profile/placeholder-profile.jpg"
-import { Petition, setStorage } from "../../utils/constanst"
+import { ReactComponent as VerifyBadgetIcon } from "../../static/icons/check-circular-button.svg"
+import Countries from "../../utils/countries.json"
+
+import {
+    Petition,
+    setStorage,
+    readFile,
+    calcAge,
+} from "../../utils/constanst"
 import Swal from "sweetalert2"
 import { SETSTORAGE } from "../../store/ActionTypes"
 import moment from "moment"
+import { userValidations } from "../../utils/kycFormValidations"
 
 /**Estado incial de storage de REACT */
 const initialState = {
@@ -30,6 +45,9 @@ const initialState = {
 
     // Password confirm
     password: "",
+
+    // Typo de kyc
+    kycType: null
 }
 
 
@@ -54,6 +72,26 @@ const Profile = () => {
     const [state, dispatch] = useReducer(reducer, initialState)
 
     const [info, setInfo] = useState(null)
+
+    const [beneficiary, setBeneficiary] = useState({})
+    const [backupBeneficiary, setBackupBeneficiary] = useState({})
+
+    const [isReadOnly, setIsReadOnly] = useState(true)
+
+    const [userAge, setUserAge] = useState(0)
+
+    const [createBeneficiary, setCreateBeneficiary] = useState(false)
+
+    const [existBeneficiary, setExistBeneficiary] = useState(true)
+
+    const [showTerms, setShowTerms] = useState(false)
+
+    // Credenciales de acceso
+    const credentials = {
+        headers: {
+            "x-auth-token": globalStorage.token
+        }
+    }
 
     /**Metodo que se ejecuta cuando cancela la edicion de wallet y usuario coinbase */
     const cancelEditWallet = () => {
@@ -88,35 +126,32 @@ const Profile = () => {
                 password: state.password,
             }
 
-            await Petition.post("/profile/update-wallet", dataSend, {
-                headers: {
-                    "x-auth-token": globalStorage.token
-                }
-            }).then(async ({ data }) => {
-                if (data.error) {
-                    throw String(data.message)
-                } else {
-                    // Hacemos el dispatch al store de redux
-                    reduxStorage.dispatch({ type: SETSTORAGE, payload: data })
+            await Petition.post("/profile/update-wallet", dataSend, credentials)
+                .then(async ({ data }) => {
+                    if (data.error) {
+                        throw String(data.message)
+                    } else {
+                        // Hacemos el dispatch al store de redux
+                        reduxStorage.dispatch({ type: SETSTORAGE, payload: data })
 
-                    // Actualizamos el localstorage
-                    setStorage(data)
+                        // Actualizamos el localstorage
+                        setStorage(data)
 
-                    // Limpiamos el campo password
-                    dispatch({ type: "password", payload: "" })
+                        // Limpiamos el campo password
+                        dispatch({ type: "password", payload: "" })
 
-                    // Reconfiguramos los datos de redux
-                    await initialConfig()
+                        // Reconfiguramos los datos de redux
+                        await initialConfig()
 
-                    // Reseteamos todo el formulario
-                    dispatch({ type: "editWallets", payload: false })
+                        // Reseteamos todo el formulario
+                        dispatch({ type: "editWallets", payload: false })
 
-                    // Cerramos la ventana de confirmacion
-                    setShowConfirm(false)
+                        // Cerramos la ventana de confirmacion
+                        setShowConfirm(false)
 
-                    Swal.fire("Speed Tradings", "Tus datos se han actualizado", "success")
-                }
-            })
+                        Swal.fire("Speed Tradings", "Tus datos se han actualizado", "success")
+                    }
+                })
 
             dispatch({ type: "password", payload: "" })
         } catch (error) {
@@ -132,8 +167,9 @@ const Profile = () => {
     }
 
     /**Configuracion inicial del componente */
-    const initialConfig = () => {
+    const initialConfig = async () => {
         try {
+            setLoader(true)
             const { globalStorage: updateStorage } = reduxStorage.getState()
 
             // Initial wallet BTC
@@ -144,22 +180,90 @@ const Profile = () => {
             dispatch({ type: "walletETH", payload: updateStorage.wallet_eth })
             dispatch({ type: "intialETH", payload: updateStorage.wallet_eth })
 
-            Petition.get(`/profile/info?id=${globalStorage.id_user}`, {
-                headers: {
-                    "x-auth-token": globalStorage.token
-                }
-            }).then(({ data }) => {
-                if (data.error) {
-                    throw String(data.message)
-                } else {
-                    setInfo(data)
-                }
+            // Initial kyc type
+            dispatch({ type: "kycType", payload: updateStorage.kyc_type })
+
+            const { data } = await Petition.get(`/profile/info?id=${globalStorage.id_user}`, credentials).catch(_ => {
+                throw String("No se ha podido actualizar tu perfil")
             })
-                .catch(() => {
-                    throw String("No se ha podido actualizar tu perfil")
+
+            if (data.error) {
+                throw String(data.message)
+            } else {
+                setInfo(data)
+            }
+
+            const { data: dataBeneficiary } = await Petition.get('/kyc/user/beneficiary', credentials)
+
+            if (Object.keys(dataBeneficiary).length > 0) {
+
+                const { profilePictureId, indentificationPictureId } = dataBeneficiary
+
+                // Se obtienen las fotos desde el servidor
+                dataBeneficiary.profilePicture = await readFile(profilePictureId, credentials)
+                dataBeneficiary.IDPicture = await readFile(indentificationPictureId, credentials)
+
+                const { nationality, residence } = dataBeneficiary
+
+                console.log(dataBeneficiary)
+                setExistBeneficiary(true)
+                setUserAge(calcAge(dataBeneficiary.userBirthday))
+                setBeneficiary({
+                    ...dataBeneficiary,
+                    nationality: Countries.findIndex(item => item.phoneCode === nationality),
+                    residence: Countries.findIndex(item => item.phoneCode === residence)
                 })
+            } else {
+                setUserAge(18)
+            }
         } catch (error) {
             Swal.fire("Ha ocurrido un error", error, "error")
+        } finally {
+            setLoader(false)
+        }
+    }
+
+    const submitBeneficiary = async _ => {
+        try {
+            setLoader(true)
+
+            if (state.password.length === "") {
+                throw String("Escribe tu Contraseña para continuar")
+            }
+
+            const dataSend = {
+                passwordUser: state.password,
+                emailUser: globalStorage.email,
+                ...(await kycUserBeneficiaryData(
+                    beneficiary,
+                    userAge,
+                    credentials,
+                    existBeneficiary
+                ))
+            }
+            console.log(dataSend)
+
+            const { data } = await Petition.post('/kyc/user/beneficiary', dataSend, credentials)
+
+            if (data.error) {
+                throw String(data.message)
+            }
+            console.log(data)
+            setBackupBeneficiary({})
+            setIsReadOnly(true)
+            setCreateBeneficiary(false)
+
+            Swal.fire("Speed Tradings", "Tus datos se han actualizado", "success")
+        } catch (error) {
+            console.error(error)
+            Swal.fire("Speed Tradings", error.toString(), "error")
+        } finally {
+            // Cerramos la ventana de confirmacion
+            setShowConfirm(false)
+            // Reseteamos el campo de la contraseña
+            dispatch({ type: "password", payload: "" })
+
+            setLoader(false)
         }
     }
 
@@ -178,8 +282,10 @@ const Profile = () => {
                     </div>
 
                     <div className="col large">
-                        <div className="row">
-                            <h2 className="full-name">{globalStorage.firstname} {globalStorage.lastname}</h2>
+                        <div className="row centered">
+                            <h2 className="full-name">
+                                {globalStorage.firstname} {globalStorage.lastname}
+                            </h2>
                         </div>
 
                         <div className="row">
@@ -216,6 +322,24 @@ const Profile = () => {
                     {
                         (info !== null) &&
                         <div className="col">
+                            <div className="row right">
+                                <span className="verified-account">
+                                    {
+                                        globalStorage.kyc_type !== null &&
+                                        <VerifyBadgetIcon className="verifyBadget" />
+                                    }
+                                    {
+                                        globalStorage.kyc_type === 1 &&
+                                        'cuenta verificada'
+                                    }
+
+                                    {
+                                        globalStorage.kyc_type === 2 &&
+                                        'cuenta empresarial verificada'
+                                    }
+                                </span>
+                            </div>
+
                             <div className="row">
                                 <div className="sub-row">
                                     <span className="key">Rango</span>
@@ -241,7 +365,7 @@ const Profile = () => {
                                     }
 
                                     {
-                                        (info.sponsors >= 100 ) &&
+                                        (info.sponsors >= 100) &&
                                         <span className="value">VIP</span>
                                     }
                                 </div>
@@ -300,6 +424,85 @@ const Profile = () => {
             </header>
 
             {
+                Object.keys(beneficiary).length === 0 &&
+                !createBeneficiary &&
+                globalStorage.kyc_type === 1 &&
+                <div className="row add-beneficiary">
+                    <button
+                        onClick={_ => {
+                            setCreateBeneficiary(true)
+                            setIsReadOnly(false)
+                        }}
+                        className="button secondary">agregar beneficiario</button>
+                </div>
+            }
+
+            {
+                (Object.keys(beneficiary).length > 0 ||
+                    createBeneficiary) &&
+                <div className="header-profile beneficiary">
+                    <div className="main-row">
+                        <div className="row center">
+                            <KycUserForm
+                                isReadOnly={isReadOnly}
+                                state={beneficiary}
+                                setState={setBeneficiary}
+                                secondaryTypeForm={userAge < 18 ? 1 : 2} />
+                        </div>
+                    </div>
+
+                    {
+                        userAge >= 18 &&
+                        <div className="main-row resalt">
+                            <div className="row buttons-row">
+                                {
+                                    isReadOnly &&
+                                    <button
+                                        onClick={_ => {
+                                            setBackupBeneficiary(beneficiary)
+                                            setIsReadOnly(false)
+                                            setCreateBeneficiary(true)
+                                        }}
+                                        className="button secondary">
+                                        editar
+                                    </button>
+                                }
+
+                                {
+                                    !isReadOnly &&
+                                    <>
+                                        <button
+                                            onClick={_ => {
+                                                setBeneficiary(backupBeneficiary)
+                                                setBackupBeneficiary({})
+                                                setIsReadOnly(true)
+                                                setCreateBeneficiary(false)
+                                            }}
+                                            className="button cancel">
+                                            cancelar
+                                        </button>
+                                        <button
+                                            disabled={!userValidations.beneficiaryInfo(beneficiary)}
+                                            onClick={_ => setShowConfirm(true)}
+                                            className="button secondary">
+                                            guardar
+                                        </button>
+                                    </>
+                                }
+                            </div>
+                        </div>
+                    }
+                </div>
+            }
+
+            {
+                !showConfirm && loader &&
+                <Modal persist={true} onlyChildren>
+                    <ActivityIndicator size={64} />
+                </Modal>
+            }
+
+            {
                 showConfirm &&
                 <div className="modal-password">
                     {
@@ -323,13 +526,29 @@ const Profile = () => {
 
                             <div className="buttons">
                                 <button className="button margin" onClick={onCancellEditWallet}>Atras</button>
-                                <button className="button secondary" onClick={onChangeWallet}>Procesar</button>
+                                <button
+                                    className="button secondary"
+                                    onClick={
+                                        createBeneficiary
+                                            ? submitBeneficiary
+                                            : onChangeWallet
+                                    }>
+                                    Procesar
+                                </button>
                             </div>
                         </>
                     }
 
                 </div>
             }
+
+            <span
+                className="terms-label"
+                onClick={_ => setShowTerms(true)}>
+                Términos y condiciones
+            </span>
+
+            <ModalTerms isVisible={showTerms} onClose={_ => setShowTerms(false)} />
         </div>
     )
 }
