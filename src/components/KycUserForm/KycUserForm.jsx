@@ -462,7 +462,7 @@ const KycUserForm = ({
                                         <option value="1">Herencia</option>
                                         <option value="2">Pensión</option>
                                         <option value="3">Salario</option>
-                                        <option value="4">Otro (especifique)</option>
+                                        <option value="4">Otro</option>
                                     </select>
                                 </div>
 
