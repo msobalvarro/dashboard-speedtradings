@@ -467,7 +467,7 @@ const KycUserForm = ({
                                 </div>
 
                                 <div className="row">
-                                    <span className="required">¿Cuál es el monto estimado a guardar mensualmente?</span>
+                                    <span className="required">¿Cuál es el monto estimado a guardar mensualmente? ($)</span>
 
                                     <input
                                         readOnly={isReadOnly}
