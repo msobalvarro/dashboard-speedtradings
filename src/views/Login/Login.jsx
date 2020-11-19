@@ -60,7 +60,8 @@ const Login = () => {
     // Datos de las credenciales a enviar
     const data = {
       email,
-      password
+      password,
+      web: true
     }
 
     try {
