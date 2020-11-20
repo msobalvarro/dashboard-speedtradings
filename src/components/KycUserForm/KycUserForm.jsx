@@ -520,7 +520,7 @@ const KycUserForm = ({
                             {
                                 !isReadOnly &&
                                 <div className="row horizontal upload-section">
-                                    <span className="required">Adjuntar foto de perfil</span>
+                                    <span className="required">Adjuntar foto de perfil sosteniendo su identificación</span>
 
                                     <label
                                         title="Subir archivo"
