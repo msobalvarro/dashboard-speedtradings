@@ -113,8 +113,8 @@ export const amountMin = {
     eth: 0.1
 }
 
-//export const urlServer = "https://ardent-medley-272823.appspot.com"
-export const urlServer = "http://192.168.0.106:8084"
+export const urlServer = "https://ardent-medley-272823.appspot.com"
+//export const urlServer = "http://192.168.0.106:8084"
 
 // Límite de subida de los archivos e bytes
 export const MAX_FILE_SIZE = 5 * 1024 * 1024
