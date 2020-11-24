@@ -8,7 +8,7 @@ import { uploadFile, calcAge } from "../utils/constanst"
  * @param {Object} userInfo - Información del usuario ingresada en el formulario kyc 
  * @param {Object} credentials - Credenciales de acceso para realizar peticiones al servidor
  */
-export const kycUserData = async (userInfo, credentials, update = false) => {
+export const kycUserData = (userInfo, credentials, update = false) => new Promise(async (resolve, reject) => {
     try {
         // Se obtiene el name, phoneCode, y currency según la nacionalidad
         const userNationality = Countries[userInfo.nationality]
@@ -39,7 +39,7 @@ export const kycUserData = async (userInfo, credentials, update = false) => {
         }
 
         // Se construye el objeto a enviar al servidor con la info del usuario
-        return {
+        const result = {
             birthday: userInfo.birthday,
             alternativeNumber: userInfo.alternativeNumber,
             nationality: userNationality.name,
@@ -68,12 +68,12 @@ export const kycUserData = async (userInfo, credentials, update = false) => {
                     : {}
             )
         }
+
+        resolve(result)
     } catch (error) {
-        return {
-            error: error.toString()
-        }
+        reject(error.toString())
     }
-}
+})
 
 
 /**
@@ -83,7 +83,7 @@ export const kycUserData = async (userInfo, credentials, update = false) => {
  * @param {Number} userAge - Edad del usuario kyc
  * @param {Object} credentials - Credenciales de acceso para realizar peticiones al servidor
  */
-export const kycUserBeneficiaryData = async (beneficiaryInfo, userAge, credentials, update = false) => {
+export const kycUserBeneficiaryData = (beneficiaryInfo, userAge, credentials, update = false) => new Promise(async (resolve, reject) => {
     try {
         // Se obtiene el name, phoneCode, y currency según la nacionalidad
         const beneficiaryNationality = Countries[beneficiaryInfo.nationality]
@@ -98,6 +98,7 @@ export const kycUserBeneficiaryData = async (beneficiaryInfo, userAge, credentia
             update ? beneficiaryInfo.profilePictureId : null
         )
 
+        console.log(uploadProfilePic)
         if (uploadProfilePic.error) {
             throw String(uploadProfilePic.message)
         }
@@ -108,13 +109,13 @@ export const kycUserBeneficiaryData = async (beneficiaryInfo, userAge, credentia
             credentials,
             update ? beneficiaryInfo.identificationPictureId : null
         )
-
+        console.log(uploadIdentificationPic)
         if (uploadIdentificationPic.error) {
             throw String(uploadIdentificationPic.message)
         }
 
         // Datos del beneficiario o tutor del usuario
-        return {
+        const result = {
             relationship: beneficiaryInfo.relationship,
             firstname: beneficiaryInfo.firstname,
             lastname: beneficiaryInfo.lastname,
@@ -142,9 +143,9 @@ export const kycUserBeneficiaryData = async (beneficiaryInfo, userAge, credentia
             identificationPictureId: uploadIdentificationPic.fileId,
             tutor: userAge < 18 ? 1 : 0
         }
+
+        resolve(result)
     } catch (error) {
-        return {
-            error: error.toString()
-        }
+        reject(error.toString())
     }
-}
+})

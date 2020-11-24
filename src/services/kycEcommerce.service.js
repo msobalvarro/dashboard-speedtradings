@@ -7,7 +7,7 @@ import { uploadFile, commercialCategories } from "../utils/constanst"
  * @param {Array} beneficiariesData - Lista de beneficiarios
  * @param {Object} credentials - credenciales de acceso al endpoint
  */
-export const kycEcommerceBeneficiariesData = async (beneficiariesData, credentials) => {
+export const kycEcommerceBeneficiariesData = (beneficiariesData, credentials) => new Promise(async (resolve, reject) => {
     try {
         const result = []
 
@@ -64,14 +64,12 @@ export const kycEcommerceBeneficiariesData = async (beneficiariesData, credentia
             })
         }
 
-        return result
+        resolve(result)
     } catch (error) {
         console.error("benef", error)
-        return {
-            error: error.toString()
-        }
+        reject(error.toString())
     }
-}
+})
 
 
 /**
@@ -79,7 +77,7 @@ export const kycEcommerceBeneficiariesData = async (beneficiariesData, credentia
  * @param {Object} legalRepresentativeData 
  * @param {Object} credentials 
  */
-export const kycEcommerceLegalRepresentative = async (legalRepresentativeData, credentials) => {
+export const kycEcommerceLegalRepresentative = (legalRepresentativeData, credentials) => new Promise(async (resolve, reject) => {
     try {
         // Se obtienen los datos de los países
         const passportOrigin = (legalRepresentativeData.passportNumber)
@@ -109,7 +107,7 @@ export const kycEcommerceLegalRepresentative = async (legalRepresentativeData, c
             throw String(uploadIdentificationPicture.message)
         }
 
-        return {
+        const result = {
             representativeType: legalRepresentativeData.representativeType,
             chargeTitle: legalRepresentativeData.chargeTitle,
             fullname: legalRepresentativeData.fullname,
@@ -129,13 +127,13 @@ export const kycEcommerceLegalRepresentative = async (legalRepresentativeData, c
             politicallyExposed: legalRepresentativeData.politicallyExposed,
             email: legalRepresentativeData.email
         }
+
+        resolve(result)
     } catch (error) {
         console.error("legal", error)
-        return {
-            error: error.toString()
-        }
+        reject(error.toString())
     }
-}
+})
 
 
 /**
@@ -143,7 +141,7 @@ export const kycEcommerceLegalRepresentative = async (legalRepresentativeData, c
  * @param {Object} commerceData - Información del comercio
  * @param {Object} credentials - Credenciales de acceso
  */
-export const kycEcommerceData = async (commerceInfo, credentials) => {
+export const kycEcommerceData = (commerceInfo, credentials) => new Promise(async (resolve, reject) => {
     try {
         // Se obtiene el name, phoneCode, y currency según la actividad comercial
         const ecommerceComercial = Countries[commerceInfo.commercialActivityCountry]
@@ -201,7 +199,7 @@ export const kycEcommerceData = async (commerceInfo, credentials) => {
         }, credentials)
 
 
-        return {
+        const result = {
             commerceWebsite: commerceInfo.commerceWebsite,
             comercialCountry: ecommerceComercial.name,
             comercialPhoneCode: ecommerceComercial.phoneCode,
@@ -235,10 +233,9 @@ export const kycEcommerceData = async (commerceInfo, credentials) => {
             legalRepresentative
         }
 
+        resolve(result)
     } catch (error) {
         console.error("main", error)
-        return {
-            error: error.toString()
-        }
+        reject(error.toString())
     }
-}
+})
