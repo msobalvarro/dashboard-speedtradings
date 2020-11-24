@@ -185,7 +185,7 @@ const Kyc = () => {
             }
 
             Swal.fire("Felicidades", "Información actualizada con éxito", "success")
-                .then(_ => redirectToDashboard())
+            //.then(_ => redirectToDashboard())
         } catch (error) {
             console.error(error)
             Swal.fire("Ha ocurrido un error", error.toString(), "error")
