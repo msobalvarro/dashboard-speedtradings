@@ -14,7 +14,6 @@ const ModalTerms = ({ isVisible = false, onClose = () => { } }) => {
         try {
             const { data } = await Petition.get('/terms/read/speedtradings')
 
-            console.log(data)
             setPage(data)
         } catch (error) {
             console.error(error)
