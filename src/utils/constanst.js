@@ -306,7 +306,7 @@ export const readFile = (fileId, credentials) => new Promise(async (resolve, _) 
 
 
 
-const Petition = Axios.create({
+export const Petition = Axios.create({
     baseURL: urlServer,
     validateStatus: (status) => {
         if (status === 401) {
