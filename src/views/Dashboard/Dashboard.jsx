@@ -23,7 +23,7 @@ const Dashboard = () => {
     // Estado que alamacena los datos para los planes BTC y ETH del usuario
     const [dataDashoardBTC, setDataDashboardBTC] = useState({ info: null, history: null })
     const [dataDashoardETH, setDataDashboardETH] = useState({ info: null, history: null })
-
+    console.log('welcome to dashborad')
     const ConfigurateComponent = async () => {
         try {
 
@@ -51,7 +51,7 @@ const Dashboard = () => {
             if (dataETH.error) {
                 throw String(dataETH.message)
             } else if (Object.keys(dataETH).length > 0) {
-                setDataDashboardETH(dataETH);
+                setDataDashboardETH(dataETH)
             }
 
             setLoader(false)
