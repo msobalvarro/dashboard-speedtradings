@@ -159,7 +159,7 @@ const Register = (props) => {
             }
 
             const { data } = await Petition.post(`/register`, dataSend)
-
+            console.log(data)
             if (data.error) {
                 throw String(data.message)
             }
@@ -174,6 +174,7 @@ const Register = (props) => {
             }
 
         } catch (error) {
+            console.error(error)
             Swal.fire("", error.toString(), "warning")
         } finally {
             setLoaderData(false)
@@ -190,12 +191,14 @@ const Register = (props) => {
                         if (response.data.error) {
                             throw response.data.message
                         }
-                        else if (response.status === 200) {
-                            setValidateUser(response.data.length === 0)
-                        }
+
+                        setValidateUser(response.data.length === 0)
                     })
                     .catch(reason => {
-                        throw reason
+                        console.error('comprobate username: ', reason)
+                        if (!/Network Error/.test(reason)) {
+                            throw reason
+                        }
                     })
             } else {
                 setValidateUser(false)
@@ -218,12 +221,14 @@ const Register = (props) => {
                             if (response.data.error) {
                                 throw response.data.message
                             }
-                            else if (response.status === 200) {
-                                setValidateEmail(response.data.length === 0)
-                            }
+
+                            setValidateEmail(response.data.length === 0)
                         })
                         .catch(reason => {
-                            throw reason
+                            console.error('comprobate email: ', reason)
+                            if (!/Network Error/.test(reason)) {
+                                throw reason
+                            }
                         })
                 } else {
                     setValidateEmail(false)
