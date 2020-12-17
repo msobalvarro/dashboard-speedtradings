@@ -311,7 +311,7 @@ const Petition = Axios.create({
     validateStatus: (status) => {
         if (status === 401) {
             console.error("logout")
-            //LogOut()
+            window.setTimeout(_ => LogOut(), 2000)
         }
 
         if (status === 426) {
@@ -321,22 +321,6 @@ const Petition = Axios.create({
         return status >= 200 && status < 300
     }
 })
-
-Petition.interceptors.request.use(config => {
-    console.log('request: ', config)
-
-    return config
-})
-
-Petition.interceptors.response.use(response => {
-    console.log('response: ', response)
-    return response
-}, error => {
-    console.error('response error: ', error)
-    return Promise.reject(error)
-})
-
-export { Petition }
 
 /**Opciones para grafica diaria de dashboard */
 export const optionsChartDashboard = {
