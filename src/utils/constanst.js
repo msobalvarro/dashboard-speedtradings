@@ -306,15 +306,12 @@ export const readFile = (fileId, credentials) => new Promise(async (resolve, _) 
 
 
 
-export const Petition = Axios.create({
+const Petition = Axios.create({
     baseURL: urlServer,
-    headers: {
-        "ignore-release-date": true
-    },
     validateStatus: (status) => {
         if (status === 401) {
             console.error("logout")
-            LogOut()
+            //LogOut()
         }
 
         if (status === 426) {
@@ -324,6 +321,22 @@ export const Petition = Axios.create({
         return status >= 200 && status < 300
     }
 })
+
+Petition.interceptors.request.use(config => {
+    console.log('request: ', config)
+
+    return config
+})
+
+Petition.interceptors.response.use(response => {
+    console.log('response: ', response)
+    return response
+}, error => {
+    console.error('response error: ', error)
+    return Promise.reject(error)
+})
+
+export { Petition }
 
 /**Opciones para grafica diaria de dashboard */
 export const optionsChartDashboard = {
