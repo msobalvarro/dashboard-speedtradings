@@ -4,7 +4,7 @@ import Swal from "sweetalert2"
 import './KycUserForm.scss'
 
 // Import utils
-import { calcAge, MAX_FILE_SIZE } from "../../utils/constanst"
+import { calcAge, MAX_FILE_SIZE, compressImage } from "../../utils/constanst"
 import {
     nameRegex,
     identificationRegex,
@@ -37,7 +37,12 @@ const KycUserForm = ({
      * @param {Event} e 
      */
     const handleChangeProfileFile = async (e) => {
-        const file = e.target.files[0]
+        const file = await compressImage(e.target.files[0])
+
+        if (!file) {
+            return
+        }
+
         if (file && file.size > MAX_FILE_SIZE) {
             Swal.fire('Archivo demasiado grande', '¡Ups! El archivo que intentas subir es demasiado grande, nuestro límite es de 7MB', 'error')
             return
@@ -52,7 +57,11 @@ const KycUserForm = ({
      * @param {Event} e 
      */
     const handleChangeIdFile = async (e) => {
-        const file = e.target.files[0]
+        const file = await compressImage(e.target.files[0])
+
+        if (!file) {
+            return
+        }
 
         if (file.size > MAX_FILE_SIZE) {
             Swal.fire('Archivo demasiado grande', '¡Ups! El archivo que intentas subir es demasiado grande, nuestro límite es de 7MB', 'error')

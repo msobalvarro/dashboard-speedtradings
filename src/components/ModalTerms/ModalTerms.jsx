@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react"
 import "./ModalTerms.scss"
 
-import { urlServer, Petition } from '../../utils/constanst'
+import { Petition } from '../../utils/constanst'
 
 /**
  * @param {Boolean} isVisible - Determina si se muestra o no el componente

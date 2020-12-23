@@ -11,12 +11,9 @@ import NavigationBar from "../../components/NavigationBar/NavigationBar"
 import MobileMessage from "../../components/Mobile/Mobile"
 import Swal from "sweetalert2"
 import { Petition } from "../../utils/constanst"
-import { useSelector } from "react-redux"
 
 
 const Dashboard = () => {
-    const storage = useSelector(({ globalStorage }) => globalStorage)
-
     // Estado para mostrar u ocultar el loader
     const [loader, setLoader] = useState(true)
 
@@ -26,16 +23,8 @@ const Dashboard = () => {
 
     const ConfigurateComponent = async () => {
         try {
-
-            // constant header petition
-            const headers = {
-                headers: {
-                    "x-auth-token": storage.token
-                }
-            }
-
             // Get data BTC
-            const { data: dataBTC } = await Petition.get('/dashboard/1', headers)
+            const { data: dataBTC } = await Petition.get('/dashboard/1')
 
             // verificamos si hay un error al cargar los datos
             if (dataBTC.error) {
@@ -45,7 +34,7 @@ const Dashboard = () => {
             }
 
             // Get data ETH
-            const { data: dataETH } = await Petition.get('/dashboard/2', headers)
+            const { data: dataETH } = await Petition.get('/dashboard/2')
 
             // verificamos si hay un error al cargar los datos
             if (dataETH.error) {

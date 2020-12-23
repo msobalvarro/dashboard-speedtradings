@@ -1,5 +1,4 @@
 import React, { useEffect, useReducer, useState } from "react"
-import { useSelector } from "react-redux"
 
 // Import styles
 import "./HeaderDashboard.scss"
@@ -76,9 +75,13 @@ const reducer = (state, action) => {
  * @param {Number} idInvestment - Código del plan de inversión
  * @param {Boolean} disabled
  */
-const HeaderDashboard = ({ type = "btc", amount = 0.5, amountToday = 2, idInvestment = 0, disabled = false }) => {
-    const { token } = useSelector(({ globalStorage }) => globalStorage)
-
+const HeaderDashboard = ({
+    type = "btc",
+    amount = 0.5,
+    amountToday = 2,
+    idInvestment = 0,
+    disabled = false
+}) => {
     const [state, dispatch] = useReducer(reducer, initialState)
     const [wallets, setWallets] = useState({})
 
@@ -173,33 +176,30 @@ const HeaderDashboard = ({ type = "btc", amount = 0.5, amountToday = 2, idInvest
                 hash: state.hash,
             }
 
-            await Petition.post('/buy/upgrade', dataSend, {
-                headers: {
-                    "x-auth-token": token
-                }
-            }).then(({ data }) => {
-                if (data.error) {
-                    throw String(data.message)
-                } else {
-                    // success Upgrade
-                    toggleModal()
+            await Petition.post('/buy/upgrade', dataSend)
+                .then(({ data }) => {
+                    if (data.error) {
+                        throw String(data.message)
+                    } else {
+                        // success Upgrade
+                        toggleModal()
 
-                    dispatch({ type: "hash", payload: "" })
-                    dispatch({ type: "airtm", payload: false })
-                    dispatch({ type: "alypay", payload: false })
-                    dispatch({ type: "emailAirtm", payload: "" })
-                    dispatch({ type: "userInput", payload: "" })
-                    dispatch({ type: "plan", payload: 0 })
+                        dispatch({ type: "hash", payload: "" })
+                        dispatch({ type: "airtm", payload: false })
+                        dispatch({ type: "alypay", payload: false })
+                        dispatch({ type: "emailAirtm", payload: "" })
+                        dispatch({ type: "userInput", payload: "" })
+                        dispatch({ type: "plan", payload: 0 })
 
-                    Swal.fire(
-                        'Upgrade Completado',
-                        'En breves momentos, estaremos atendiendo su peticion de UPGRADE',
-                        'success'
-                    )
-                }
-            }).catch(reason => {
-                throw String(reason.toString())
-            })
+                        Swal.fire(
+                            'Upgrade Completado',
+                            'En breves momentos, estaremos atendiendo su peticion de UPGRADE',
+                            'success'
+                        )
+                    }
+                }).catch(reason => {
+                    throw String(reason.toString())
+                })
         } catch (error) {
 
             Swal.fire(
@@ -246,7 +246,7 @@ const HeaderDashboard = ({ type = "btc", amount = 0.5, amountToday = 2, idInvest
 
     /**Metodo que se ejecuta cuando el usuario cambia el método de pago */
     const onChangePaidMethod = (e) => {
-        const { value } = e.target;
+        const { value } = e.target
 
         switch (value) {
             case "0":
@@ -265,7 +265,7 @@ const HeaderDashboard = ({ type = "btc", amount = 0.5, amountToday = 2, idInvest
                 break
 
             default:
-                break;
+                break
         }
     }
 

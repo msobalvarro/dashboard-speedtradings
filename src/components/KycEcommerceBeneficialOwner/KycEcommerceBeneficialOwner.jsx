@@ -13,7 +13,7 @@ import { ReactComponent as AddIcon } from '../../static/icons/add.svg'
 
 // Import utils
 import { ecommerceValidations } from '../../utils/kycFormValidations'
-import { randomKey, MAX_FILE_SIZE } from '../../utils/constanst'
+import { randomKey, MAX_FILE_SIZE, compressImage } from '../../utils/constanst'
 import {
     nameRegex,
     identificationRegex,
@@ -49,7 +49,11 @@ const KycEcommerceBeneficialOwner = ({ onSubmit = _ => { }, onChange = null }) =
      * @param {React.setState} dispatch
      */
     const handleLoadPreview = async (e, dispatchPreview, dispatch) => {
-        const file = e.target.files[0]
+        const file = await compressImage(e.target.files[0])
+
+        if (!file) {
+            return
+        }
 
         if (file.size > MAX_FILE_SIZE) {
             Swal.fire('Archivo demasiado grande', '¡Ups! El archivo que intentas subir es demasiado grande, nuestro límite es de 7MB', 'error')
