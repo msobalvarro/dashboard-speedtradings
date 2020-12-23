@@ -13,7 +13,13 @@ import Countries from '../../utils/countries.json'
 import { ReactComponent as UploadIcon } from '../../static/icons/upload.svg'
 
 // Import constants & utils
-import { commercialCategories, randomKey, MAX_FILE_SIZE } from '../../utils/constanst'
+import {
+    commercialCategories,
+    randomKey,
+    MAX_FILE_SIZE,
+    compressImage
+} from '../../utils/constanst'
+
 import {
     nameRegex,
     identificationRegex,
@@ -26,8 +32,6 @@ import {
 const KycEcommerceForm = ({
     state = {},
     setState = _ => { },
-    onCancel = _ => { },
-    onSubmit = _ => { },
     activeSection = 1,
     className = '',
 }) => {
@@ -47,7 +51,11 @@ const KycEcommerceForm = ({
     * @param {React.setState} dispatch
     */
     const handleLoadPreview = async (e, dispatchPreview, dispatch) => {
-        const file = e.target.files[0]
+        const file = await compressImage(e.target.files[0])
+
+        if (!file) {
+            return
+        }
 
         if (file.size > MAX_FILE_SIZE) {
             Swal.fire('Archivo demasiado grande', '¡Ups! El archivo que intentas subir es demasiado grande, nuestro límite es de 7MB', 'error')

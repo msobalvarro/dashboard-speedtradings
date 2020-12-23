@@ -2,6 +2,7 @@ import jwt from "jwt-simple"
 import Axios from "axios"
 import Swal from "sweetalert2"
 import moment from "moment"
+import Compress from 'compress.js'
 
 
 // Constanst
@@ -120,7 +121,7 @@ export const urlServer = "https://ardent-medley-272823.appspot.com"
 //export const urlServer = "http://192.168.0.104:8084"
 
 // Límite de subida de los archivos e bytes
-export const MAX_FILE_SIZE = 5 * 1024 * 1024
+export const MAX_FILE_SIZE = 7 * 1024 * 1024
 
 /**
  * Constante que almacena key secret para recaptcha
@@ -271,8 +272,14 @@ export const copyData = async (str = "", msg = "Copiado a portapapeles") => {
  * Función para almacenar en el servidor
  * @param {File} file - Foto a almacenar
  */
-export const uploadFile = async (file, credentials, update = null) => {
-    return new Promise((resolve, reject) => {
+export const uploadFile = async (file, credentials = {}, update = null) => {
+    return new Promise((resolve, _) => {
+        const headers = {
+            headers: {
+                'x-auth-token': getStorage().token
+            }
+        }
+
         const dataSend = new FormData()
 
         dataSend.append('image', file)
@@ -281,7 +288,7 @@ export const uploadFile = async (file, credentials, update = null) => {
             dataSend.append('idFile', update)
         }
 
-        Petition.post('/file/', dataSend, credentials)
+        Petition.post('/file/', dataSend, headers)
             .then(({ data }) => {
                 resolve(data)
             }).catch(error => resolve({ error: true, message: error }))
@@ -304,21 +311,60 @@ export const readFile = (fileId, credentials) => new Promise(async (resolve, _) 
         }).catch(error => resolve({ error: true, message: error }))
 })
 
+/**
+ * Función para comprimir una imagen seleccionada de la galería del usuario
+ * @param {File} image - Imagen original
+ * @return {File} compressImage - Imagen comprimida
+ */
+export const compressImage = image => new Promise(async (resolve, _) => {
+    if (!image) {
+        resolve(null)
+        return
+    }
+
+    // Sí el no es una imagen, se retorna el archivo
+    if (!/^image/.test(image.type)) {
+        resolve(image)
+        return
+    }
+
+    // Instancia de la librería de compresión
+    const _compress = new Compress()
+
+    // Configuraciones de la compresión
+    const compressOptions = {
+        // Tamaño máximo en MB
+        size: 2,
+        // Radio de compresión
+        quality: .75,
+        // Ancho y alto máximo permitido
+        maxWidth: 1080,
+        maxHeight: 1080,
+        resize: true
+    }
+
+    // Procesa la imagen original
+    const compressData = await _compress.compress([image], compressOptions, false)
+
+    // Se extrae la data, el tipo y el nombre original de la imagen
+    const { data, ext: type, alt: filename } = compressData[0]
+    // Se convierte la data en un Blob
+    const compressBlob = Compress.convertBase64ToFile(data, type)
+
+
+    // Se crea una instancia File con el blob obtenido
+    const _image = new File([compressBlob], filename, { type: type })
+
+    resolve(_image)
+})
 
 
 export const Petition = Axios.create({
     baseURL: urlServer,
-    headers: {
-        "ignore-release-date": true
-    },
     validateStatus: (status) => {
         if (status === 401) {
             console.error("logout")
             LogOut()
-        }
-
-        if (status === 426) {
-            console.log("actualizar")
         }
 
         return status >= 200 && status < 300

@@ -205,7 +205,7 @@ const Kyc = () => {
                         <div className="toshow">
                             <InformationIcon className="indicator" />
                             <p>
-                                Para brindarle un mejor servicio y seguriidad a nuestros usuarios, hemos agregado el formulario kyc. Para poder seguir disfutando de <strong>Speed Tradings Bank</strong>, por favor completar la siguiente información
+                                Para brindarle un mejor servicio y seguridad a nuestros usuarios, hemos agregado el formulario kyc. Para poder seguir disfutando de <strong>Speed Tradings Bank</strong>, por favor completar la siguiente información
                             </p>
 
                             <div className="action-buttons">

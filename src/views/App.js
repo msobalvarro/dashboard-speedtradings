@@ -44,6 +44,7 @@ const App = () => {
    * Deshabilita el acceso a la vista del kyc cuando este ya eha sido completado
    */
   const checkKycAccess = () => {
+    return _ => (<Kyc />)
     return !completedKyc
       ? _ => (<Kyc />)
       : _ => (<Redirect to="/" />)
