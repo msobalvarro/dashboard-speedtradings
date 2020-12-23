@@ -7,15 +7,12 @@ import './DashboardAllReports.scss'
 import ActivityIndicator from "../../components/ActivityIndicator/Activityindicator"
 import { Petition, calculateCryptoPriceWithoutFee } from "../../utils/constanst"
 import Swal from "sweetalert2"
-import { useSelector } from "react-redux"
 
 /**
  * @param {String} type - Tipo de moneda a procesar
  * @param {Callback} onClose - Función a ejecutar cuando se cierra el modal
  */
-const DashboardAllReports = ({type='btc', onClose=_ => {}}) => {
-    // Cargamos el storage
-    const storage = useSelector(({ globalStorage }) => globalStorage)
+const DashboardAllReports = ({ type = 'btc', onClose = _ => { } }) => {
     const coinCode = type === 'btc' ? 1 : 2
 
     // Estado para almacenar los reportes recibidos
@@ -34,30 +31,23 @@ const DashboardAllReports = ({type='btc', onClose=_ => {}}) => {
         return total
     }
 
-    // constant header petition
-    const headers = {
-        headers: {
-            "x-auth-token": storage.token
-        }
-    }
-
     // Obtiene el registro de todas las transacciones
     const FetchAllReports = async () => {
         try {
             setLoader(true)
 
             // Get data BTC
-            const { data } = await Petition.get(`/dashboard/all-reports/${coinCode}`, headers)
+            const { data } = await Petition.get(`/dashboard/all-reports/${coinCode}`)
 
             // verificamos si hay un error al cargar los datos
             if (data.error) {
                 throw String(data.message)
             } else {
-                setAllReports(data.history);
+                setAllReports(data.history)
                 setPrice(data.price)
             }
 
-        } catch(error) {
+        } catch (error) {
             Swal.fire('Ha ocurrido un error', error.toString(), 'error')
         } finally {
             setLoader(false)
@@ -68,8 +58,8 @@ const DashboardAllReports = ({type='btc', onClose=_ => {}}) => {
         // Se obtiene la lista de todos los reportes
         FetchAllReports()
 
-        document.body.style.overflow = 'hidden';
-        return ()=> document.body.style.overflow = 'unset';
+        document.body.style.overflow = 'hidden'
+        return () => document.body.style.overflow = 'unset'
     }, [])
 
     return (
@@ -120,10 +110,9 @@ const DashboardAllReports = ({type='btc', onClose=_ => {}}) => {
                                         `${calculateTotalProfitTable(amountSumArr)} ${type.toUpperCase()}`
                                     }
                                     {
-                                        ` ($ ${
-                                            (price !== 0)
-                                                ? calculateCryptoPriceWithoutFee(price, calculateTotalProfitTable(amountSumArr))
-                                                : 0
+                                        ` ($ ${(price !== 0)
+                                            ? calculateCryptoPriceWithoutFee(price, calculateTotalProfitTable(amountSumArr))
+                                            : 0
                                         })`
                                     }
                                 </span>
@@ -136,4 +125,4 @@ const DashboardAllReports = ({type='btc', onClose=_ => {}}) => {
     )
 }
 
-export default DashboardAllReports;
+export default DashboardAllReports

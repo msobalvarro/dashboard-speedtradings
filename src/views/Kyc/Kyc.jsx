@@ -1,5 +1,4 @@
 import React, { useState } from "react"
-import { useSelector } from "react-redux"
 import Swal from "sweetalert2"
 import "./Kyc.scss"
 
@@ -27,14 +26,6 @@ import Logo from "../../static/images/logo.png"
 
 
 const Kyc = () => {
-    const storage = useSelector(({ globalStorage }) => globalStorage)
-    // constant header petition
-    const credentials = {
-        headers: {
-            "x-auth-token": storage.token
-        }
-    }
-
     // Estado para controlar la visibilidad del indicador de carga
     const [loader, setLoader] = useState(false)
     const [showWaitMessage, setShowWaitMessage] = useState(false)
@@ -166,19 +157,19 @@ const Kyc = () => {
             // Se construye el objeto a enviar al servidor con la info del usuario
             if (isUser) {
                 endpointKyc = '/kyc/user'
-                dataSend = await kycUserData(userInfo, credentials)
+                dataSend = await kycUserData(userInfo)
 
                 if (userInfo.addBeneficiary || USERAGE < 18) {
                     // Se añade la información del tutor/beneficiario a la data a enviar al server
-                    dataSend.beneficiary = await kycUserBeneficiaryData(beneficiaryInfo, USERAGE, credentials)
+                    dataSend.beneficiary = await kycUserBeneficiaryData(beneficiaryInfo, USERAGE)
                 }
 
             } else {
                 endpointKyc = '/kyc/ecommerce'
-                dataSend = await kycEcommerceData(ecommerceInfo, credentials)
+                dataSend = await kycEcommerceData(ecommerceInfo)
             }
 
-            const { data } = await Petition.post(endpointKyc, dataSend, credentials)
+            const { data } = await Petition.post(endpointKyc, dataSend)
 
             if (data.error) {
                 throw String(data.message)

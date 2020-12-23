@@ -86,12 +86,6 @@ const Profile = () => {
 
     const [showTerms, setShowTerms] = useState(false)
 
-    // Credenciales de acceso
-    const credentials = {
-        headers: {
-            "x-auth-token": globalStorage.token
-        }
-    }
 
     /**Metodo que se ejecuta cuando cancela la edicion de wallet y usuario coinbase */
     const cancelEditWallet = () => {
@@ -126,7 +120,7 @@ const Profile = () => {
                 password: state.password,
             }
 
-            await Petition.post("/profile/update-wallet", dataSend, credentials)
+            await Petition.post("/profile/update-wallet", dataSend)
                 .then(async ({ data }) => {
                     if (data.error) {
                         throw String(data.message)
@@ -183,7 +177,7 @@ const Profile = () => {
             // Initial kyc type
             dispatch({ type: "kycType", payload: updateStorage.kyc_type })
 
-            const { data } = await Petition.get(`/profile/info?id=${globalStorage.id_user}`, credentials).catch(_ => {
+            const { data } = await Petition.get(`/profile/info?id=${globalStorage.id_user}`).catch(_ => {
                 throw String("No se ha podido actualizar tu perfil")
             })
 
@@ -193,15 +187,15 @@ const Profile = () => {
                 setInfo(data)
             }
 
-            const { data: dataBeneficiary } = await Petition.get('/kyc/user/beneficiary', credentials)
+            const { data: dataBeneficiary } = await Petition.get('/kyc/user/beneficiary')
 
             if (Object.keys(dataBeneficiary).length > 0) {
 
                 const { profilePictureId, indentificationPictureId } = dataBeneficiary
 
                 // Se obtienen las fotos desde el servidor
-                dataBeneficiary.profilePicture = await readFile(profilePictureId, credentials)
-                dataBeneficiary.IDPicture = await readFile(indentificationPictureId, credentials)
+                dataBeneficiary.profilePicture = await readFile(profilePictureId)
+                dataBeneficiary.IDPicture = await readFile(indentificationPictureId)
 
                 const { nationality, residence } = dataBeneficiary
 
@@ -237,13 +231,12 @@ const Profile = () => {
                 ...(await kycUserBeneficiaryData(
                     beneficiary,
                     userAge,
-                    credentials,
                     existBeneficiary
                 ))
             }
             console.log(dataSend)
 
-            const { data } = await Petition.post('/kyc/user/beneficiary', dataSend, credentials)
+            const { data } = await Petition.post('/kyc/user/beneficiary', dataSend)
 
             if (data.error) {
                 throw String(data.message)

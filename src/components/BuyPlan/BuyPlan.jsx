@@ -1,6 +1,6 @@
 import React, { useEffect, useReducer } from "react"
+import { useSelector } from 'react-redux'
 import Swal from "sweetalert2"
-import { useSelector } from "react-redux"
 
 // Import Assets
 import "./BuyPlan.scss"
@@ -9,7 +9,15 @@ import LogoETH from "../../static/icons/ether.svg"
 
 // Import info or components
 import validator from "validator"
-import { Petition, getWallets, copyData, WithDecimals, calculateCryptoPrice, calculateCryptoPriceWithoutFee, amountMin } from "../../utils/constanst"
+import {
+    Petition,
+    getWallets,
+    copyData,
+    WithDecimals,
+    calculateCryptoPrice,
+    calculateCryptoPriceWithoutFee,
+    amountMin
+} from "../../utils/constanst"
 
 const initialState = {
     // Estado que indica si la transacción es con airtm
@@ -129,7 +137,7 @@ const BuyPlan = ({ idCrypto = 1, onBuy = () => { } }) => {
                 amount: parseFloat(state.amount),
             }
 
-            const { data } = await Petition.post('/buy/plan', dataSend, { headers: { "x-auth-token": storage.token } })
+            const { data } = await Petition.post('/buy/plan', dataSend)
 
             if (data.error) {
                 throw String(data.message)
@@ -187,7 +195,7 @@ const BuyPlan = ({ idCrypto = 1, onBuy = () => { } }) => {
 
     /**Metodo que se ejecuta cuando el usuario cambia el método de pago */
     const onChangePaidMethod = (e) => {
-        const { value } = e.target;
+        const { value } = e.target
 
         switch (value) {
             case "0":
@@ -268,8 +276,8 @@ const BuyPlan = ({ idCrypto = 1, onBuy = () => { } }) => {
                         <span className="wallet" onClick={_ => copyData(!state.alypay ? state.wallets[type] : state.wallets.alypay[type])}>
                             {
                                 !state.alypay
-                                ? state.wallets[type]
-                                : state.wallets.alypay[type]
+                                    ? state.wallets[type]
+                                    : state.wallets.alypay[type]
                             }
                         </span>
                     </>

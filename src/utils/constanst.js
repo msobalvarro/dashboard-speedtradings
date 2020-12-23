@@ -272,14 +272,8 @@ export const copyData = async (str = "", msg = "Copiado a portapapeles") => {
  * Función para almacenar en el servidor
  * @param {File} file - Foto a almacenar
  */
-export const uploadFile = async (file, credentials = {}, update = null) => {
+export const uploadFile = async (file, update = null) => {
     return new Promise((resolve, _) => {
-        const headers = {
-            headers: {
-                'x-auth-token': getStorage().token
-            }
-        }
-
         const dataSend = new FormData()
 
         dataSend.append('image', file)
@@ -288,7 +282,7 @@ export const uploadFile = async (file, credentials = {}, update = null) => {
             dataSend.append('idFile', update)
         }
 
-        Petition.post('/file/', dataSend, headers)
+        Petition.post('/file/', dataSend)
             .then(({ data }) => {
                 resolve(data)
             }).catch(error => resolve({ error: true, message: error }))
@@ -299,10 +293,9 @@ export const uploadFile = async (file, credentials = {}, update = null) => {
  * Función para leer un archivo y retornarlo en base64
  * @param {File} file - Archivo a leer y retornar en base64 
  */
-export const readFile = (fileId, credentials) => new Promise(async (resolve, _) => {
+export const readFile = (fileId) => new Promise(async (resolve, _) => {
     Petition.get(`/file/${fileId}`, {
-        responseType: 'arraybuffer',
-        ...credentials
+        responseType: 'arraybuffer'
     })
         .then(({ data, headers }) => {
             const blob = new Blob([data], { type: headers['content-type'] })
@@ -359,7 +352,7 @@ export const compressImage = image => new Promise(async (resolve, _) => {
 })
 
 
-export const Petition = Axios.create({
+const Petition = Axios.create({
     baseURL: urlServer,
     validateStatus: (status) => {
         if (status === 401) {
@@ -370,6 +363,20 @@ export const Petition = Axios.create({
         return status >= 200 && status < 300
     }
 })
+
+Petition.interceptors.request.use(config => {
+    // Se añade el token de acceso antes de cada petición
+    config.headers = {
+        ...config.headers,
+        'x-auth-token': getStorage().token
+    }
+
+    return config
+})
+
+export {
+    Petition
+}
 
 /**Opciones para grafica diaria de dashboard */
 export const optionsChartDashboard = {

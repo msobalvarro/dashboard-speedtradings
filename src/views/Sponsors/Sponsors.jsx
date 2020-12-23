@@ -45,11 +45,7 @@ const Sponsors = () => {
         try {
             setLoader(true)
 
-            Petition.get(`/collection/sponsors/${globalStorage.id_user}`, {
-                headers: {
-                    "x-auth-token": globalStorage.token
-                }
-            })
+            Petition.get(`/collection/sponsors/${globalStorage.id_user}`)
                 .then(({ data, status }) => {
                     if (data.error) {
                         throw String(data.message)

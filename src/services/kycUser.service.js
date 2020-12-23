@@ -8,7 +8,7 @@ import { uploadFile, calcAge } from "../utils/constanst"
  * @param {Object} userInfo - Información del usuario ingresada en el formulario kyc 
  * @param {Object} credentials - Credenciales de acceso para realizar peticiones al servidor
  */
-export const kycUserData = (userInfo, credentials, update = false) => new Promise(async (resolve, reject) => {
+export const kycUserData = (userInfo, update = false) => new Promise(async (resolve, reject) => {
     try {
         // Se obtiene el name, phoneCode, y currency según la nacionalidad
         const userNationality = Countries[userInfo.nationality]
@@ -19,7 +19,6 @@ export const kycUserData = (userInfo, credentials, update = false) => new Promis
         // Se almacena en el servidor la imagen de perfil
         const uploadProfilePic = await uploadFile(
             userInfo.profilePicture,
-            credentials,
             update ? userInfo.profilePictureId : null
         )
 
@@ -30,7 +29,6 @@ export const kycUserData = (userInfo, credentials, update = false) => new Promis
         // se almacena en el servidor la foto de la identificación/pasaporte
         const uploadIdentificationPic = await uploadFile(
             userInfo.IDPicture,
-            credentials,
             update ? userInfo.identificationPictureId : null
         )
 
@@ -83,7 +81,7 @@ export const kycUserData = (userInfo, credentials, update = false) => new Promis
  * @param {Number} userAge - Edad del usuario kyc
  * @param {Object} credentials - Credenciales de acceso para realizar peticiones al servidor
  */
-export const kycUserBeneficiaryData = (beneficiaryInfo, userAge, credentials, update = false) => new Promise(async (resolve, reject) => {
+export const kycUserBeneficiaryData = (beneficiaryInfo, userAge, update = false) => new Promise(async (resolve, reject) => {
     try {
         // Se obtiene el name, phoneCode, y currency según la nacionalidad
         const beneficiaryNationality = Countries[beneficiaryInfo.nationality]
@@ -94,7 +92,6 @@ export const kycUserBeneficiaryData = (beneficiaryInfo, userAge, credentials, up
         // Se almacena en el servidor la imagen de perfil
         const uploadProfilePic = await uploadFile(
             beneficiaryInfo.profilePicture,
-            credentials,
             update ? beneficiaryInfo.profilePictureId : null
         )
 
@@ -106,7 +103,6 @@ export const kycUserBeneficiaryData = (beneficiaryInfo, userAge, credentials, up
         // se almacena en el servidor la foto de la identificación/pasaporte
         const uploadIdentificationPic = await uploadFile(
             beneficiaryInfo.IDPicture,
-            credentials,
             update ? beneficiaryInfo.identificationPictureId : null
         )
         console.log(uploadIdentificationPic)
