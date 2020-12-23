@@ -1,14 +1,14 @@
-@import "./utils/constants.scss";
+@import './utils/constants.scss';
 
 @font-face {
   font-family: Gotham;
-  src: url("./static/fonts/GothamRounded-Book.otf") format("opentype");
+  src: url('./static/fonts/GothamRounded-Book.otf') format('opentype');
 }
 
 @font-face {
   font-family: Gotham;
   font-weight: bold;
-  src: url("./static/fonts/GothamRounded_Bold.ttf") format("truetype");
+  src: url('./static/fonts/GothamRounded_Bold.ttf') format('truetype');
 }
 
 * {
@@ -44,14 +44,14 @@ body {
 }
 
 code {
-  font-family: source-code-pro, Menlo, Monaco, Consolas, "Courier New",
+  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
     monospace;
 }
 
 input:-webkit-autofill,
-input:-webkit-autofill:hover, 
-input:-webkit-autofill:focus, 
-input:-webkit-autofill:active  {
+input:-webkit-autofill:hover,
+input:-webkit-autofill:focus,
+input:-webkit-autofill:active {
   transition-delay: 9999999s !important;
   transition-property: background-color, color !important;
 }
@@ -110,6 +110,10 @@ a {
       background-color: $colorYellow;
     }
 
+    &.yellow {
+      background-color: $colorYellow;
+    }
+
     &.large {
       font-size: 24px;
     }
@@ -147,11 +151,11 @@ a {
     }
   }
 
-  &[type="radio"].check {
+  &[type='radio'].check {
     position: relative;
 
     &::after {
-      content: "";
+      content: '';
       background-color: #000;
       border: 1px solid $colorYellow;
       position: absolute;
@@ -177,4 +181,38 @@ a {
 #root {
   height: 100vh;
   width: 100%;
+}
+
+.text__group {
+  margin-top: 16px;
+}
+
+.label {
+  font-style: normal;
+  font-weight: bold;
+  font-size: 20px;
+  line-height: 23px;
+  color: $colorSecondary;
+
+  &.yellow {
+    color: $colorYellow;
+  }
+
+  &.white {
+    color: #fff;
+  }
+}
+
+.value {
+  margin-top: 5px;
+  font-style: normal;
+  font-weight: normal;
+  font-size: 18px;
+  line-height: 21px;
+  color: #ffffff;
+}
+
+.text__bigger {
+  font-size: 32px;
+  line-height: 37px;
 }

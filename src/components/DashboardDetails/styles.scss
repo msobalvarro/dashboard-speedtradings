@@ -1,0 +1,62 @@
+@import '../../utils/constants.scss';
+
+.card__plan {
+  background: rgba(0, 0, 0, 0.2);
+  border-radius: 8px;
+  padding: 30px;
+  text-align: center;
+}
+
+.plan__icon {
+  width: 156px;
+  height: 152px;
+  margin-bottom: 30px;
+}
+
+.bar__container {
+  text-align: left;
+  margin-bottom: 16px;
+}
+
+.bar {
+  position: relative;
+  width: 100%;
+  height: 32px;
+
+  border: 2px solid $colorSecondary;
+  border-radius: 50px;
+
+  &.yellow {
+    border: 2px solid $colorYellow;
+  }
+}
+
+.bar__progressive {
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 0;
+  bottom: 0;
+  border-radius: 50px;
+  background-color: $colorSecondary;
+  &.yellow {
+    background-color: $colorYellow;
+  }
+}
+
+.auto-columns {
+  display: grid;
+  grid-gap: 16px;
+  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+}
+
+button.upgrade__button {
+  padding: 16px;
+  margin: 30px auto;
+  width: 100%;
+  max-width: 300px;
+  font-style: normal;
+  font-weight: bold;
+  font-size: 20px;
+  line-height: 23px;
+}

@@ -1,17 +1,13 @@
-import React, { useEffect, useState } from 'react'
-
-// Import Assets
-import './Dashboard.scss'
-
-// Import Components
-import ActivityIndicator from '../../components/ActivityIndicator/Activityindicator'
-import BuyPlan from '../../components/BuyPlan/BuyPlan'
-import DashboardDetails from '../../components/DashboardDetails/DashboardDetails'
+import React, { useState, useEffect } from 'react'
+import DashboardDetails from '../../components/DashboardDetails'
 import NavigationBar from '../../components/NavigationBar/NavigationBar'
-import MobileMessage from '../../components/Mobile/Mobile'
+import ActivityIndicator from '../../components/ActivityIndicator/Activityindicator'
 import Swal from 'sweetalert2'
 import { Petition } from '../../utils/constanst'
 import { useSelector } from 'react-redux'
+
+//Importar estilos
+import './styles.scss'
 
 const Dashboard = () => {
   const storage = useSelector(({ globalStorage }) => globalStorage)
@@ -70,40 +66,20 @@ const Dashboard = () => {
     ConfigurateComponent()
   }, [])
 
+  useEffect(() => {
+    console.log(dataDashoardBTC)
+  }, [dataDashoardBTC])
+
   return (
-    <div className="container-dashboard">
-      <MobileMessage />
-
+    <section className="Dashboard">
       <NavigationBar />
-
       {loader && <ActivityIndicator size={128} className="loader-dashboard" />}
-
-      {!loader && (
-        <div className="content-dashboard">
-          <div className="content">
-            {dataDashoardBTC.info !== null &&
-              dataDashoardBTC.info.amount !== null && (
-                <DashboardDetails type="btc" data={dataDashoardBTC} />
-              )}
-
-            {dataDashoardBTC.info === null && (
-              <BuyPlan onBuy={ConfigurateComponent} idCrypto={1} />
-            )}
-          </div>
-
-          <div className="content">
-            {dataDashoardETH.info !== null &&
-              dataDashoardETH.info?.amount !== null && (
-                <DashboardDetails type="eth" data={dataDashoardETH} />
-              )}
-
-            {dataDashoardETH.info === null && (
-              <BuyPlan onBuy={ConfigurateComponent} idCrypto={2} />
-            )}
-          </div>
-        </div>
-      )}
-    </div>
+      <main className="plan__container">
+        <DashboardDetails plan="bitcoin" data={dataDashoardBTC.info} />
+        <DashboardDetails plan="ethereum" data={dataDashoardETH.info} />
+      </main>
+      <section className="graphic__container"></section>
+    </section>
   )
 }
 

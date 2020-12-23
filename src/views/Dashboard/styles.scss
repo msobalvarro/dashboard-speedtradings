@@ -1,0 +1,12 @@
+.Dashboard {
+  width: 90%;
+  margin: 0 auto;
+  max-width: 1200px;
+}
+
+.plan__container {
+  margin-top: 64px;
+  display: grid;
+  grid-gap: 30px;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+}
