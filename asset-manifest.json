@@ -1,19 +1,19 @@
 {
   "files": {
-    "main.css": "/static/css/main.ed2e4fb0.chunk.css",
-    "main.js": "/static/js/main.c64522bd.chunk.js",
-    "main.js.map": "/static/js/main.c64522bd.chunk.js.map",
-    "runtime-main.js": "/static/js/runtime-main.d918a19f.js",
-    "runtime-main.js.map": "/static/js/runtime-main.d918a19f.js.map",
-    "static/css/2.27f7052c.chunk.css": "/static/css/2.27f7052c.chunk.css",
-    "static/js/2.dfc3323b.chunk.js": "/static/js/2.dfc3323b.chunk.js",
-    "static/js/2.dfc3323b.chunk.js.map": "/static/js/2.dfc3323b.chunk.js.map",
+    "main.css": "/static/css/main.2e6534a8.chunk.css",
+    "main.js": "/static/js/main.2754d7c2.chunk.js",
+    "main.js.map": "/static/js/main.2754d7c2.chunk.js.map",
+    "runtime-main.js": "/static/js/runtime-main.e6e578d6.js",
+    "runtime-main.js.map": "/static/js/runtime-main.e6e578d6.js.map",
+    "static/css/2.726ec839.chunk.css": "/static/css/2.726ec839.chunk.css",
+    "static/js/2.1d0f9c6f.chunk.js": "/static/js/2.1d0f9c6f.chunk.js",
+    "static/js/2.1d0f9c6f.chunk.js.map": "/static/js/2.1d0f9c6f.chunk.js.map",
     "index.html": "/index.html",
-    "precache-manifest.ba5c178ca81049f574d21c2c5f92150b.js": "/precache-manifest.ba5c178ca81049f574d21c2c5f92150b.js",
+    "precache-manifest.cf60138ad390ca5685beb315cef6b581.js": "/precache-manifest.cf60138ad390ca5685beb315cef6b581.js",
     "service-worker.js": "/service-worker.js",
-    "static/css/2.27f7052c.chunk.css.map": "/static/css/2.27f7052c.chunk.css.map",
-    "static/css/main.ed2e4fb0.chunk.css.map": "/static/css/main.ed2e4fb0.chunk.css.map",
-    "static/js/2.dfc3323b.chunk.js.LICENSE.txt": "/static/js/2.dfc3323b.chunk.js.LICENSE.txt",
+    "static/css/2.726ec839.chunk.css.map": "/static/css/2.726ec839.chunk.css.map",
+    "static/css/main.2e6534a8.chunk.css.map": "/static/css/main.2e6534a8.chunk.css.map",
+    "static/js/2.1d0f9c6f.chunk.js.LICENSE.txt": "/static/js/2.1d0f9c6f.chunk.js.LICENSE.txt",
     "static/media/AlyCoin.png": "/static/media/AlyCoin.60352b68.png",
     "static/media/AlyPay.png": "/static/media/AlyPay.ee5c670b.png",
     "static/media/AlySystem-banner.png": "/static/media/AlySystem-banner.1fc9bcce.png",
@@ -46,10 +46,10 @@
     "static/media/user.57eda5a1.svg": "/static/media/user.57eda5a1.svg"
   },
   "entrypoints": [
-    "static/js/runtime-main.d918a19f.js",
-    "static/css/2.27f7052c.chunk.css",
-    "static/js/2.dfc3323b.chunk.js",
-    "static/css/main.ed2e4fb0.chunk.css",
-    "static/js/main.c64522bd.chunk.js"
+    "static/js/runtime-main.e6e578d6.js",
+    "static/css/2.726ec839.chunk.css",
+    "static/js/2.1d0f9c6f.chunk.js",
+    "static/css/main.2e6534a8.chunk.css",
+    "static/js/main.2754d7c2.chunk.js"
   ]
 }
