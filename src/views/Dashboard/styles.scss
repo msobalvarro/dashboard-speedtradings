@@ -10,3 +10,9 @@
   grid-gap: 30px;
   grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
 }
+
+.graphic__container {
+  margin-top: 64px;
+  height: 300px;
+  max-height: 300px;
+}
