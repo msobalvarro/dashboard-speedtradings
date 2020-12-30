@@ -1,7 +1,7 @@
-import React, { useEffect, useState } from "react"
+import React, { useEffect, useState } from 'react'
 
 // Import Assets
-import "./Dashboard.scss"
+import './Dashboard.scss'
 
 // Import Components
 import ActivityIndicator from "../../components/ActivityIndicator/Activityindicator"
@@ -11,6 +11,7 @@ import NavigationBar from "../../components/NavigationBar/NavigationBar"
 import MobileMessage from "../../components/Mobile/Mobile"
 import Swal from "sweetalert2"
 import { Petition } from "../../utils/constanst"
+
 
 
 const Dashboard = () => {
@@ -51,54 +52,47 @@ const Dashboard = () => {
             setLoader(false)
         }
     }
+  }
 
+  useEffect(() => {
+    ConfigurateComponent()
+  }, [])
 
-    useEffect(() => {
-        ConfigurateComponent()
-    }, [])
+  return (
+    <div className="container-dashboard">
+      <MobileMessage />
 
-    return (
-        <div className="container-dashboard">
-            <MobileMessage />
+      <NavigationBar />
 
+      {loader && <ActivityIndicator size={128} className="loader-dashboard" />}
 
-            <NavigationBar />
+      {!loader && (
+        <div className="content-dashboard">
+          <div className="content">
+            {dataDashoardBTC.info !== null &&
+              dataDashoardBTC.info.amount !== null && (
+                <DashboardDetails type="btc" data={dataDashoardBTC} />
+              )}
 
-            {
-                loader &&
-                <ActivityIndicator size={128} className="loader-dashboard" />
-            }
+            {dataDashoardBTC.info === null && (
+              <BuyPlan onBuy={ConfigurateComponent} idCrypto={1} />
+            )}
+          </div>
 
-            {
-                !loader &&
-                <div className="content-dashboard">
-                    <div className="content">
-                        {
-                            (dataDashoardBTC.info !== null && dataDashoardBTC.info.amount !== null) &&
-                            <DashboardDetails type="btc" data={dataDashoardBTC} />
-                        }
+          <div className="content">
+            {dataDashoardETH.info !== null &&
+              dataDashoardETH.info?.amount !== null && (
+                <DashboardDetails type="eth" data={dataDashoardETH} />
+              )}
 
-                        {
-                            dataDashoardBTC.info === null &&
-                            <BuyPlan onBuy={ConfigurateComponent} idCrypto={1} />
-                        }
-                    </div>
-
-                    <div className="content">
-                        {
-                            (dataDashoardETH.info !== null && dataDashoardETH.info?.amount !== null) &&
-                            <DashboardDetails type="eth" data={dataDashoardETH} />
-                        }
-
-                        {
-                            dataDashoardETH.info === null &&
-                            <BuyPlan onBuy={ConfigurateComponent} idCrypto={2} />
-                        }
-                    </div>
-                </div>
-            }
+            {dataDashoardETH.info === null && (
+              <BuyPlan onBuy={ConfigurateComponent} idCrypto={2} />
+            )}
+          </div>
         </div>
-    )
+      )}
+    </div>
+  )
 }
 
 export default Dashboard

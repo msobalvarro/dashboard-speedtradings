@@ -1,0 +1,53 @@
+.Dashboard {
+  width: 90%;
+  margin: 0 auto;
+  max-width: 1200px;
+}
+
+.plan__container {
+  margin-top: 64px;
+  display: grid;
+  grid-gap: 30px;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+}
+
+.graphic__container {
+  margin-top: 64px;
+  height: 300px;
+  max-height: 300px;
+}
+
+.filters__container {
+  margin-top: 64px;
+  display: flex;
+  justify-content: space-between;
+}
+
+.switcher {
+  width: 120px;
+  background: rgba($color: #fff, $alpha: 0.2);
+  border-radius: 8px;
+  display: flex;
+  & .icon__button {
+    width: 60px;
+    border-radius: 8px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 8px;
+    cursor: pointer;
+
+    &:hover {
+      background: rgba(0, 0, 0, 0.2);
+    }
+
+    & .switch__icon {
+      width: 32px;
+      height: 32px;
+    }
+
+    &.active {
+      background: rgba(0, 0, 0, 0.4);
+    }
+  }
+}
