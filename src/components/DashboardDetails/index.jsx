@@ -48,7 +48,7 @@ const DashboardDetails = ({ plan, data = {} }) => {
         </span>
         <p className="value text__bigger">
           {data?.last_pay}
-          {plan === PLAN.BITCOIN ? ' BTC' : ' ETC'}
+          {plan === PLAN.BITCOIN ? ' BTC' : ' ETH'}
         </p>
       </div>
 

@@ -1,12 +1,14 @@
 import React, { useState, useEffect } from 'react'
 import DashboardDetails from '../../components/DashboardDetails'
 import NavigationBar from '../../components/NavigationBar/NavigationBar'
+import EmptyPlan from '../../components/EmptyPlan/EmptyPlan'
 import ActivityIndicator from '../../components/ActivityIndicator/Activityindicator'
 import Swal from 'sweetalert2'
 import { Petition } from '../../utils/constanst'
 import { useSelector } from 'react-redux'
 
 import InfiniteCalendar from 'react-infinite-calendar'
+import BuyPlan from '../../components/BuyPlan/BuyPlan'
 
 //Import icons
 import { ReactComponent as BitcoinIcon } from '../../static/icons/bitcoin-small.svg'
@@ -93,8 +95,17 @@ const Dashboard = () => {
           </div>
         )}
         <main className="plan__container">
-          <DashboardDetails plan={BITCOIN} data={dataDashoardBTC.info} />
-          <DashboardDetails plan={ETHEREUM} data={dataDashoardETH.info} />
+          {dataDashoardBTC.info ? (
+            <DashboardDetails plan={BITCOIN} data={dataDashoardBTC.info} />
+          ) : (
+            <EmptyPlan />
+          )}
+
+          {dataDashoardETH.info ? (
+            <DashboardDetails plan={ETHEREUM} data={dataDashoardETH.info} />
+          ) : (
+            <EmptyPlan />
+          )}
         </main>
 
         <LineChart

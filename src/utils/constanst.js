@@ -1,9 +1,8 @@
-import jwt from "jwt-simple"
-import Axios from "axios"
-import Swal from "sweetalert2"
-import moment from "moment"
+import jwt from 'jwt-simple'
+import Axios from 'axios'
+import Swal from 'sweetalert2'
+import moment from 'moment'
 import Compress from 'compress.js'
-
 
 // Constanst
 const keySecret = 'testDevelop'
@@ -114,10 +113,10 @@ export const amountMin = {
   eth: 0.1,
 }
 
-//export const urlServer = "https://ardent-medley-272823.appspot.com"
+//export const urlServer = 'https://ardent-medley-272823.appspot.com'
 //export const urlServer = "http://192.168.1.238:8084"
 //export const urlServer = "http://192.168.1.224:8084"
-export const urlServer = "http://192.168.0.120:8084"
+export const urlServer = 'http://192.168.0.120:8084'
 //export const urlServer = "http://192.168.0.104:8084"
 
 // Límite de subida de los archivos e bytes
@@ -278,8 +277,8 @@ export const copyData = async (str = '', msg = 'Copiado a portapapeles') => {
  * @param {File} file - Foto a almacenar
  */
 export const uploadFile = async (file, update = null) => {
-    return new Promise((resolve, _) => {
-        const dataSend = new FormData()
+  return new Promise((resolve, _) => {
+    const dataSend = new FormData()
 
     dataSend.append('image', file)
 
@@ -287,43 +286,47 @@ export const uploadFile = async (file, update = null) => {
       dataSend.append('idFile', update)
     }
 
-        Petition.post('/file/', dataSend)
-            .then(({ data }) => {
-                resolve(data)
-            }).catch(error => resolve({ error: true, message: error }))
-    })
+    Petition.post('/file/', dataSend)
+      .then(({ data }) => {
+        resolve(data)
+      })
+      .catch(error => resolve({ error: true, message: error }))
+  })
 }
 
 /**
  * Función para leer un archivo y retornarlo en base64
  * @param {File} file - Archivo a leer y retornar en base64
  */
-export const readFile = (fileId) => new Promise(async (resolve, _) => {
+export const readFile = fileId =>
+  new Promise(async (resolve, _) => {
     Petition.get(`/file/${fileId}`, {
-        responseType: 'arraybuffer'
+      responseType: 'arraybuffer',
     })
-        .then(({ data, headers }) => {
-            const blob = new Blob([data], { type: headers['content-type'] })
+      .then(({ data, headers }) => {
+        const blob = new Blob([data], { type: headers['content-type'] })
 
-            resolve(blob)
-        }).catch(error => resolve({ error: true, message: error }))
-})
+        resolve(blob)
+      })
+      .catch(error => resolve({ error: true, message: error }))
+  })
 
 /**
  * Función para comprimir una imagen seleccionada de la galería del usuario
  * @param {File} image - Imagen original
  * @return {File} compressImage - Imagen comprimida
  */
-export const compressImage = image => new Promise(async (resolve, _) => {
+export const compressImage = image =>
+  new Promise(async (resolve, _) => {
     if (!image) {
-        resolve(null)
-        return
+      resolve(null)
+      return
     }
 
     // Sí el no es una imagen, se retorna el archivo
     if (!/^image/.test(image.type)) {
-        resolve(image)
-        return
+      resolve(image)
+      return
     }
 
     // Instancia de la librería de compresión
@@ -331,57 +334,57 @@ export const compressImage = image => new Promise(async (resolve, _) => {
 
     // Configuraciones de la compresión
     const compressOptions = {
-        // Tamaño máximo en MB
-        size: 2,
-        // Radio de compresión
-        quality: .75,
-        // Ancho y alto máximo permitido
-        maxWidth: 1080,
-        maxHeight: 1080,
-        resize: true
+      // Tamaño máximo en MB
+      size: 2,
+      // Radio de compresión
+      quality: 0.75,
+      // Ancho y alto máximo permitido
+      maxWidth: 1080,
+      maxHeight: 1080,
+      resize: true,
     }
 
     // Procesa la imagen original
-    const compressData = await _compress.compress([image], compressOptions, false)
+    const compressData = await _compress.compress(
+      [image],
+      compressOptions,
+      false
+    )
 
     // Se extrae la data, el tipo y el nombre original de la imagen
     const { data, ext: type, alt: filename } = compressData[0]
     // Se convierte la data en un Blob
     const compressBlob = Compress.convertBase64ToFile(data, type)
 
-
     // Se crea una instancia File con el blob obtenido
     const _image = new File([compressBlob], filename, { type: type })
 
     resolve(_image)
-})
-
+  })
 
 const Petition = Axios.create({
-    baseURL: urlServer,
-    validateStatus: (status) => {
-        if (status === 401) {
-            console.error("logout")
-            window.setTimeout(_ => LogOut(), 2000)
-        }
-
-        return status >= 200 && status < 300
+  baseURL: urlServer,
+  validateStatus: status => {
+    if (status === 401) {
+      console.error('logout')
+      window.setTimeout(_ => LogOut(), 2000)
     }
+
+    return status >= 200 && status < 300
+  },
 })
 
 Petition.interceptors.request.use(config => {
-    // Se añade el token de acceso antes de cada petición
-    config.headers = {
-        ...config.headers,
-        'x-auth-token': getStorage().token
-    }
+  // Se añade el token de acceso antes de cada petición
+  config.headers = {
+    ...config.headers,
+    'x-auth-token': getStorage().token,
+  }
 
-    return config
+  return config
 })
 
-export {
-    Petition
-}
+export { Petition }
 
 /**Opciones para grafica diaria de dashboard */
 export const optionsChartDashboard = {

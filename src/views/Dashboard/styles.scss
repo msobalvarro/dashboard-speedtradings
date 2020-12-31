@@ -5,9 +5,10 @@
 }
 
 .plan__container {
-  margin-top: 64px;
+  margin-top: 32px;
   display: grid;
-  grid-gap: 30px;
+  grid-column-gap: 5%;
+  grid-row-gap: 32px;
   grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
 }
 

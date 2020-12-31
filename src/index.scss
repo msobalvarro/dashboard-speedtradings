@@ -110,6 +110,10 @@ a {
       background-color: $colorYellow;
     }
 
+    &.skyblue {
+      background-color: $colorSecondary;
+    }
+
     &.yellow {
       background-color: $colorYellow;
     }
@@ -190,12 +194,16 @@ a {
 .label {
   font-style: normal;
   font-weight: bold;
-  font-size: 18px;
+  font-size: 16px;
   line-height: 23px;
   color: $colorSecondary;
 
   &.yellow {
     color: $colorYellow;
+  }
+
+  &.secondary {
+    color: $colorSecondary;
   }
 
   &.white {
@@ -207,14 +215,22 @@ a {
   margin-top: 5px;
   font-style: normal;
   font-weight: normal;
-  font-size: 20px;
+  font-size: 18px;
   line-height: 21px;
   color: #ffffff;
+
+  &.yellow {
+    color: $colorYellow;
+  }
+
+  &.secondary {
+    color: $colorSecondary;
+  }
 }
 
 .text__bigger {
-  font-size: 32px;
-  line-height: 37px;
+  font-size: 24px;
+  line-height: 24px;
 }
 
 .center__element {
