@@ -228,6 +228,23 @@ a {
   }
 }
 
+.caption {
+  margin-top: 5px;
+  font-style: normal;
+  font-weight: normal;
+  font-size: 12px;
+  line-height: 14px;
+  color: rgba($color: #fff, $alpha: 0.57);
+
+  &.yellow {
+    color: $colorYellow;
+  }
+
+  &.secondary {
+    color: $colorSecondary;
+  }
+}
+
 .text__bigger {
   font-size: 24px;
   line-height: 24px;

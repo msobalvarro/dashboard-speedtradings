@@ -54,7 +54,11 @@ const NavigationBar = () => {
 
       {/** Elementos de navegación */}
 
-      <div className={`${showMenu ? 'overlay visible' : 'overlay'}`}>
+      <div
+        className={`${
+          showMenu ? 'overlay__navbar visible' : 'overlay__navbar'
+        }`}
+      >
         <div className="content-links">
           <Link to="/" className={location === '#/' ? 'active' : ''}>
             Dashboard

@@ -5,7 +5,7 @@ import { ReactComponent as EthereumIcon } from '../../static/icons/ethereum-big.
 //Importar estilos
 import './EmptyPlan.scss'
 
-const EmptyPlan = ({ plan = 'ethereum' }) => {
+const EmptyPlan = ({ plan = 'ethereum', onClick }) => {
   return (
     <section className="EmptyPlan">
       {plan === 'bitcoin' ? (
@@ -22,6 +22,7 @@ const EmptyPlan = ({ plan = 'ethereum' }) => {
         <p className="value">¿Desea adquirir un plan de {plan}?</p>
       </div>
       <button
+        onClick={onClick}
         className={`${
           plan === 'bitcoin'
             ? 'button acquire__button yellow'

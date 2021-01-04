@@ -8,7 +8,7 @@ import { Petition } from '../../utils/constanst'
 import { useSelector } from 'react-redux'
 
 import InfiniteCalendar from 'react-infinite-calendar'
-import BuyPlan from '../../components/BuyPlan/BuyPlan'
+import BuyPlan from '../../components/BuyPlan'
 
 //Import icons
 import { ReactComponent as BitcoinIcon } from '../../static/icons/bitcoin-small.svg'
@@ -20,8 +20,8 @@ import 'react-infinite-calendar/styles.css'
 import LineChart from '../../components/LineChart/LineChart'
 import ListOfProfits from '../../components/ListOfProfits/ListOfProfits'
 
-const BITCOIN = 'bitcoin'
-const ETHEREUM = 'ethereum'
+const BITCOIN = { id: 1, name: 'bitcoin' }
+const ETHEREUM = { id: 2, name: 'ethereum' }
 
 const Dashboard = () => {
   const storage = useSelector(({ globalStorage }) => globalStorage)
@@ -42,6 +42,11 @@ const Dashboard = () => {
     history: null,
   })
 
+  const [modalBuyPlan, setModalBuyPlan] = useState({
+    visible: false,
+    idCrypto: 0,
+  })
+
   const ConfigurateComponent = async () => {
     try {
       // constant header petition
@@ -59,7 +64,7 @@ const Dashboard = () => {
         throw String(dataBTC.message)
       } else if (Object.keys(dataBTC).length > 0) {
         setDataDashboardBTC(dataBTC)
-        setCurrencySelected(BITCOIN)
+        setCurrencySelected(BITCOIN.name)
       }
 
       // Get data ETH
@@ -70,7 +75,7 @@ const Dashboard = () => {
         throw String(dataETH.message)
       } else if (Object.keys(dataETH).length > 0) {
         setDataDashboardETH(dataETH)
-        setCurrencySelected(ETHEREUM)
+        setCurrencySelected(ETHEREUM.name)
       }
 
       setLoader(false)
@@ -86,8 +91,9 @@ const Dashboard = () => {
   }, [])
 
   return (
-    <div>
-      <NavigationBar />
+    <>
+      {!modalBuyPlan.visible && <NavigationBar />}
+
       <section className="Dashboard">
         {loader && (
           <div className="center__element">
@@ -96,15 +102,28 @@ const Dashboard = () => {
         )}
         <main className="plan__container">
           {dataDashoardBTC.info ? (
-            <DashboardDetails plan={BITCOIN} data={dataDashoardBTC.info} />
+            <DashboardDetails plan={BITCOIN.name} data={dataDashoardBTC.info} />
           ) : (
-            <EmptyPlan />
+            <EmptyPlan
+              plan={BITCOIN.name}
+              onClick={() =>
+                setModalBuyPlan({ visible: true, idCrypto: BITCOIN.id })
+              }
+            />
           )}
 
           {dataDashoardETH.info ? (
-            <DashboardDetails plan={ETHEREUM} data={dataDashoardETH.info} />
+            <DashboardDetails
+              plan={ETHEREUM.name}
+              data={dataDashoardETH.info}
+            />
           ) : (
-            <EmptyPlan />
+            <EmptyPlan
+              plan={ETHEREUM.name}
+              onClick={() =>
+                setModalBuyPlan({ visible: true, idCrypto: ETHEREUM.id })
+              }
+            />
           )}
         </main>
 
@@ -121,21 +140,21 @@ const Dashboard = () => {
               <div className="switcher">
                 <div
                   className={`${
-                    currencySelected === BITCOIN
+                    currencySelected === BITCOIN.name
                       ? 'icon__button active'
                       : 'icon__button'
                   }`}
-                  onClick={() => setCurrencySelected(BITCOIN)}
+                  onClick={() => setCurrencySelected(BITCOIN.name)}
                 >
                   <BitcoinIcon className="switch__icon icon" color="#ffcb08" />
                 </div>
                 <div
                   className={`${
-                    currencySelected === ETHEREUM
+                    currencySelected === ETHEREUM.name
                       ? 'icon__button active'
                       : 'icon__button'
                   }`}
-                  onClick={() => setCurrencySelected(ETHEREUM)}
+                  onClick={() => setCurrencySelected(ETHEREUM.name)}
                 >
                   <EthereumIcon className="switch__icon icon" color="#9ed3da" />
                 </div>
@@ -150,7 +169,14 @@ const Dashboard = () => {
           />
         </section>
       </section>
-    </div>
+      {modalBuyPlan.visible && (
+        <BuyPlan
+          onBuy={ConfigurateComponent}
+          onClose={() => setModalBuyPlan({ ...modalBuyPlan, visible: false })}
+          idCrypto={modalBuyPlan.idCrypto}
+        />
+      )}
+    </>
   )
 }
 
