@@ -13,8 +13,16 @@ export const kycUserData = (userInfo, update = false) => new Promise(async (reso
         // Se obtiene el name, phoneCode, y currency según la nacionalidad
         const userNationality = Countries[userInfo.nationality]
 
+        if (!userNationality || userNationality === undefined) {
+            throw String(`Error on select user nationality country: ${userInfo.nationality}`)
+        }
+
         // Se obtiene el name, phoneCode, y currency según la residencia
         const userResidence = Countries[userInfo.residence]
+
+        if (!userResidence || userResidence === undefined) {
+            throw String(`Error on select user residence country: ${userInfo.residence}`)
+        }
 
         // Se almacena en el servidor la imagen de perfil
         const uploadProfilePic = await uploadFile(
@@ -86,8 +94,16 @@ export const kycUserBeneficiaryData = (beneficiaryInfo, userAge, update = false)
         // Se obtiene el name, phoneCode, y currency según la nacionalidad
         const beneficiaryNationality = Countries[beneficiaryInfo.nationality]
 
+        if (!beneficiaryNationality || beneficiaryNationality === undefined) {
+            throw String(`Error on select beneficiary nationality country: ${beneficiaryInfo.nationality}`)
+        }
+
         // Se obtiene el name, phoneCode, y currency según la residencia
         const beneficiaryResidence = Countries[beneficiaryInfo.residence]
+
+        if (!beneficiaryResidence || beneficiaryResidence === undefined) {
+            throw String(`Error on select beneficiary residence country: ${beneficiaryInfo.residence}`)
+        }
 
         // Se almacena en el servidor la imagen de perfil
         const uploadProfilePic = await uploadFile(
