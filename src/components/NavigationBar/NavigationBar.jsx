@@ -71,15 +71,6 @@ const NavigationBar = () => {
             Comisiones
           </Link>
 
-          <a
-            target="_blank"
-            href="https://play.google.com/store/apps/details?id=com.speedtradingsapp"
-            className="app"
-          >
-            <span>App</span>
-            <img src={logoPlayStore} className="play-store" alt="logo" />
-          </a>
-
           <button
             onClick={_ => setShowMore(!showMore)}
             className={`dropdown ${showMore ? 'active' : ''}`}

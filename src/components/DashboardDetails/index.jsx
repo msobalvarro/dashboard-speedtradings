@@ -6,7 +6,13 @@ import moment from 'moment'
 //Importar estilos
 import './styles.scss'
 
-const DashboardDetails = ({ plan, data = {} }) => {
+/**
+ * @param {String} plan - Tipo de moneda a procesar
+ * @param {Object} data - Datos del plan BITCOIN/ETHEREUM
+ * @param {Function} upgradePlan - Funcion que se ejecuta cuando se hace click en el boton upgrade
+ */
+
+const DashboardDetails = ({ plan, data = {}, upgradePlan }) => {
   const PLAN = {
     BITCOIN: 'bitcoin',
   }
@@ -53,6 +59,7 @@ const DashboardDetails = ({ plan, data = {} }) => {
       </div>
 
       <button
+        onClick={upgradePlan}
         className={`${
           plan === PLAN.BITCOIN
             ? 'button upgrade__button yellow'

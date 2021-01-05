@@ -182,28 +182,34 @@ const ListOfProfits = ({
                 <div />
               </div>
             ))}
+
+          {profitsData.length === 0 && (
+            <h2 className="empty caption">Aun no hay historial de ganancias</h2>
+          )}
         </div>
 
-        <div className="total__container">
-          <div className="total__item">
-            <span className="label white">
-              Total {currencySelected === BITCOIN ? 'BTC: ' : 'ETH: '}{' '}
-            </span>
-            <span className="value">
-              {currencySelected === BITCOIN ? sumTotalBtc : sumTotalEth}
-            </span>
+        {profitsData.length > 0 && (
+          <div className="total__container">
+            <div className="total__item">
+              <span className="label white">
+                Total {currencySelected === BITCOIN ? 'BTC: ' : 'ETH: '}{' '}
+              </span>
+              <span className="value">
+                {currencySelected === BITCOIN ? sumTotalBtc : sumTotalEth}
+              </span>
+            </div>
+            <div className="total__item">
+              <span className="label white">Total USD</span>
+              <span className="value">
+                ${' '}
+                {calculateCryptoPriceWithoutFee(
+                  currencySelected === BITCOIN ? btcToDollar : ethToDollar,
+                  currencySelected === BITCOIN ? sumTotalBtc : sumTotalEth
+                )}
+              </span>
+            </div>
           </div>
-          <div className="total__item">
-            <span className="label white">Total USD</span>
-            <span className="value">
-              ${' '}
-              {calculateCryptoPriceWithoutFee(
-                currencySelected === BITCOIN ? btcToDollar : ethToDollar,
-                currencySelected === BITCOIN ? sumTotalBtc : sumTotalEth
-              )}
-            </span>
-          </div>
-        </div>
+        )}
       </section>
     </div>
   )

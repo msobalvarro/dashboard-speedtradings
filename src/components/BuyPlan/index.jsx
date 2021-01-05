@@ -73,11 +73,11 @@ const reducer = (state, action) => {
 /**
  * @param {Number} idCrypto - código de la moneda
  * @param {Callback} onBuy - Función a ejecutar cuando se realiza la comprar
- * @param {Function} onClose - Función para cerrar el modal
+ * @param {Function} closeModal - Función para cerrar el modal
 
  */
 
-const BuyPlan = ({ idCrypto = 1, onBuy = () => {}, onClose = () => {} }) => {
+const BuyPlan = ({ idCrypto = 1, onBuy = () => {}, closeModal = () => {} }) => {
   // Redux store
   const storage = useSelector(store => store.globalStorage)
 
@@ -271,9 +271,9 @@ const BuyPlan = ({ idCrypto = 1, onBuy = () => {}, onClose = () => {} }) => {
   return (
     <Modal persist={true} onlyChildren>
       <div className="overlay">
-        <div className="modal__buyplan">
+        <div className="modal__buyplan modal__window">
           <div className="modal__close">
-            <CloseIcon className="icon" fill="#ffffff" onClick={onClose} />
+            <CloseIcon className="icon" fill="#ffffff" onClick={closeModal} />
           </div>
 
           <div className="form__container">

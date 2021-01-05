@@ -63,7 +63,7 @@ div.content-links {
   align-items: center;
   grid-gap: 8px;
   grid-template-columns: 1fr;
-  grid-template-rows: repeat(4, 1fr);
+  grid-template-rows: repeat(3, 1fr);
   padding-bottom: 25px;
   width: 90%;
   max-width: 300px;
@@ -71,7 +71,8 @@ div.content-links {
   text-align: center;
 
   @media (min-width: $breakpoint) {
-    grid-template-columns: repeat(4, 1fr);
+    justify-content: end;
+    grid-template-columns: repeat(3, min-content);
     grid-template-rows: 1fr;
     padding: 0;
     text-align: left;

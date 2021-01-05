@@ -1,57 +1,6 @@
-@import '../../utils/constants.scss';
-
 .modal__buyplan {
-  border-radius: 8px;
-  background-color: $colorMain;
-  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.19), 0 6px 6px rgba(0, 0, 0, 0.23);
   max-width: 500px;
-  position: relative;
-  width: 100%;
-  padding: 16px;
-
-  & .form__container {
-    height: 100%;
-  }
-
   & .modal__icon--container {
     text-align: center;
-  }
-
-  & .modal__title {
-    margin-top: 16px;
-    text-align: center;
-    font-size: 24px;
-    font-weight: 500px;
-    margin-bottom: 16px;
-    color: $colorYellow;
-
-    &.skyblue {
-      color: $colorSecondary;
-    }
-  }
-
-  & .modal__group {
-    width: inherit;
-    & > .label {
-      margin-bottom: 5px;
-      display: block;
-    }
-    margin-bottom: 25px;
-    display: flex;
-    flex-direction: column;
-  }
-}
-
-span.wallet {
-  background-color: $colorYellow;
-  border-radius: 3px;
-  color: #2d2d2d;
-  cursor: pointer;
-  text-align: center;
-  padding: 5px;
-  width: 100%;
-
-  &.skyblue {
-    background-color: $colorSecondary;
   }
 }
