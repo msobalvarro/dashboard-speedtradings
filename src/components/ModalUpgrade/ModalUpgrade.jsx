@@ -303,7 +303,7 @@ const ModalUpgrade = ({
             <CloseIcon className="icon" fill="#ffffff" onClick={closeModal} />
           </div>
 
-          <form className="form__container">
+          <div className="form__container">
             <h2
               className={`${
                 type === 'btc' ? 'modal__title mt' : 'modal__title skyblue mt'
@@ -435,7 +435,7 @@ const ModalUpgrade = ({
                 UPGRADE
               </button>
             </div>
-          </form>
+          </div>
         </div>
       </div>
     </Modal>

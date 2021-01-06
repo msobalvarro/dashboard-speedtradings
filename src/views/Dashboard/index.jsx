@@ -3,6 +3,7 @@ import React, { useState, useEffect } from 'react'
 import Swal from 'sweetalert2'
 import { Petition } from '../../utils/constanst'
 import { useSelector } from 'react-redux'
+import moment from 'moment'
 
 //Import icons
 import { ReactComponent as BitcoinIcon } from '../../static/icons/bitcoin-small.svg'
@@ -27,7 +28,7 @@ const ETHEREUM = { id: 2, name: 'ethereum' }
 
 const Dashboard = () => {
   const storage = useSelector(({ globalStorage }) => globalStorage)
-
+  //const { navigation, globalStorage } = storeRedux.getState()
   // Estado para mostrar u ocultar el loader
   const [loader, setLoader] = useState(true)
 
@@ -55,6 +56,8 @@ const Dashboard = () => {
     visible: false,
     type: '',
   })
+
+  const [greeting, setGreeting] = useState('')
 
   const ConfigurateComponent = async () => {
     try {
@@ -99,6 +102,16 @@ const Dashboard = () => {
 
   useEffect(() => {
     ConfigurateComponent()
+    // Obtener saludo
+    const hour = moment().format('HH')
+    const stateDay =
+      hour > 0 && hour <= 12
+        ? 'Buenos dias'
+        : hour >= 13 && hour <= 18
+        ? 'Buenas tardes'
+        : 'Buenas noches'
+
+    setGreeting(stateDay + `, ${storage.firstname}`)
   }, [])
 
   return (
@@ -111,6 +124,9 @@ const Dashboard = () => {
             <ActivityIndicator size={128} className="loader-dashboard" />
           </div>
         )}
+        <div className="greeting">
+          <p className="value">{greeting}</p>
+        </div>
         <main className="plan__container">
           {dataDashoardBTC.info ? (
             <DashboardDetails

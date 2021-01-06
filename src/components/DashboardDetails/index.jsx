@@ -26,6 +26,13 @@ const DashboardDetails = ({ plan, data = {}, upgradePlan }) => {
     }
   }, [data])
 
+  if (data.approved === 0)
+    return (
+      <article className="card__plan">
+        <h1 className="caption">Tu plan se activara cuando sea verificado</h1>
+      </article>
+    )
+
   return (
     <article className="card__plan">
       {plan === 'bitcoin' ? (

@@ -1,0 +1,113 @@
+@import '../../utils/constants.scss';
+
+.profile {
+  width: 90%;
+  height: 100%;
+  margin: 0 auto;
+  max-width: 1200px;
+  position: relative;
+  border: 1px solid transparent;
+}
+
+.profile__close {
+  width: 22px;
+  height: 22px;
+  position: absolute;
+  right: 8px;
+  top: 25px;
+}
+
+.profile__info {
+  margin: 64px auto;
+  max-width: 250px;
+  width: 100%;
+  text-align: center;
+  & .profile__image {
+    width: 100%;
+    max-height: 250px;
+    border-radius: 8px;
+  }
+
+  & .profile__name {
+    margin-top: 8px;
+    font-weight: 500;
+    font-size: 24px;
+    line-height: 28px;
+    text-align: center;
+    color: #fff;
+  }
+  & .profile__username {
+    font-style: normal;
+    font-weight: normal;
+    font-size: 16px;
+    line-height: 18px;
+    display: block;
+    margin: 4px 0;
+    color: rgba($color: #fff, $alpha: 0.57);
+  }
+
+  & .profile__verified {
+    border: 1px solid $greenColor;
+    background: rgba($color: $greenColor, $alpha: 0.5);
+    padding: 4px;
+    border-radius: 50px;
+
+    font-style: normal;
+    font-weight: normal;
+    font-size: 14px;
+    line-height: 16px;
+    color: lighten($greenColor, 20%);
+    width: 80%;
+    margin: 8px auto;
+    display: block;
+  }
+}
+
+.two__columns {
+  display: flex;
+  justify-content: space-between;
+  &.mt-16 {
+    margin-top: 16px;
+  }
+}
+
+.label__group {
+  display: flex;
+  flex-direction: column;
+}
+
+.tabs {
+  max-width: 400px;
+  margin: 32px auto;
+  width: 100%;
+  text-align: center;
+  display: grid;
+  grid-gap: 8px;
+  grid-template-columns: repeat(2, 1fr);
+
+  & .tab__item {
+    cursor: pointer;
+    font-weight: normal;
+    font-style: normal;
+    font-size: 18px;
+    line-height: 20px;
+    color: rgba(255, 255, 255, 0.2);
+    &.active {
+      font-weight: bold;
+      color: $greenColor;
+      &:after {
+        content: '';
+        margin-top: 5px;
+        display: block;
+        height: 8px;
+        width: 100%;
+        background: $greenColor;
+        border-radius: 5px;
+      }
+    }
+  }
+}
+
+.wallets__container {
+  padding-bottom: 64px;
+}

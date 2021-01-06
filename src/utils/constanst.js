@@ -114,9 +114,9 @@ export const amountMin = {
 }
 
 //export const urlServer = 'https://ardent-medley-272823.appspot.com'
-export const urlServer = 'http://192.168.0.132:8084'
+//export const urlServer = 'http://192.168.0.132:8084'
 //export const urlServer = "http://192.168.1.224:8084"
-//export const urlServer = 'http://192.168.0.120:8084'
+export const urlServer = 'http://192.168.0.120:8084'
 //export const urlServer = "http://192.168.0.104:8084"
 
 // Límite de subida de los archivos e bytes

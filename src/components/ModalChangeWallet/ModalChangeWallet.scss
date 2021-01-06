@@ -1,0 +1,36 @@
+@import '../../utils/constants.scss';
+
+.modal__change-wallet {
+  border-radius: 8px;
+  background-color: $colorMain;
+  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.19), 0 6px 6px rgba(0, 0, 0, 0.23);
+  max-width: 400px;
+  position: relative;
+  width: 100%;
+  padding: 16px;
+  align-self: center;
+
+  & .full-width {
+    width: 100%;
+  }
+
+  & .modal__title {
+    text-align: center;
+    font-size: 22px;
+    font-weight: 500px;
+    margin-bottom: 16px;
+    color: $greenColor;
+  }
+
+  & .modal__group {
+    display: flex;
+    flex-direction: column;
+    margin-bottom: 25px;
+  }
+
+  & .close__icon {
+    cursor: pointer;
+    width: 22px;
+    height: 22px;
+  }
+}
