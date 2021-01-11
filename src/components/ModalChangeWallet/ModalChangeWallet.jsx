@@ -5,7 +5,7 @@ import PasswordField from '../PasswordField/PasswordField'
 import Swal from 'sweetalert2'
 import './ModalChangeWallet.scss'
 
-const ModalChangeWallet = ({ closeModal, type, onSuccess }) => {
+const ModalChangeWallet = ({ closeModal, type, onChangeWallet }) => {
   const [password, setPassword] = useState('')
   const [wallet, setWallet] = useState('')
 
@@ -25,8 +25,8 @@ const ModalChangeWallet = ({ closeModal, type, onSuccess }) => {
         text: 'Ingrese una wallet valida',
       })
 
-    //Actualizar el wallet en la interfaz
-    onSuccess(wallet)
+    //Actualizar el wallet en la BD y en la interfaz
+    onChangeWallet(password, type, wallet)
 
     //Cerrar modal
     closeModal()

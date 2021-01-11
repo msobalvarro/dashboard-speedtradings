@@ -22,7 +22,8 @@ const DashboardDetails = ({ plan, data = {}, upgradePlan }) => {
   useEffect(() => {
     if (data) {
       const result = (data.amount / data.amount_to_win) * 100
-      setPercentage(result)
+      const valuePorcent = (data.total_paid / (data.amount * 2)) * 100
+      setPercentage(valuePorcent)
     }
   }, [data])
 
@@ -42,7 +43,7 @@ const DashboardDetails = ({ plan, data = {}, upgradePlan }) => {
       )}
 
       <div className="bar__container">
-        <p className="value">{`Ganado (${percentage}%)`}</p>
+        <p className="value">{`Ganado (${percentage.toFixed(1)}%)`}</p>
         <div className={`${plan === PLAN.BITCOIN ? 'bar yellow' : 'bar'}`}>
           <div
             style={{ width: `${percentage}%` }}

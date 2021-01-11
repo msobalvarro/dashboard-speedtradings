@@ -4,28 +4,11 @@
   padding-bottom: 64px;
   display: grid;
   grid-gap: 16px;
-  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-  //grid-template-rows: repeat(auto-fit, minmax(300px, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
 }
 
-.two__rows {
+.two__rows--person {
   display: grid;
-  grid-gap: 16px;
+  grid-row-gap: 16px;
   grid-template-rows: 1fr 1fr;
-}
-
-.card__information {
-  background: rgba(0, 0, 0, 0.2);
-  border-radius: 8px;
-  padding: 16px;
-}
-
-.card__information--title {
-  margin-bottom: 16px;
-  font-style: normal;
-  font-weight: 500;
-  font-size: 18px;
-  line-height: 20px;
-
-  color: $greenColor;
 }

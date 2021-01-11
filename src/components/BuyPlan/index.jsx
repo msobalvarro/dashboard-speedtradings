@@ -165,6 +165,8 @@ const BuyPlan = ({ idCrypto = 1, onBuy = () => {}, closeModal = () => {} }) => {
           'En breves momentos estaremos confirmando tu transacción',
           'success'
         )
+
+        closeModal()
       }
     } catch (error) {
       Swal.fire('Ha ocurrido un error', error.toString(), 'warning')
@@ -273,7 +275,9 @@ const BuyPlan = ({ idCrypto = 1, onBuy = () => {}, closeModal = () => {} }) => {
       <div className="overlay">
         <div className="modal__buyplan modal__window">
           <div className="modal__close">
-            <CloseIcon className="icon" fill="#ffffff" onClick={closeModal} />
+            {!state.loader && (
+              <CloseIcon className="icon" fill="#ffffff" onClick={closeModal} />
+            )}
           </div>
 
           <div className="form__container">

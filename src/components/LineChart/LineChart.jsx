@@ -33,7 +33,7 @@ const LineChart = ({ dataDashoardBTC, dataDashoardETH }) => {
     if (!_data) return false
 
     //Obtener los valores para las graficas
-    return _data.map(item => item.amount)
+    return _data.map(item => item.percentage.toFixed(1))
   }
 
   const loadChart = () => {

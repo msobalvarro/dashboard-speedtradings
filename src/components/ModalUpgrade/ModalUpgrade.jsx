@@ -178,6 +178,8 @@ const ModalUpgrade = ({
             dispatch({ type: 'userInput', payload: '' })
             dispatch({ type: 'plan', payload: 0 })
 
+            closeModal()
+
             Swal.fire(
               'Upgrade Completado',
               'En breves momentos, estaremos atendiendo su peticion de UPGRADE',
@@ -300,7 +302,9 @@ const ModalUpgrade = ({
       <div className="overlay">
         <div className="modal__window modal__upgrade">
           <div className="modal__close">
-            <CloseIcon className="icon" fill="#ffffff" onClick={closeModal} />
+            {!state.loader && (
+              <CloseIcon className="icon" fill="#ffffff" onClick={closeModal} />
+            )}
           </div>
 
           <div className="form__container">
