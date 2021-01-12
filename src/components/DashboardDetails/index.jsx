@@ -21,8 +21,9 @@ const DashboardDetails = ({ plan, data = {}, upgradePlan }) => {
 
   useEffect(() => {
     if (data) {
-      const result = (data.amount / data.amount_to_win) * 100
+      //const result = (data.amount / data.amount_to_win) * 100
       const valuePorcent = (data.total_paid / (data.amount * 2)) * 100
+      console.log(data)
       setPercentage(valuePorcent)
     }
   }, [data])
@@ -36,36 +37,88 @@ const DashboardDetails = ({ plan, data = {}, upgradePlan }) => {
 
   return (
     <article className="card__plan">
-      {plan === 'bitcoin' ? (
-        <BitcoinIcon className="plan__icon icon" color="#ffcb08" />
-      ) : (
-        <EthereumIcon className="plan__icon icon" color="#9ed3da" />
-      )}
-
-      <div className="bar__container">
-        <p className="value">{`Ganado (${percentage.toFixed(1)}%)`}</p>
-        <div className={`${plan === PLAN.BITCOIN ? 'bar yellow' : 'bar'}`}>
+      {/*BARRA DE PROGRESO*/}
+      <div className="plan__header">
+        <div className="plan__name">
           <div
-            style={{ width: `${percentage}%` }}
             className={`${
               plan === PLAN.BITCOIN
-                ? 'bar__progressive yellow'
-                : 'bar__progressive'
+                ? 'plan__icon--container yellow'
+                : 'plan__icon--container skyblue'
             }`}
-          ></div>
+          >
+            {plan === 'bitcoin' ? (
+              <BitcoinIcon className="plan__icon icon" color="#ffcb08" />
+            ) : (
+              <EthereumIcon className="plan__icon icon" color="#9ed3da" />
+            )}
+          </div>
+          <span className="value">Plan {plan}</span>
+        </div>
+
+        <div className="plan__group">
+          <span className="caption">Fecha inicio</span>
+          <span className="plan__value">
+            {moment(data?.start_date).format('DD MMM YYYY')}
+          </span>
         </div>
       </div>
 
-      <div className="text__group">
-        <span className={`${plan === PLAN.BITCOIN ? 'label yellow' : 'label'}`}>
-          Ultimo reporte de ganancia
-        </span>
-        <p className="value text__bigger">
-          {data?.last_pay}
-          {plan === PLAN.BITCOIN ? ' BTC' : ' ETH'}
-        </p>
+      {/*BARRA DE PROGRESO*/}
+      <div className="plan__two-columns">
+        <div className="plan__group left__align">
+          <span className="caption">Inversion inicial</span>
+          <p className="plan__value bigger">
+            {data?.amount}
+            {plan === PLAN.BITCOIN ? ' BTC' : ' ETH'}
+          </p>
+        </div>
+
+        <div className="plan__group">
+          <span className="caption">Monto a ganar</span>
+          <p className="plan__value bigger">
+            {data?.amount_to_win}
+            {plan === PLAN.BITCOIN ? ' BTC' : ' ETH'}
+          </p>
+        </div>
       </div>
 
+      {/*BARRA DE PROGRESO*/}
+      <div className="bar__container">
+        <div>
+          <p className="plan__value">{`Ganado (${percentage.toFixed(1)}%)`}</p>
+
+          <div className={`${plan === PLAN.BITCOIN ? 'bar yellow' : 'bar'}`}>
+            <div
+              style={{ width: `${percentage}%` }}
+              className={`${
+                plan === PLAN.BITCOIN
+                  ? 'bar__progressive yellow'
+                  : 'bar__progressive'
+              }`}
+            ></div>
+          </div>
+          <span className="plan__value">
+            {data?.total_paid} {plan === PLAN.BITCOIN ? ' BTC' : ' ETH'} /{' '}
+            {data?.amount_to_win} {plan === PLAN.BITCOIN ? ' BTC' : ' ETH'}
+          </span>
+        </div>
+        <div className="plan__group">
+          <span className="caption">Restante</span>
+          <span
+            className={`${
+              plan === PLAN.BITCOIN
+                ? 'plan__value yellow'
+                : 'plan__value skyblue'
+            }`}
+          >
+            {data?.amount_rest}
+            {plan === PLAN.BITCOIN ? ' BTC' : ' ETH'}
+          </span>
+        </div>
+      </div>
+
+      {/*CTA UPGRADE PLAN*/}
       <button
         onClick={upgradePlan}
         className={`${
@@ -76,27 +129,6 @@ const DashboardDetails = ({ plan, data = {}, upgradePlan }) => {
       >
         UPGRADE
       </button>
-
-      <div className="auto-columns">
-        <div className="text__group">
-          <span
-            className={`${plan === PLAN.BITCOIN ? 'label yellow' : 'label'}`}
-          >
-            Saldo pendiente
-          </span>
-          <p className="value">{data?.amount_rest}</p>
-        </div>
-        <div className="text__group">
-          <span
-            className={`${plan === PLAN.BITCOIN ? 'label yellow' : 'label'}`}
-          >
-            Fecha de inicio
-          </span>
-          <p className="value">
-            {moment(data?.start_date).format('DD-MM-YYYY')}
-          </p>
-        </div>
-      </div>
     </article>
   )
 }
