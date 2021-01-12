@@ -115,9 +115,9 @@ export const amountMin = {
 }
 
 //export const urlServer = 'https://ardent-medley-272823.appspot.com'
-export const urlServer = 'http://192.168.0.132:8084'
+//export const urlServer = 'http://192.168.0.132:8084'
 //export const urlServer = "http://192.168.1.224:8084"
-//export const urlServer = 'http://192.168.0.120:8084'
+export const urlServer = 'http://192.168.0.120:8084'
 //export const urlServer = "http://192.168.0.104:8084"
 
 // Límite de subida de los archivos e bytes
@@ -236,7 +236,7 @@ export const calculateCryptoPrice = (price = 0, amount = 0) => {
  * @param {Number} amount
  */
 export const calculateCryptoPriceWithoutFee = (price = 0, amount = 0) => {
-  return (amount * price).toFixed(2)
+  return (amount * price).toFixed(2).toLocaleString('en-US')
 }
 
 /**

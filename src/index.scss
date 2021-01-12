@@ -121,6 +121,9 @@ a {
     &.green {
       background-color: $greenColor;
     }
+    &.red {
+      background-color: rgba($color: $colorRed, $alpha: 0.57);
+    }
 
     &.large {
       font-size: 24px;

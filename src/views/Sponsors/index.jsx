@@ -307,22 +307,24 @@ const Sponsors = () => {
             ))}
           </div>
         )}
-        <div className="commissions__total">
-          <div className="commissions__total--group">
-            <span className="label white">Total BTC:</span>
-            <span className="value">
-              {floor(SumBTC, 8)} BTC ($
-              {calcDollarAmount(1, SumBTC)})
-            </span>
+        {filteredData.length > 0 && (
+          <div className="commissions__total">
+            <div className="commissions__total--group">
+              <span className="label white">Total BTC:</span>
+              <span className="value">
+                {floor(SumBTC, 8)} BTC ($
+                {calcDollarAmount(1, SumBTC)})
+              </span>
+            </div>
+            <div className="commissions__total--group">
+              <span className="label white">Total ETH:</span>
+              <span className="value">
+                {floor(SumETH, 8)} ETH ($
+                {calcDollarAmount(2, SumETH)})
+              </span>
+            </div>
           </div>
-          <div className="commissions__total--group">
-            <span className="label white">Total ETH:</span>
-            <span className="value">
-              {floor(SumETH, 8)} ETH ($
-              {calcDollarAmount(2, SumETH)})
-            </span>
-          </div>
-        </div>
+        )}
       </section>
     </>
   )

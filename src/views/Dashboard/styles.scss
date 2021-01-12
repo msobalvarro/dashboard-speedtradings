@@ -18,13 +18,13 @@
   max-height: 300px;
 }
 
-.filters__container {
+.profits__container {
   margin-top: 64px;
-  display: flex;
-  justify-content: space-between;
 }
 
 .switcher {
+  margin-left: 16px;
+
   width: 120px;
   background: rgba($color: #fff, $alpha: 0.2);
   border-radius: 8px;
@@ -54,4 +54,37 @@
 }
 .greeting {
   margin-top: 25px;
+}
+
+.calendar__container {
+  border-radius: 8px;
+  overflow: auto;
+}
+
+.profits__filter--container {
+  width: 100%;
+  display: grid;
+
+  grid-template-columns: 1fr;
+  align-items: end;
+  @media (min-width: 400px) {
+    grid-template-columns: 1fr 1fr;
+  }
+
+  grid-column-gap: 16px;
+  grid-row-gap: 4px;
+
+  & .profits__filter--buttons {
+    display: flex;
+    justify-content: flex-start;
+
+    @media (min-width: 400px) {
+      justify-content: flex-end;
+    }
+  }
+}
+
+button.btn-date {
+  background: rgba($color: #fff, $alpha: 0.2);
+  border-radius: 8px;
 }

@@ -11,7 +11,6 @@ import { ReactComponent as EthereumIcon } from '../../static/icons/ethereum -sma
 
 //Importar estilos
 import './styles.scss'
-import 'react-infinite-calendar/styles.css'
 
 //Import components
 import ActivityIndicator from '../../components/ActivityIndicator/Activityindicator'
@@ -22,6 +21,9 @@ import LineChart from '../../components/LineChart/LineChart'
 import ListOfProfits from '../../components/ListOfProfits/ListOfProfits'
 import ModalUpgrade from '../../components/ModalUpgrade/ModalUpgrade'
 import NavigationBar from '../../components/NavigationBar/NavigationBar'
+import ModalDatePicker from '../../components/ModalDatePicker/ModalDatePicker'
+
+import { FaCalendarAlt as CalendarIcon } from 'react-icons/fa'
 
 const BITCOIN = { id: 1, name: 'bitcoin' }
 const ETHEREUM = { id: 2, name: 'ethereum' }
@@ -57,7 +59,15 @@ const Dashboard = () => {
     type: '',
   })
 
+  //Estado para mostrar/ocultar modal de fechas
+  const [modalDate, setModalDate] = useState(false)
+
   const [greeting, setGreeting] = useState('')
+
+  const [dateRange, setDateRange] = useState({
+    start: '',
+    end: '',
+  })
 
   const ConfigurateComponent = async () => {
     try {
@@ -76,6 +86,7 @@ const Dashboard = () => {
         throw String(dataBTC.message)
       } else if (Object.keys(dataBTC).length > 0) {
         setDataDashboardBTC(dataBTC)
+
         //Preseleccionar por defecto BTC en caso de que este disponible
         setCurrencySelected(BITCOIN.name)
       }
@@ -100,6 +111,72 @@ const Dashboard = () => {
     }
   }
 
+  //Obtener la lista de ganancias
+  const getProfitList = async rangeDate => {
+    try {
+      // constant header petition
+      const headers = {
+        headers: {
+          'x-auth-token': storage.token,
+        },
+      }
+
+      if (dataDashoardBTC.info) {
+        // Obtener ganacias en bitcoin
+        const { data: profitsBTC } = await Petition.get(
+          `/dashboard/all-reports/${BITCOIN.id}?date_from=${rangeDate.startDate}&date_to=${rangeDate.endDate}`,
+          headers
+        )
+
+        // verificamos si hay un error al cargar los datos
+        if (profitsBTC.error) {
+          throw String(profitsBTC.message)
+        } else if (Object.keys(profitsBTC).length > 0) {
+          //Actualizamos las ganancias en la tabla de bitcoin
+          setDataDashboardBTC({
+            ...dataDashoardBTC,
+            history: profitsBTC.history,
+            price: profitsBTC.price,
+          })
+        }
+      }
+
+      if (dataDashoardETH.info) {
+        // Get data ETH
+        const { data: profitsETH } = await Petition.get(
+          `/dashboard/all-reports/${ETHEREUM.id}?date_from=${rangeDate.startDate}&date_to=${rangeDate.endDate}`,
+          headers
+        )
+
+        // verificamos si hay un error al cargar los datos
+        if (profitsETH.error) {
+          throw String(profitsETH.message)
+        } else if (Object.keys(profitsETH).length > 0) {
+          //Actualizamos las ganancias en la tabla de ethereum
+          setDataDashboardETH({
+            ...dataDashoardETH,
+            history: profitsETH.history,
+            price: profitsETH.price,
+          })
+        }
+      }
+    } catch (error) {
+      Swal.fire('Ha ocurrido un error', error.toString(), 'error')
+    } finally {
+      setLoader(false)
+    }
+  }
+
+  const onSelectRangeDate = rangeDate => {
+    //Mostrar etiqueta con el rango de fecha seleccionado
+    setDateRange({
+      start: moment(rangeDate.startDate).format('DD MMM YYYY'),
+      end: moment(rangeDate.endDate).format('DD MMM YYYY'),
+    })
+    //Obtener las ganacias por rango de fechas
+    getProfitList(rangeDate)
+  }
+
   useEffect(() => {
     ConfigurateComponent()
     // Obtener saludo
@@ -117,7 +194,9 @@ const Dashboard = () => {
   return (
     <>
       {/*Mostrar el navbar solo cuando los modales esten ocultos*/}
-      {!modalBuyPlan.visible && !modalUpgrade.visible && <NavigationBar />}
+      {!modalBuyPlan.visible && !modalUpgrade.visible && !modalDate && (
+        <NavigationBar />
+      )}
       <section className="Dashboard">
         {loader && (
           <div className="center__element">
@@ -125,7 +204,7 @@ const Dashboard = () => {
           </div>
         )}
         <div className="greeting">
-          <p className="value">{greeting}</p>
+          <p className="label white">{greeting}</p>
         </div>
         <main className="plan__container">
           {dataDashoardBTC.info ? (
@@ -169,34 +248,56 @@ const Dashboard = () => {
         />
 
         <section className="profits__container">
-          <div className="filters__container">
-            <h2>Historial</h2>
+          <div className="profits__filter--container">
+            <div>
+              <h2>Historial</h2>
+              {dateRange.start && dateRange.end && (
+                <span className="caption">
+                  {`Ganancias del ${dateRange.start} al ${dateRange.end}`}
+                </span>
+              )}
+            </div>
 
-            {/*Mostrar el switcher de cambiar de moneda solo cuando BTC y ETH esten disponibles ambos*/}
-            {dataDashoardBTC.history && dataDashoardETH.history && (
-              <div className="switcher">
-                <div
-                  className={`${
-                    currencySelected === BITCOIN.name
-                      ? 'icon__button active'
-                      : 'icon__button'
-                  }`}
-                  onClick={() => setCurrencySelected(BITCOIN.name)}
-                >
-                  <BitcoinIcon className="switch__icon icon" color="#ffcb08" />
+            <div className="profits__filter--buttons">
+              <button
+                className="button btn-date"
+                onClick={() => setModalDate(true)}
+              >
+                <CalendarIcon size={22} />
+              </button>
+
+              {/*Mostrar el switcher de cambiar de moneda solo cuando BTC y ETH esten disponibles ambos*/}
+              {dataDashoardBTC.history && dataDashoardETH.history && (
+                <div className="switcher">
+                  <div
+                    className={`${
+                      currencySelected === BITCOIN.name
+                        ? 'icon__button active'
+                        : 'icon__button'
+                    }`}
+                    onClick={() => setCurrencySelected(BITCOIN.name)}
+                  >
+                    <BitcoinIcon
+                      className="switch__icon icon"
+                      color="#ffcb08"
+                    />
+                  </div>
+                  <div
+                    className={`${
+                      currencySelected === ETHEREUM.name
+                        ? 'icon__button active'
+                        : 'icon__button'
+                    }`}
+                    onClick={() => setCurrencySelected(ETHEREUM.name)}
+                  >
+                    <EthereumIcon
+                      className="switch__icon icon"
+                      color="#9ed3da"
+                    />
+                  </div>
                 </div>
-                <div
-                  className={`${
-                    currencySelected === ETHEREUM.name
-                      ? 'icon__button active'
-                      : 'icon__button'
-                  }`}
-                  onClick={() => setCurrencySelected(ETHEREUM.name)}
-                >
-                  <EthereumIcon className="switch__icon icon" color="#9ed3da" />
-                </div>
-              </div>
-            )}
+              )}
+            </div>
           </div>
 
           <ListOfProfits
@@ -241,6 +342,14 @@ const Dashboard = () => {
             setModalBuyPlan({ ...modalBuyPlan, visible: false })
           }
           idCrypto={modalBuyPlan.idCrypto}
+        />
+      )}
+
+      {modalDate && (
+        <ModalDatePicker
+          currency={currencySelected}
+          closeModal={() => setModalDate(false)}
+          onSelect={_data => onSelectRangeDate(_data)}
         />
       )}
     </>

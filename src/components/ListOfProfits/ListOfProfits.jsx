@@ -52,7 +52,7 @@ const ListOfProfits = ({
   //Funcion que se ejecuta cuando cambiamos la moneda en el switcher
   const changeCurrency = () => {
     if (currencySelected === BITCOIN) {
-      if (!dataDashoardBTC?.history) return false
+      if (!dataDashoardBTC?.history) return setProfitsData([])
 
       //Obtenemos la suma total de ganancias en bitcoin
       const totalBTC = calculateTotalProfitTable(dataDashoardBTC.history)
@@ -61,7 +61,7 @@ const ListOfProfits = ({
       //Mostrarmos el historial de ganancias en btc
       setProfitsData(dataDashoardBTC.history)
     } else {
-      if (!dataDashoardETH?.history) return false
+      if (!dataDashoardETH?.history) return setProfitsData([])
 
       //Obtenemos la suma total de ganancias en ethereum
       const totalETH = calculateTotalProfitTable(dataDashoardETH.history)

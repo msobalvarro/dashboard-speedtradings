@@ -23,14 +23,14 @@ const LineChart = ({ dataDashoardBTC, dataDashoardETH }) => {
   const [chartData, setChartData] = useState({})
 
   const getLabels = _data => {
-    if (!_data) return false
+    if (!_data) return []
 
     //Obtener los labels
     return _data.map(item => moment(item.date).format('ddd DD MMM'))
   }
 
   const getSeries = _data => {
-    if (!_data) return false
+    if (!_data) return []
 
     //Obtener los valores para las graficas
     return _data.map(item => item.percentage.toFixed(1))
