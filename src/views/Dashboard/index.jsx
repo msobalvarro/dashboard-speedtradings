@@ -191,6 +191,15 @@ const Dashboard = () => {
     setGreeting(stateDay + `, ${storage.firstname}`)
   }, [])
 
+  //Deshabilitar el scroll cuando se ve el modal de fecha
+  useEffect(() => {
+    if (modalDate) {
+      document.body.style.overflow = 'hidden'
+    } else {
+      document.body.style.overflow = 'visible'
+    }
+  }, [modalDate])
+
   return (
     <>
       {/*Mostrar el navbar solo cuando los modales esten ocultos*/}

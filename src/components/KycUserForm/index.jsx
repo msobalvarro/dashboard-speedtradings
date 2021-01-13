@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react'
 import moment from 'moment'
 import Swal from 'sweetalert2'
-import './KycUserForm.scss'
+import './styles.scss'
 
 // Import utils
 import { calcAge, MAX_FILE_SIZE, compressImage } from '../../utils/constanst'
@@ -176,7 +176,7 @@ const KycUserForm = ({
 
               {secondaryTypeForm !== 0 && (
                 <>
-                  <div className="row__kyc--person">
+                  <div className="row">
                     <span className="required">Nombre(s)</span>
                     <input
                       autoFocus
@@ -192,7 +192,7 @@ const KycUserForm = ({
                     />
                   </div>
 
-                  <div className="row__kyc--person">
+                  <div className="row">
                     <span className="required">Apellido(s)</span>
                     <input
                       value={state.lastname || ''}
@@ -209,7 +209,7 @@ const KycUserForm = ({
                 </>
               )}
 
-              <div className="row__kyc--person">
+              <div className="row">
                 <span className="required">Fecha de nacimiento</span>
                 <input
                   disabled={isReadOnly}
@@ -231,7 +231,7 @@ const KycUserForm = ({
 
               {(userAge >= 18 || secondaryTypeForm !== 0) && (
                 <>
-                  <div className="row__kyc--person toshow">
+                  <div className="row toshow">
                     <span className="required">Tipo de identificación</span>
 
                     <select
@@ -253,7 +253,7 @@ const KycUserForm = ({
                     </select>
                   </div>
 
-                  <div className="row__kyc--person toshow">
+                  <div className="row toshow">
                     <span className="required">Número de identificación</span>
                     <input
                       readOnly={isReadOnly}
@@ -271,7 +271,7 @@ const KycUserForm = ({
               )}
 
               {secondaryTypeForm !== 0 && (
-                <div className="row__kyc--person">
+                <div className="row">
                   <span className="required">Parentesco</span>
 
                   <select
@@ -304,7 +304,7 @@ const KycUserForm = ({
               <h3 className="subtitle">2. Información de contacto</h3>
 
               {secondaryTypeForm !== 0 && (
-                <div className="row__kyc--person">
+                <div className="row">
                   <span className="required">Correo electrónico</span>
                   <input
                     value={state.email || ''}
@@ -318,7 +318,7 @@ const KycUserForm = ({
               )}
 
               {secondaryTypeForm !== 0 && (
-                <div className="row__kyc--person">
+                <div className="row">
                   <span className="required">Número de teléfono principal</span>
                   <TelephoneField
                     readOnly={isReadOnly}
@@ -334,7 +334,7 @@ const KycUserForm = ({
                 </div>
               )}
 
-              <div className="row__kyc--person">
+              <div className="row">
                 <span>Número de teléfono alternativo</span>
                 <TelephoneField
                   readOnly={isReadOnly}
@@ -360,7 +360,7 @@ const KycUserForm = ({
             <div className="subsection">
               <h3 className="subtitle">3. Nacionalidad y residencia</h3>
 
-              <div className="row__kyc--person">
+              <div className="row">
                 <span className="required">Nacionalidad</span>
                 <select
                   disabled={isReadOnly}
@@ -382,7 +382,7 @@ const KycUserForm = ({
                 </select>
               </div>
 
-              <div className="row__kyc--person">
+              <div className="row">
                 <span className="required">País de residencia</span>
                 <select
                   disabled={isReadOnly}
@@ -404,7 +404,7 @@ const KycUserForm = ({
                 </select>
               </div>
 
-              <div className="row__kyc--person">
+              <div className="row">
                 <span className="required">Estado / Provincia / Región</span>
                 <input
                   readOnly={isReadOnly}
@@ -419,7 +419,7 @@ const KycUserForm = ({
                 />
               </div>
 
-              <div className="row__kyc--person">
+              <div className="row">
                 <span className="required">Ciudad</span>
                 <input
                   readOnly={isReadOnly}
@@ -434,7 +434,7 @@ const KycUserForm = ({
                 />
               </div>
 
-              <div className="row__kyc--person">
+              <div className="row">
                 <span className="required">Dirección (línea 1)</span>
                 <input
                   readOnly={isReadOnly}
@@ -447,7 +447,7 @@ const KycUserForm = ({
                 />
               </div>
 
-              <div className="row__kyc--person">
+              <div className="row">
                 <span>Dirección (línea 2)</span>
                 <input
                   readOnly={isReadOnly}
@@ -460,7 +460,7 @@ const KycUserForm = ({
                 />
               </div>
 
-              <div className="row__kyc--person">
+              <div className="row">
                 <span className="required">Código postal</span>
                 <input
                   readOnly={isReadOnly}
@@ -488,7 +488,7 @@ const KycUserForm = ({
                 <div className="subsection toshow">
                   <h3 className="subtitle">4. Pregunta de control</h3>
 
-                  <div className="row__kyc--person">
+                  <div className="row">
                     <span className="required">
                       ¿De dónde provienen tus ingresos?
                     </span>
@@ -511,7 +511,7 @@ const KycUserForm = ({
                     </select>
                   </div>
 
-                  <div className="row__kyc--person">
+                  <div className="row">
                     <span className="required">
                       ¿Cuál es el monto estimado a guardar mensualmente? ($)
                     </span>
@@ -532,7 +532,7 @@ const KycUserForm = ({
                     />
                   </div>
 
-                  <div className="row__kyc--person">
+                  <div className="row">
                     <span className="required">
                       ¿Cuál es su profesión actual?
                     </span>
@@ -571,7 +571,7 @@ const KycUserForm = ({
               )}
 
               {!isReadOnly && (
-                <div className="row__kyc--person horizontal upload-section">
+                <div className="row horizontal upload-section">
                   <span className="required">
                     Adjuntar foto de perfil sosteniendo su identificación
                   </span>
@@ -593,18 +593,18 @@ const KycUserForm = ({
               )}
 
               {isReadOnly && (
-                <div className="row__kyc--person horizontal upload-section">
+                <div className="row horizontal upload-section">
                   <span>Foto de perfil</span>
                 </div>
               )}
 
               {profileFileURL !== null && (
-                <div className="row__kyc--person centered">
+                <div className="row centered">
                   <img src={profileFileURL} alt="" className="img-preview" />
                 </div>
               )}
 
-              <div className="row__kyc--person horizontal upload-section">
+              <div className="row horizontal upload-section">
                 {!isReadOnly && (
                   <>
                     {userAge < 18 && secondaryTypeForm === 0 && (
@@ -661,7 +661,7 @@ const KycUserForm = ({
               </div>
 
               {idFileURL !== null && (
-                <div className="row__kyc--person centered">
+                <div className="row centered">
                   <img src={idFileURL} alt="" className="img-preview" />
                 </div>
               )}
@@ -670,7 +670,7 @@ const KycUserForm = ({
                 <div className="subsection">
                   <h3 className="subtitle">6. Beneficiario</h3>
 
-                  <div className="row__kyc--person">
+                  <div className="row">
                     <label className="check-input">
                       Añadir beneficiario
                       <input

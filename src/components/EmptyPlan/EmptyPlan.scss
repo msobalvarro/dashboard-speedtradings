@@ -6,30 +6,28 @@
   padding: 5%;
   text-align: center;
   display: grid;
-  grid-gap: 20px;
+  grid-gap: 8px;
   justify-items: center;
   align-items: center;
   grid-template-rows: repeat(3, min-content);
 }
 
 .plan__icon {
-  width: 64px;
-  height: 64px;
+  width: 48px;
+  height: 48px;
   margin-bottom: 0;
 
   @media (min-width: $tablet-big) {
-    width: 84px;
-    height: 84px;
+    width: 54px;
+    height: 54px;
   }
 }
 
 button.acquire__button {
-  padding: 8px;
-  margin: 18px auto 0 auto;
+  padding: 4px;
+  margin: 16px auto 0 auto;
   width: 100%;
-  max-width: 300px;
+  max-width: 200px;
   font-style: normal;
   font-weight: bold;
-  font-size: 20px;
-  line-height: 23px;
 }

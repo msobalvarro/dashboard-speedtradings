@@ -6,6 +6,14 @@ import ActivityIndicator from '../../components/ActivityIndicator/Activityindica
 import Swal from 'sweetalert2'
 import { useSesionStorage } from '../../utils/hooks/useSesionStorage'
 
+const relationship = [
+  'Padre / Madre',
+  'Hermano (a)',
+  'Tío (a)',
+  'Abuelo (a)',
+  'Otro',
+]
+
 const KycPersonView = ({ idUser }) => {
   const [loader, setLoader] = useState(false)
   const KEY = `kyc-info-${idUser}`
@@ -63,12 +71,15 @@ const KycPersonView = ({ idUser }) => {
                 label="Nombre"
                 value={`${kycInfo?.beneficiary?.firstname} ${kycInfo?.beneficiary?.lastname}`}
               />
-              <TextGroup label="Parentesco" value="Padre / Madre" />
+              <TextGroup
+                label="Parentesco"
+                value={relationship[kycInfo?.beneficiary?.relationship]}
+              />
             </div>
           ) : (
             <div className="empty__beneficiary">
               <span className="label white">No cuenta con un beneficiario</span>
-              <button className="button green">Agregar beneficiario</button>
+              {/*<button className="button green">Agregar beneficiario</button>*/}
             </div>
           )}
         </div>

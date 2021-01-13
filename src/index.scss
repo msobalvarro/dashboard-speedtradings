@@ -64,6 +64,8 @@ a {
   outline: none;
 
   &.text-input {
+    width: 100%;
+
     background-color: #1d1d1d;
     border: 2px solid #000;
     border-radius: 3px;
@@ -236,6 +238,10 @@ a {
 
   &.gray {
     color: rgba(255, 255, 255, 0.57);
+  }
+
+  &.skyblue {
+    color: $colorSecondary;
   }
 }
 

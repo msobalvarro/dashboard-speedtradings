@@ -25,7 +25,6 @@ const KycEnterpriseView = ({ idUser }) => {
       } else {
         //Cargar la foto de perfil si esta disponible
         setKycInfo(data)
-        console.log(data)
       }
     } catch (error) {
       Swal.fire('Ha ocurrido un error', error, 'error')

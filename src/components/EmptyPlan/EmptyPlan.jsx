@@ -19,7 +19,7 @@ const EmptyPlan = ({ plan = 'ethereum', onClick }) => {
         >
           No cuenta con un plan de activo de {plan}
         </h3>
-        <p className="value">¿Desea adquirir un plan de {plan}?</p>
+        <p className="caption">¿Desea adquirir un plan de {plan}?</p>
       </div>
       <button
         onClick={onClick}

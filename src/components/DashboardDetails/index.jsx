@@ -21,9 +21,7 @@ const DashboardDetails = ({ plan, data = {}, upgradePlan }) => {
 
   useEffect(() => {
     if (data) {
-      //const result = (data.amount / data.amount_to_win) * 100
       const valuePorcent = (data.total_paid / (data.amount * 2)) * 100
-      console.log(data)
       setPercentage(valuePorcent)
     }
   }, [data])
@@ -67,7 +65,7 @@ const DashboardDetails = ({ plan, data = {}, upgradePlan }) => {
       {/*BARRA DE PROGRESO*/}
       <div className="plan__two-columns">
         <div className="plan__group left__align">
-          <span className="caption">Inversion inicial</span>
+          <span className="caption">Inversión inicial</span>
           <p className="plan__value bigger">
             {data?.amount}
             {plan === PLAN.BITCOIN ? ' BTC' : ' ETH'}

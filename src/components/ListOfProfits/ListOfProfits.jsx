@@ -191,10 +191,22 @@ const ListOfProfits = ({
         {profitsData.length > 0 && (
           <div className="total__container">
             <div className="total__item">
-              <span className="label white">
+              <span
+                className={`${
+                  currencySelected === BITCOIN
+                    ? 'label yellow'
+                    : 'label skyblue'
+                }`}
+              >
                 Total {currencySelected === BITCOIN ? 'BTC: ' : 'ETH: '}{' '}
               </span>
-              <span className="value">
+              <span
+                className={`${
+                  currencySelected === BITCOIN
+                    ? 'value yellow'
+                    : 'value skyblue'
+                }`}
+              >
                 {currencySelected === BITCOIN ? sumTotalBtc : sumTotalEth}
               </span>
             </div>
