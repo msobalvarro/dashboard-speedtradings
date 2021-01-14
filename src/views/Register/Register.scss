@@ -1,4 +1,4 @@
-@import "../../utils/constants.scss";
+@import '../../utils/constants.scss';
 
 div.container-register {
   animation: fadeEffect 1s;
@@ -19,7 +19,7 @@ div.container-register {
     // En pantallas de 620px o menos, se remueve el banner
     @media (max-width: $tablet-small) {
       & {
-        display: none; 
+        display: none;
       }
     }
   }
@@ -50,9 +50,9 @@ div.container-register {
       & {
         width: 100%;
         min-height: 100vh !important;
-        
 
-        .row, .col {
+        .row__register,
+        .col {
           span {
             font-size: 0.9rem !important;
             margin-bottom: 5px !important;
@@ -62,7 +62,7 @@ div.container-register {
         .dollar-amount {
           span {
             font-size: 1.2rem !important;
-            margin-top: .5rem;
+            margin-top: 0.5rem;
 
             &::after {
               // align-self: center;
@@ -97,9 +97,10 @@ div.container-register {
 
     @media (max-width: 1000px) {
       & {
-        .row, .col {
+        .row__register,
+        .col {
           span {
-            font-size: .8rem;
+            font-size: 0.8rem;
           }
         }
 
@@ -171,10 +172,9 @@ div.container-register {
           font-weight: bold;
           flex: 1;
 
-
           &::after {
             // align-self: center;
-            content: "USD";
+            content: 'USD';
             display: flex;
             font-size: 12px;
             margin-bottom: 10px;
@@ -200,15 +200,18 @@ div.container-register {
             flex-direction: column;
             margin: 2rem 0;
 
-            &:last-child, &.telephone-field {
+            &:last-child,
+            &.telephone-field {
               margin-bottom: 0;
             }
 
             .col {
               width: 100%;
 
-              &.country-field, &.telephone-field {
-                width: 100%;              }
+              &.country-field,
+              &.telephone-field {
+                width: 100%;
+              }
             }
 
             .dollar-amount {
@@ -223,7 +226,7 @@ div.container-register {
         }
       }
 
-      .row,
+      .row__register,
       .col {
         justify-content: flex-end;
         display: flex;
@@ -259,7 +262,7 @@ div.container-register {
             font-size: 8px;
             right: 0%;
             border-radius: 2px;
-            content: "requerido";
+            content: 'requerido';
             position: absolute;
             padding: 3px;
           }

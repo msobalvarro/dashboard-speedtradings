@@ -1,39 +1,59 @@
-import React, { useEffect, useState } from "react"
-import "./ModalTerms.scss"
-
+import React, { useEffect, useState } from 'react'
+import Modal from '../Modal/Modal'
+import { ReactComponent as CloseIcon } from '../../static/icons/close.svg'
 import { Petition } from '../../utils/constanst'
+import { useSesionStorage } from '../../utils/hooks/useSesionStorage'
+import ActivityIndicator from '../../components/ActivityIndicator/Activityindicator'
 
-/**
- * @param {Boolean} isVisible - Determina si se muestra o no el componente
- * @param {Callback} onClose - Función a ejecutar cuando se cierra el modal
- */
-const ModalTerms = ({ isVisible = false, onClose = () => { } }) => {
-    const [page, setPage] = useState('')
+import './ModalTerms.scss'
 
-    const fetchData = async _ => {
-        try {
-            const { data } = await Petition.get('/terms/read/speedtradings')
+const Modalterms = ({ closeModal }) => {
+  const [terms, setTerms] = useSesionStorage('terms', [])
+  const [loader, setLoader] = useState(false)
 
-            setPage(data)
-        } catch (error) {
-            console.error(error)
-        }
+  const fetchData = async _ => {
+    try {
+      setLoader(true)
+
+      const { data } = await Petition.get('/terms/api/speedtradings')
+      setTerms(data)
+    } catch (error) {
+      console.error(error)
+    } finally {
+      setLoader(false)
     }
+  }
 
-    useEffect(_ => {
-        fetchData()
-    }, [])
+  useEffect(_ => {
+    //Llamar a los terminos y condiciones solo si no se ha cargado antes
+    terms.length === 0 && fetchData()
+  }, [])
 
-    if (isVisible) {
-        return (
-            <div className="modal-terms">
-                <button onClick={_ => onClose()} className="button">Cerrar</button>
-                <div className='content' dangerouslySetInnerHTML={{ __html: page }}></div>
+  return (
+    <Modal persist={true} onlyChildren>
+      <div className="overlay">
+        <div className="modal__terms">
+          <div className="two__columns">
+            <h2 className="modal__title">Términos y condiciones</h2>
+            <CloseIcon className="close__modal--icon" onClick={closeModal} />
+          </div>
+
+          {loader && (
+            <div className="center__element">
+              <ActivityIndicator size={100} />
             </div>
-        )
-    } else {
-        return null
-    }
+          )}
+
+          {terms.length > 0 &&
+            terms.map((paragraph, index) => (
+              <p key={index} className="terms__contain">
+                {paragraph}
+              </p>
+            ))}
+        </div>
+      </div>
+    </Modal>
+  )
 }
 
-export default ModalTerms
+export default Modalterms

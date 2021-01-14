@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from 'react'
-import { HashRouter, Route, Switch, Redirect } from "react-router-dom"
-import { useDispatch } from "react-redux"
+import { HashRouter, Route, Switch, Redirect } from 'react-router-dom'
+import { useDispatch } from 'react-redux'
 
 // Import Assets
-import "@sweetalert2/theme-dark"
+import '@sweetalert2/theme-dark'
 
 // Redux configurations
 import { getStorage } from '../utils/constanst'
@@ -34,19 +34,15 @@ const App = () => {
    * @param {React.Component} child - componente a renderizar en caso de haber completado
    * el formulario kyc
    */
-  const checkKycComplete = (child) => {
-    return completedKyc
-      ? child
-      : _ => (<Redirect to="/kyc" />)
+  const checkKycComplete = child => {
+    return completedKyc ? child : _ => <Redirect to="/kyc" />
   }
 
   /**
    * Deshabilita el acceso a la vista del kyc cuando este ya eha sido completado
    */
   const checkKycAccess = () => {
-    return !completedKyc
-      ? _ => (<Kyc />)
-      : _ => (<Redirect to="/" />)
+    return !completedKyc ? _ => <Kyc /> : _ => <Redirect to="/" />
   }
 
   useEffect(() => {
@@ -54,11 +50,10 @@ const App = () => {
 
     // Comprueba si hay datos retornados en el payload
     if (Object.keys(payload).length > 0) {
-
       // Creamos el dispatch para el storage de redux
       dispatch({
         type: SETSTORAGE,
-        payload
+        payload,
       })
 
       // Verificamos sí el usuario completó
@@ -78,8 +73,7 @@ const App = () => {
   return (
     <>
       <HashRouter>
-        {
-          loged &&
+        {loged && (
           <Switch>
             <Route path="/" exact component={checkKycComplete(Dashboard)} />
             <Route path="/sponsors" component={checkKycComplete(Sponsors)} />
@@ -87,11 +81,9 @@ const App = () => {
             <Route path="/kyc" component={checkKycAccess()} />
             <Route path="*" component={checkKycComplete(NotFound)} />
           </Switch>
+        )}
 
-        }
-
-        {
-          !loged &&
+        {!loged && (
           <Switch>
             <Route path="/" exact component={Login} />
             <Route path="/register" exact component={Register} />
@@ -99,10 +91,10 @@ const App = () => {
             <Route path="/reset/password" component={Reset} />
             <Route path="*" component={NotFound} />
           </Switch>
-        }
+        )}
       </HashRouter>
 
-      <ButtonSupport />
+      {/*<ButtonSupport />*/}
     </>
   )
 }

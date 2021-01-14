@@ -1,4 +1,4 @@
-@import "../../utils/constants.scss";
+@import '../../utils/constants.scss';
 
 div.container-buy-plan {
   background-color: rgba(0, 0, 0, 0.5);
@@ -23,7 +23,7 @@ div.container-buy-plan {
     width: 60%;
 
     .aproximateAmount-legend {
-      font-size: .75rem;
+      font-size: 0.75rem;
       margin-top: 5px;
     }
 
@@ -37,7 +37,6 @@ div.container-buy-plan {
       }
     }
 
-
     .picker,
     .text-input {
       margin-top: 10px;
@@ -48,7 +47,6 @@ div.container-buy-plan {
       display: flex;
       overflow: hidden;
       flex-direction: column;
-
 
       span.wallet {
         background-color: $colorYellow;

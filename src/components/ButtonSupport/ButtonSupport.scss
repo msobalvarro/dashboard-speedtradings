@@ -1,46 +1,47 @@
-@import "../../utils/constants.scss";
+@import '../../utils/constants.scss';
 
 .container-support {
-    animation: fadeInEffect 0.5s;
-    background-color: rgba($color: $colorMain, $alpha: 0.8);
-    position: fixed;
-    top: 0;
-    left: 0;
-    height: 100vh;
-    transition: $transition;
-    width: 100vw;
-    z-index: 1000;
+  animation: fadeInEffect 0.5s;
+  background-color: rgba($color: $colorMain, $alpha: 0.8);
+  position: fixed;
+  top: 0;
+  left: 0;
+  height: 100vh;
+  transition: $transition;
+  width: 100vw;
+  z-index: 1000;
 
-    span.label {
-        bottom: 30px;
-        color: $colorYellow;
-        right: 120px;
-        font-weight: bold;
-        position: absolute;
-    }
+  span.label {
+    bottom: 30px;
+    color: $greenColor;
+    right: 120px;
+    font-weight: bold;
+    position: absolute;
+  }
 }
 
 .button-support {
-    padding: 25px;
-    border-radius: 50%;
-    background-color: $colorYellow;
-    box-shadow: rgba(0, 0, 0, 0.8) 0px 10px 20px;
-    position: fixed;
-    right: -50px;
-    transition: $transition;
-    bottom: -50px;
-    z-index: 1100;
+  padding: 25px;
+  border-radius: 50%;
+  background-color: $greenColor;
+  box-shadow: rgba(0, 0, 0, 0.8) 0px 10px 20px;
+  position: fixed;
+  right: -50px;
+  transition: $transition;
+  bottom: -50px;
+  z-index: 1100;
 
-    &:hover {
-        right: 10px;
-    }
+  &:hover {
+    right: 10px;
+  }
 
-    &:hover {
-        right: -20px;
-        bottom: -25px;
-    }
+  &:hover {
+    right: -20px;
+    bottom: -25px;
+  }
+}
 
-    img {
-        max-width: 48px;
-    }
+.support__icon {
+  width: 48px;
+  height: 48px;
 }

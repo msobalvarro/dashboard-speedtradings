@@ -1,0 +1,31 @@
+@import '../../utils/constants.scss';
+
+.wallet__card {
+  background: rgba(0, 0, 0, 0.2);
+  border-radius: 8px;
+  padding: 16px;
+  max-width: 400px;
+  margin: 16px auto;
+
+  & .wallet__title {
+    font-style: normal;
+    font-weight: 500;
+    font-size: 18px;
+    line-height: 28px;
+    margin-bottom: 5px;
+  }
+
+  & .wallet__value {
+    font-style: normal;
+    font-weight: normal;
+    font-size: 16px;
+    line-height: 18px;
+    color: rgba($color: #fff, $alpha: 0.57);
+  }
+
+  & .edit__icon {
+    cursor: pointer;
+    width: 22px;
+    height: 22px;
+  }
+}

@@ -1,14 +1,14 @@
-@import "./utils/constants.scss";
+@import './utils/constants.scss';
 
 @font-face {
   font-family: Gotham;
-  src: url("./static/fonts/GothamRounded-Book.otf") format("opentype");
+  src: url('./static/fonts/GothamRounded-Book.otf') format('opentype');
 }
 
 @font-face {
   font-family: Gotham;
   font-weight: bold;
-  src: url("./static/fonts/GothamRounded_Bold.ttf") format("truetype");
+  src: url('./static/fonts/GothamRounded_Bold.ttf') format('truetype');
 }
 
 * {
@@ -44,14 +44,14 @@ body {
 }
 
 code {
-  font-family: source-code-pro, Menlo, Monaco, Consolas, "Courier New",
+  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
     monospace;
 }
 
 input:-webkit-autofill,
-input:-webkit-autofill:hover, 
-input:-webkit-autofill:focus, 
-input:-webkit-autofill:active  {
+input:-webkit-autofill:hover,
+input:-webkit-autofill:focus,
+input:-webkit-autofill:active {
   transition-delay: 9999999s !important;
   transition-property: background-color, color !important;
 }
@@ -64,6 +64,8 @@ a {
   outline: none;
 
   &.text-input {
+    //width: 100%;
+
     background-color: #1d1d1d;
     border: 2px solid #000;
     border-radius: 3px;
@@ -110,6 +112,21 @@ a {
       background-color: $colorYellow;
     }
 
+    &.skyblue {
+      background-color: $colorSecondary;
+    }
+
+    &.yellow {
+      background-color: $colorYellow;
+    }
+
+    &.green {
+      background-color: $greenColor;
+    }
+    &.red {
+      background-color: rgba($color: $colorRed, $alpha: 0.57);
+    }
+
     &.large {
       font-size: 24px;
     }
@@ -147,11 +164,11 @@ a {
     }
   }
 
-  &[type="radio"].check {
+  &[type='radio'].check {
     position: relative;
 
     &::after {
-      content: "";
+      content: '';
       background-color: #000;
       border: 1px solid $colorYellow;
       position: absolute;
@@ -177,4 +194,107 @@ a {
 #root {
   height: 100vh;
   width: 100%;
+}
+
+.text__group {
+  margin-top: 16px;
+}
+
+.label {
+  font-style: normal;
+  font-weight: bold;
+  font-size: 16px;
+  line-height: 23px;
+  color: $colorSecondary;
+
+  &.yellow {
+    color: $colorYellow;
+  }
+
+  &.secondary {
+    color: $colorSecondary;
+  }
+
+  &.white {
+    color: #fff;
+  }
+}
+
+.value {
+  margin-top: 5px;
+  font-style: normal;
+  font-weight: normal;
+  font-size: 18px;
+  line-height: 23px;
+  color: #ffffff;
+
+  &.yellow {
+    color: $colorYellow;
+  }
+
+  &.secondary {
+    color: $colorSecondary;
+  }
+
+  &.gray {
+    color: rgba(255, 255, 255, 0.57);
+  }
+
+  &.skyblue {
+    color: $colorSecondary;
+  }
+}
+
+.caption {
+  margin-top: 5px;
+  font-style: normal;
+  font-weight: normal;
+  font-size: 12px;
+  line-height: 14px;
+  color: rgba($color: #fff, $alpha: 0.57);
+
+  &.yellow {
+    color: $colorYellow;
+  }
+
+  &.secondary {
+    color: $colorSecondary;
+  }
+}
+
+.text__bigger {
+  font-size: 24px;
+  line-height: 24px;
+}
+
+.center__element {
+  position: absolute;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+}
+
+.icon {
+  fill: currentColor;
+
+  path {
+    fill: currentColor;
+  }
+}
+
+.center__element {
+  z-index: 99;
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
 }

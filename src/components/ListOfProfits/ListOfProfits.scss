@@ -1,0 +1,119 @@
+$mobile: 380px;
+$tabletSmall: 580px;
+
+.ListOfProfits {
+  margin-top: 16px;
+  padding-bottom: 64px;
+}
+
+.table {
+  width: 100%;
+  background: rgba(0, 0, 0, 0.2);
+  border-radius: 8px;
+}
+
+.table__head {
+  padding-top: 8px;
+}
+
+.table__body {
+  padding-bottom: 8px;
+}
+
+.row {
+  padding: 8px;
+  text-align: left;
+  display: grid;
+  justify-content: space-between;
+  justify-items: center;
+  align-items: center;
+  grid-template-columns: 75px repeat(3, 1fr);
+  grid-gap: 5px;
+
+  & span:first-of-type {
+    justify-self: start;
+  }
+
+  & span:last-of-type {
+    justify-self: end;
+  }
+
+  @media (min-width: $mobile) {
+    grid-template-columns: minmax(75px, 1fr) 18px repeat(3, 1fr);
+    grid-gap: 8px;
+  }
+
+  @media (min-width: $tabletSmall) {
+    grid-template-columns: repeat(5, 1fr);
+    grid-gap: 16px;
+    padding: 16px;
+  }
+}
+
+.divisor {
+  height: 1px;
+  width: 100%;
+  background-color: #4f4f4f;
+}
+
+.table__label {
+  font-style: normal;
+  font-weight: bold;
+  font-size: 12px;
+  line-height: 14px;
+  color: #f2f2f2;
+
+  @media (min-width: 780px) {
+    font-size: 20px;
+    line-height: 23px;
+  }
+}
+
+.table__value {
+  font-style: normal;
+  font-weight: normal;
+  font-size: 12px;
+  line-height: 14px;
+  color: #bdbdbd;
+
+  @media (min-width: 780px) {
+    font-size: 18px;
+    line-height: 21px;
+  }
+}
+
+.coin__container {
+  display: flex;
+  justify-content: start;
+  align-items: center;
+
+  & .icon-small {
+    @media (min-width: $tabletSmall) {
+      margin-right: 5px;
+    }
+    width: 18px;
+    height: 18px;
+  }
+}
+
+.total__container {
+  padding: 5%;
+  width: 100%;
+
+  @media (min-width: $tabletSmall) {
+    margin-left: auto;
+    padding: 20px;
+  }
+
+  & .total__item {
+    padding: 8px 0;
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+  }
+}
+
+.empty {
+  text-align: center;
+  padding: 16px;
+}
