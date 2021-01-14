@@ -59,6 +59,11 @@
 }
 .greeting {
   margin-top: 25px;
+  display: block;
+
+  @media (min-width: 1000px) {
+    display: none;
+  }
 }
 
 .calendar__container {

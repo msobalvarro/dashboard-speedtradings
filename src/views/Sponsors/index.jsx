@@ -10,8 +10,10 @@ import {
 
 // Import styles and assets
 import astronaut from '../../static/images/astronaut.png'
-import { ReactComponent as BitcoinIcon } from '../../static/icons/bitcoin.svg'
-import { ReactComponent as EthereumIcon } from '../../static/icons/ether.svg'
+//Import icons
+import { ReactComponent as BitcoinIcon } from '../../static/icons/bitcoin-small.svg'
+import { ReactComponent as EthereumIcon } from '../../static/icons/ethereum -small.svg'
+
 import { ReactComponent as CopyIcon } from '../../static/icons/copy.svg'
 
 import './styles.scss'
@@ -268,9 +270,25 @@ const Sponsors = () => {
                   </div>
                   <div className="sponsor__group">
                     <span className="sponsor__label">Moneda</span>
-                    <p className="sponsor__value">
-                      {sponsor.id_currency === 1 ? 'Bitcoin' : 'Ethereum'}
-                    </p>
+                    <div className="sponsor__value">
+                      {sponsor.id_currency === 1 ? (
+                        <div className="align__vertical">
+                          <BitcoinIcon
+                            className="sponsor__icon small icon"
+                            color="#ffcb08"
+                          />
+                          Bitcoin
+                        </div>
+                      ) : (
+                        <div className="align__vertical">
+                          <EthereumIcon
+                            className="sponsor__icon small icon"
+                            color="#9ed3da"
+                          />
+                          Ethereum
+                        </div>
+                      )}
+                    </div>
                   </div>
                   <div className="sponsor__group">
                     <span className="sponsor__label">Inversión</span>
@@ -310,14 +328,20 @@ const Sponsors = () => {
         {filteredData.length > 0 && (
           <div className="commissions__total">
             <div className="commissions__total--group">
-              <span className="label white">Total BTC:</span>
+              <div className="label white align__vertical">
+                Total BTC{' '}
+                <BitcoinIcon className="sponsor__icon icon" color="#ffcb08" />
+              </div>
               <span className="value">
                 {floor(SumBTC, 8)} BTC ($
                 {calcDollarAmount(1, SumBTC)})
               </span>
             </div>
             <div className="commissions__total--group">
-              <span className="label white">Total ETH:</span>
+              <div className="label white align__vertical">
+                Total ETH{' '}
+                <EthereumIcon className="sponsor__icon icon" color="#9ed3da" />
+              </div>
               <span className="value">
                 {floor(SumETH, 8)} ETH ($
                 {calcDollarAmount(2, SumETH)})

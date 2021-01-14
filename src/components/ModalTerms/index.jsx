@@ -8,7 +8,10 @@ const Modalterms = ({ closeModal }) => {
     <Modal persist={true} onlyChildren>
       <div className="overlay">
         <div className="modal__terms">
-          <h2 className="modal__title">Términos y condiciones</h2>
+          <div className="two__columns">
+            <h2 className="modal__title">Términos y condiciones</h2>
+            <CloseIcon className="close__modal--icon" onClick={closeModal} />
+          </div>
           <p className="terms__contain">
             Speed Tradings es una plataforma descentralizada de Inversión a
             través del trading de criptomonedas cuyo objetivo es compartir con
@@ -67,10 +70,6 @@ const Modalterms = ({ closeModal }) => {
             comisión de retiro. Términos y condiciones sujetos a modificaciones
             según lo requiera la empresa.
           </p>
-
-          <button className="button green accept__button" onClick={closeModal}>
-            He leído y acepto los términos y condiciones de uso
-          </button>
         </div>
       </div>
     </Modal>

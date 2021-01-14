@@ -120,9 +120,32 @@
 }
 
 .commissions__total--group {
-  margin-bottom: 8px;
   display: flex;
-  flex-wrap: wrap;
-  align-items: flex-end;
-  justify-content: space-between;
+  flex-direction: column;
+  margin-bottom: 16px;
+
+  @media (min-width: 380px) {
+    margin-bottom: 8px;
+
+    flex-direction: row;
+    align-items: flex-end;
+    justify-content: space-between;
+  }
+}
+
+.sponsor__icon {
+  width: 22px;
+  height: 22px;
+  margin-left: 5px;
+  &.small {
+    width: 16px;
+    height: 16px;
+    margin-left: 0px;
+    margin-right: 5px;
+  }
+}
+
+.align__vertical {
+  display: flex;
+  align-items: center;
 }
