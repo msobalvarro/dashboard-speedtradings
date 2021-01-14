@@ -14,7 +14,7 @@ import AlypayLogo from '../../static/images/alypay-logo.png'
 
 // Import Components
 import Countries from '../../utils/countries.json'
-import ModalTerms from '../../components/ModalTerms/'
+import ModalTerms from '../../components/ModalTerms/ModalTerms'
 import ActivityIndicator from '../../components/ActivityIndicator/Activityindicator'
 import {
   Petition,

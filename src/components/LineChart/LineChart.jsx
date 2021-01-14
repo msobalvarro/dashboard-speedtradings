@@ -81,7 +81,6 @@ const LineChart = ({ dataDashoardBTC, dataDashoardETH }) => {
   useEffect(() => {
     //Cargamos los datos de la grafica
     loadChart()
-    console.log(dataDashoardBTC)
   }, [dataDashoardBTC, dataDashoardETH])
 
   return (

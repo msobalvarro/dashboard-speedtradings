@@ -1,179 +1,134 @@
-import React, { useState, useRef } from "react"
-import ChartistGraph from "react-chartist"
-import "chartist/dist/scss/chartist.scss"
-import moment from "moment"
-import "./DashboardDetails.scss"
+import React, { useEffect, useState } from 'react'
+import { ReactComponent as BitcoinIcon } from '../../static/icons/bitcoin-big.svg'
+import { ReactComponent as EthereumIcon } from '../../static/icons/ethereum-big.svg'
+import moment from 'moment'
 
-// Import Components
-import DashboardAllReports from "../../components/DashboardAllReports/DashboardAllReports"
-import HeaderDashboard from "../../components/HeaderDashboard/HeaderDashboard"
-
-// Import utils
-import { optionsChartDashboard, calculateCryptoPriceWithoutFee } from "../../utils/constanst"
+//Importar estilos
+import './DashboardDetails.scss'
 
 /**
- * @param {Object} data - infromación del plan del usuario
- * @param {String} type - Tipo de moneda
+ * @param {String} plan - Tipo de moneda a procesar
+ * @param {Object} data - Datos del plan BITCOIN/ETHEREUM
+ * @param {Function} upgradePlan - Funcion que se ejecuta cuando se hace click en el boton upgrade
  */
-const DashboardDetails = ({ data = {}, type = "" }) => {
-    // Estado para mostrar u ocultar el modal del historial completo de inversiones
-    const [showMoreContent, setShow] = useState(false)
 
-    // Estados para mostrar indicadores en la gráfica
-    const labels = []
-    const series = []
+const DashboardDetails = ({ plan, data = {}, upgradePlan }) => {
+  const PLAN = {
+    BITCOIN: 'bitcoin',
+  }
 
-    // Referencia del modal de mostrar el historial de inversiones
-    const showMoreRef = useRef(null)
+  const [percentage, setPercentage] = useState(0)
 
-    /**Costante que almacena el total de las ganancias */
-    const amountSumArr = []
-
-    /** Destructuración de las data recibida para separar el historial, la info y el precio */
-    const {history, info, price=0} = data;
-
-    const showMore = () => {
-        setShow(true)
+  useEffect(() => {
+    if (data) {
+      const valuePorcent = (data.total_paid / (data.amount * 2)) * 100
+      setPercentage(valuePorcent)
     }
+  }, [data])
 
-    /**Creamos el algoritmo para ordenar los datos de la grafica */
-    if (history.length > 0) {
-
-        for (let index = 0; index < data.history.length - 5; index++) {
-            const item = data.history[index]
-
-            labels.push(moment(item.date).format('dddd'))
-            series.push(item.amount)
-            amountSumArr.push(item.amount)
-        }
-    }
-
-    // Datos para la gráfica
-    const dataChart = {
-        labels,
-        series: [series]
-    }
-
-    // Se indica la lista de transacciones a listar
+  if (data.approved === 0)
     return (
-        <>
-            {
-                info.approved === 0 &&
-                <h1 className="message-disabled">Tu plan se activara cuando sea verificado</h1>
-            }
-
-            <div className={info.approved === 0 ? 'disabled' : ''}>
-                <HeaderDashboard 
-                    type={type}
-                    disabled={info.approved === 0}
-                    idInvestment={info.id_investment}
-                    amount={(info.amount)}
-                    amountToday={info.total_paid} />
-
-                <div className="card chart">
-                    <ChartistGraph data={dataChart} options={optionsChartDashboard} type="Line" />
-                </div>
-
-                <div className="card details">
-                    <div className="row">
-                        <div className="col">
-                            <h2 className="big">
-                                {
-                                    moment(info.start_date).format('MMM. D, YYYY')
-                                }
-                            </h2>
-                            <span>Fecha de inicio</span>
-                        </div>
-
-                        <div className="col yellow">
-                            <h2 className="big">
-                                {
-                                    (info.amount_to_win) + ' ' + type.toUpperCase()
-                                }
-                            </h2>
-                            <span>Monto a ganar</span>
-                        </div>
-                    </div>
-
-                    <div className="row">
-                        <div className="col">
-                            <h2>
-                                {
-                                    info.last_pay !== null
-                                        ? (info.last_pay) + ' ' + type.toUpperCase()
-                                        : <span>(Sin reportes)</span>
-                                }
-                            </h2>
-                            <span>Ultimo reporte de ganancia</span>
-                        </div>
-
-                        <div className="col yellow">
-                            <h2>
-                                {
-                                    info.amount_rest !== null
-                                        ? (info.amount_rest) + ' ' + type.toUpperCase()
-                                        : (info.amount_to_win) + ' ' + type.toUpperCase()
-                                }
-                            </h2>
-                            <span>Saldo pendiente</span>
-                        </div>
-                    </div>
-                </div>
-
-                {/** Historial del los últimos 10 movimientos de inversión */}
-                <div className="card profit-table">
-                    {
-                        history.length !== 0 &&
-                        <div className="table">
-                            <div className="header">
-                                <span>Fecha</span>
-                                <span>Pocentaje</span>
-                                <span>Ganancias</span>
-                                <span>USD</span>
-                            </div>
-                            <div className="body">
-                                {
-                                    history.map((item, index) => (
-                                        <div className={`row ${moment().get('week') !== moment(item.date).get('week') ? 'paymented' : ''}`} key={index}>
-                                            <span>{moment(item.date).format('MMM. D, YYYY')}</span>
-                                            <span>{item.percentage}%</span>
-                                            <span>{item.amount}</span>
-                                            <span>
-                                                $ {
-                                                    price !== 0
-                                                        ? calculateCryptoPriceWithoutFee(price, item.amount)
-                                                        : 0
-                                                }
-                                            </span>
-                                        </div>
-                                    ))
-                                }
-                            </div>
-                            <div className={`footer ${(!showMoreContent) ? 'more' : ''}`}>
-
-                                {
-                                    (!showMoreContent) &&
-                                    <span className="show-more" onClick={showMore} ref={showMoreRef}>
-                                        Mostrar todo
-                                    </span>
-                                }
-                            </div>
-                        </div>
-                    }
-
-                    {
-                        history.length === 0 &&
-                        <h2 className="empty">Aun no hay historial de ganancias</h2>
-                    }
-                </div>
-
-                {
-                    showMoreContent &&
-                    <DashboardAllReports type={type} onClose={_ => setShow(false)}/>
-                }
-            </div>
-        </>
+      <article className="card__plan">
+        <h1 className="caption">Tu plan se activara cuando sea verificado</h1>
+      </article>
     )
+
+  return (
+    <article className="card__plan">
+      {/*BARRA DE PROGRESO*/}
+      <div className="plan__header">
+        <div className="plan__name">
+          <div
+            className={`${
+              plan === PLAN.BITCOIN
+                ? 'plan__icon--container yellow'
+                : 'plan__icon--container skyblue'
+            }`}
+          >
+            {plan === 'bitcoin' ? (
+              <BitcoinIcon className="plan__icon icon" color="#ffcb08" />
+            ) : (
+              <EthereumIcon className="plan__icon icon" color="#9ed3da" />
+            )}
+          </div>
+          <span className="value">Plan {plan}</span>
+        </div>
+
+        <div className="plan__group">
+          <span className="caption">Fecha inicio</span>
+          <span className="plan__value">
+            {moment(data?.start_date).format('DD MMM YYYY')}
+          </span>
+        </div>
+      </div>
+
+      {/*BARRA DE PROGRESO*/}
+      <div className="plan__two-columns">
+        <div className="plan__group left__align">
+          <span className="caption">Inversión inicial</span>
+          <p className="plan__value bigger">
+            {data?.amount}
+            {plan === PLAN.BITCOIN ? ' BTC' : ' ETH'}
+          </p>
+        </div>
+
+        <div className="plan__group">
+          <span className="caption">Monto a ganar</span>
+          <p className="plan__value bigger">
+            {data?.amount_to_win}
+            {plan === PLAN.BITCOIN ? ' BTC' : ' ETH'}
+          </p>
+        </div>
+      </div>
+
+      {/*BARRA DE PROGRESO*/}
+      <div className="bar__container">
+        <div>
+          <p className="plan__value">{`Ganado (${percentage.toFixed(1)}%)`}</p>
+
+          <div className={`${plan === PLAN.BITCOIN ? 'bar yellow' : 'bar'}`}>
+            <div
+              style={{ width: `${percentage}%` }}
+              className={`${
+                plan === PLAN.BITCOIN
+                  ? 'bar__progressive yellow'
+                  : 'bar__progressive'
+              }`}
+            ></div>
+          </div>
+          <span className="plan__value">
+            {data?.total_paid} {plan === PLAN.BITCOIN ? ' BTC' : ' ETH'} /{' '}
+            {data?.amount_to_win} {plan === PLAN.BITCOIN ? ' BTC' : ' ETH'}
+          </span>
+        </div>
+        <div className="plan__group">
+          <span className="caption">Restante</span>
+          <span
+            className={`${
+              plan === PLAN.BITCOIN
+                ? 'plan__value yellow'
+                : 'plan__value skyblue'
+            }`}
+          >
+            {data?.amount_rest}
+            {plan === PLAN.BITCOIN ? ' BTC' : ' ETH'}
+          </span>
+        </div>
+      </div>
+
+      {/*CTA UPGRADE PLAN*/}
+      <button
+        onClick={upgradePlan}
+        className={`${
+          plan === PLAN.BITCOIN
+            ? 'button upgrade__button yellow'
+            : 'button upgrade__button '
+        }`}
+      >
+        UPGRADE
+      </button>
+    </article>
+  )
 }
 
 export default DashboardDetails

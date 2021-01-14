@@ -165,7 +165,16 @@ const ListOfProfits = ({
                     )}
                   </div>
                   <span className="table__value">{profit?.percentage} %</span>
-                  <span className="table__value">{profit?.amount}</span>
+                  {isMobile ? (
+                    <span className="table__value">{profit?.amount}</span>
+                  ) : (
+                    <span className="table__value">
+                      {`${profit?.amount} ${
+                        currencySelected === BITCOIN ? 'BTC' : 'ETH'
+                      }`}
+                    </span>
+                  )}
+
                   {windowWidth >= mobileSmall && (
                     <span className="table__value">
                       ${' '}
@@ -208,6 +217,7 @@ const ListOfProfits = ({
                 }`}
               >
                 {currencySelected === BITCOIN ? sumTotalBtc : sumTotalEth}
+                {currencySelected === BITCOIN ? ' BTC' : ' ETH'}
               </span>
             </div>
             <div className="total__item">
