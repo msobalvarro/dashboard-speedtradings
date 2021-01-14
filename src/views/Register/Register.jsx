@@ -507,7 +507,7 @@ const Register = props => {
 
         {tabActive === 1 && (
           <div className="tab">
-            <h2>Informacion basica</h2>
+            <h2 className="label white">Informacion basica</h2>
 
             <div className="row-group">
               <div className="col">
