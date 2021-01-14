@@ -1,134 +1,187 @@
-@import "../../utils/constants.scss";
+@import '../../utils/constants.scss';
+
+$breakpoint: 768px;
 
 nav.navigation-bar {
-    align-items: center;
-    // background-color: red;
+  align-items: center;
+  display: flex;
+  justify-content: space-between;
+
+  height: 64px;
+  position: relative;
+  padding: 0 5%;
+  width: 100vw;
+
+  @media (min-width: $breakpoint) {
+    height: 80px;
+    width: 90%;
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0;
+  }
+
+  .content-logo {
+    position: relative;
+
+    img.brand-logo {
+      max-width: 128px;
+      position: relative;
+    }
+  }
+}
+
+.overlay__navbar {
+  transition: all 1s ease;
+  position: absolute;
+  width: 100%;
+  z-index: 99;
+  top: 64px;
+  left: 0;
+  right: 0;
+  display: none;
+  justify-content: center;
+  align-items: center;
+  transition: $transition;
+
+  background: $colorMain;
+
+  @media (min-width: $breakpoint) {
+    width: 500px;
+    background: transparent;
+    height: 80px;
+    position: static;
+  }
+
+  &.visible {
     display: flex;
-    justify-content: space-between;
-    // margin-top: 25px;
-    padding: 0 25px;
+  }
+}
+
+div.content-links {
+  position: relative;
+  display: grid;
+  align-items: center;
+  grid-gap: 8px;
+  grid-template-columns: 1fr;
+  grid-template-rows: repeat(3, 1fr);
+  padding-bottom: 25px;
+  width: 90%;
+  max-width: 300px;
+  margin: 0 auto;
+  text-align: center;
+
+  @media (min-width: $breakpoint) {
+    justify-content: end;
+    grid-template-columns: repeat(3, min-content);
+    grid-template-rows: 1fr;
+    padding: 0;
+    text-align: left;
     width: 100%;
+    max-width: 100%;
+    margin: 0;
+  }
 
-    .content-logo {
-        position: relative;
+  a {
+    text-decoration: none;
+    position: relative;
+    margin: 0 15px;
+    cursor: pointer;
+    color: #fff;
+    font-size: 16px;
 
-        img.brand-logo {
-            max-width: 128px;
-            position: relative;
-    
-        }
+    transition: $transition;
+
+    &:hover {
+      color: $colorSecondary;
     }
 
-
-    div.content-links {
-        position: relative;
-        display: flex;
-        align-items: center;
-
-        a {
-            text-decoration: none;
-            position: relative;
-            margin: 0 15px;
-            cursor: pointer;
-            color: #FFF;
-            font-size: 16px;
-
-            transition: $transition;
-
-            &:hover {
-                color: $colorSecondary;
-            }
-
-            &.active {
-                color: $colorSecondary;
-            }
-
-            &.app {
-                display: flex;
-                justify-content: space-between;
-                align-items: center;
-
-                img.play-store {
-                    max-height: 16px;
-                    margin-left: 10px;
-                }
-            }
-
-
-            &.comming-soon::before {
-                border-radius: 3px;
-                content: 'Proximamente';
-                font-size: 10px;
-                background: #c53c1a;
-                bottom: -25px;
-                /* left: 50%; */
-                position: absolute;
-                padding: 5px;
-              }
-        }
+    &.active {
+      color: $colorSecondary;
     }
 
-    .dropdown {
-        display: flex;
-        flex-direction: row;
-        justify-content: space-between;
-        align-items: center;
-        border: none;
-        outline: none;
-        padding: .5rem 1rem;
-        border-radius: 25px;
-        font-size: inherit;
-        background-color: transparent;
-        color: $colorSecondary;
-        border: 2px solid $colorSecondary;
+    &.app {
+      display: flex;
+      justify-content: center;
+      align-items: center;
 
-        svg {
-            height: 1rem;
-            margin-left: .5rem;
-            transition: transform .25s;
-        }
-
-        .arrow {
-            transform: rotate(-90deg);
-            polygon {
-                fill: $colorSecondary;
-                stroke: $colorSecondary;
-            }
-        }
-
-        .verifyBadget {
-            path {
-                fill: #2E8B12;
-            }
-        }
-
-        &.active {
-            .arrow {
-                transform: rotate(90deg);
-            }
-        }
+      img.play-store {
+        max-height: 16px;
+        margin-left: 10px;
+      }
     }
 
-    .dropdown-content {
-        position: absolute;
-        display: flex;
-        flex-direction: column;
-        top: calc(100% + 5px);
-        right: 0;
-        padding: .5rem 0;
-        border-radius: 7px;
-        text-align: right;
-        background-color: $colorMain;
-        transform: scaleY(0);
-        transform-origin: top center;
-        transition: transform .25s;
-
-        a {
-            padding: .25rem .75rem;
-        }
-
-        &.active {
-            transform: scaleY(1);
-        }
+    &.comming-soon::before {
+      border-radius: 3px;
+      content: 'Proximamente';
+      font-size: 10px;
+      background: #c53c1a;
+      bottom: -25px;
+      position: absolute;
+      padding: 5px;
     }
+  }
+
+  .dropdown {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    border: none;
+    outline: none;
+    padding: 0.5rem 1rem;
+    border-radius: 25px;
+    font-size: inherit;
+    background-color: transparent;
+    color: $colorSecondary;
+    border: 2px solid $colorSecondary;
+
+    svg {
+      height: 1rem;
+      margin-left: 0.5rem;
+      transition: transform 0.25s;
+    }
+
+    .arrow {
+      transform: rotate(-90deg);
+      polygon {
+        fill: $colorSecondary;
+        stroke: $colorSecondary;
+      }
+    }
+
+    .verifyBadget {
+      path {
+        fill: #2e8b12;
+      }
+    }
+
+    &.active {
+      .arrow {
+        transform: rotate(90deg);
+      }
+    }
+  }
+
+  .dropdown-content {
+    position: absolute;
+    display: flex;
+    flex-direction: column;
+    top: calc(100% + 5px);
+    right: 0;
+    padding: 0.5rem 0;
+    border-radius: 7px;
+    text-align: right;
+    background-color: $colorMain;
+    transform: scaleY(0);
+    transform-origin: top center;
+    transition: transform 0.25s;
+
+    a {
+      padding: 0.25rem 0.75rem;
+    }
+
+    &.active {
+      transform: scaleY(1);
+    }
+  }
 }

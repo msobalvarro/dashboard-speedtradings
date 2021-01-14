@@ -1,20 +1,20 @@
-import React, { useState } from "react"
-import Validator from "validator"
+import React, { useState } from 'react'
+import Validator from 'validator'
 import { Link } from 'react-router-dom'
-import Swal from "sweetalert2"
-import { setStorage, Petition } from "../../utils/constanst"
+import Swal from 'sweetalert2'
+import { setStorage, Petition } from '../../utils/constanst'
 
 // redux storage
-import { useDispatch } from "react-redux"
-import { SETSTORAGE } from "../../store/ActionTypes"
+import { useDispatch } from 'react-redux'
+import { SETSTORAGE } from '../../store/ActionTypes'
 
 // Import components
 import PasswordField from '../../components/PasswordField/PasswordField'
 
 // import Assets
-import "./Login.scss"
-import Logo from "../../static/images/logo.png"
-import alysystem from "../../static/images/alysystem.png"
+import './Login.scss'
+import Logo from '../../static/images/logo.png'
+import alysystem from '../../static/images/alysystem.png'
 
 const Login = () => {
   const dispatch = useDispatch()
@@ -31,7 +31,7 @@ const Login = () => {
   const [loading, setLoading] = useState(false)
 
   // Función a ejecutar cuando se envía el formulario de inicio de sesión
-  const submitLogin = (e) => {
+  const submitLogin = e => {
     e.preventDefault()
 
     // Validamos el correo electronico
@@ -61,29 +61,27 @@ const Login = () => {
     const data = {
       email,
       password,
-      web: true
+      web: true,
     }
 
     try {
-      await Petition.post(`/login`, data)
-        .then(response => {
-          if (response.data.error) {
-            Swal.fire('Error al auntenticar', response.data.message, 'warning')
-          } else {
-            console.log(response.data)
+      await Petition.post(`/login`, data).then(response => {
+        if (response.data.error) {
+          Swal.fire('Error al auntenticar', response.data.message, 'warning')
+        } else {
+          console.log(response.data)
 
-            // Ingresamos los datos en el localstorage
-            setStorage(response.data)
+          // Ingresamos los datos en el localstorage
+          setStorage(response.data)
 
-            dispatch({
-              type: SETSTORAGE,
-              payload: response.data
-            })
+          dispatch({
+            type: SETSTORAGE,
+            payload: response.data,
+          })
 
-            window.location.reload()
-          }
-        })
-
+          window.location.reload()
+        }
+      })
     } catch (error) {
       console.log(error)
     } finally {
@@ -99,42 +97,57 @@ const Login = () => {
         {/* <h2>Inicio de Sesion - Dashboard</h2> */}
 
         <form action="#" onSubmit={submitLogin}>
-          <div className="row">
-            {
-              errEmail
-                ? <span className="error">Email no es Correcto</span>
-                : <span>Correo Electronico</span>
-            }
-            <input required onChange={e => setEmail(e.target.value)} autoFocus value={email} type="email" className="text-input" />
+          <div className="row__login">
+            {errEmail ? (
+              <span className="error">Email no es Correcto</span>
+            ) : (
+              <span>Correo Electronico</span>
+            )}
+            <input
+              required
+              onChange={e => setEmail(e.target.value)}
+              autoFocus
+              value={email}
+              type="email"
+              className="text-input"
+            />
           </div>
 
-          <div className="row">
-            {
-              errPassword
-                ? <span className="error">Contraseña es requerida</span>
-                : <span>Contraseña</span>
-            }
+          <div className="row__login">
+            {errPassword ? (
+              <span className="error">Contraseña es requerida</span>
+            ) : (
+              <span>Contraseña</span>
+            )}
 
-            <PasswordField required value={password} onChange={e => setPassword(e.target.value)} className="text-input" />
+            <PasswordField
+              required
+              value={password}
+              onChange={e => setPassword(e.target.value)}
+              className="text-input"
+            />
 
-            <Link className="password-forgot link" to="reset/password">¿Olvido su contraseña?</Link>
+            <Link className="password-forgot link" to="reset/password">
+              ¿Olvido su contraseña?
+            </Link>
           </div>
 
-          <div className="row">
+          <div className="row__login">
             <button className="button" type="submit" disabled={loading}>
               Login
             </button>
           </div>
 
-          <div className="row">
-            <Link className="link register" to="/register">Registarse</Link>
+          <div className="row__login">
+            <Link className="link register" to="/register">
+              Registarse
+            </Link>
           </div>
 
-          <div className="row">
+          <div className="row__login">
             <img src={alysystem} alt="alysystem" className="from" />
           </div>
         </form>
-
       </div>
     </div>
   )
