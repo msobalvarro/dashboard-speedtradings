@@ -108,7 +108,7 @@ const NavigationBar = () => {
           toggled={showMenu}
           toggle={setShowMenu}
           size={28}
-          color="#fff"
+          color="#ffffff"
         />
       )}
     </nav>

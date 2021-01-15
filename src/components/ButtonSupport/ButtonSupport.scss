@@ -1,6 +1,8 @@
 @import '../../utils/constants.scss';
 
 .container-support {
+  text-align: right;
+  padding-left: 16px;
   position: fixed;
   right: 16px;
   bottom: 16px;
@@ -27,8 +29,7 @@
   justify-content: center;
   border-radius: 50%;
   background-color: $greenColor;
-  box-shadow: rgba(0, 0, 0, 0.8) 0px 10px 20px;
-
+  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.19), 0 6px 6px rgba(0, 0, 0, 0.23);
   transition: $transition;
 
   @media (min-width: 580px) {
