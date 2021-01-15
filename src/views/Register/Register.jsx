@@ -113,6 +113,8 @@ const Register = props => {
   // Hook para forzar un renderizado
   const [__, forceUpdate] = useReducer(x => x + 1, 0)
 
+  const [nameOfSponsor, setNameOfSponsor] = useState('')
+
   /**Coleccion de botones */
   const validationButtons = {
     first:
@@ -173,7 +175,7 @@ const Register = props => {
       }
 
       const { data } = await Petition.post(`/register`, dataSend)
-      console.log(data)
+
       if (data.error) {
         throw String(data.message)
       }
@@ -268,6 +270,9 @@ const Register = props => {
         })
 
         if (data.length > 0) {
+          console.log(data)
+          setNameOfSponsor(data[0]?.name)
+
           setValidateUserSponsor(true)
         } else {
           setRedirect(true)
@@ -488,7 +493,7 @@ const Register = props => {
           <>
             {validateUserSponsor ? (
               <div className="sponsor-message valid">
-                Registro patrocinado por {usernameSponsor}
+                Registro patrocinado por {nameOfSponsor || nameOfSponsor}
               </div>
             ) : (
               <div className="sponsor-message invalid">

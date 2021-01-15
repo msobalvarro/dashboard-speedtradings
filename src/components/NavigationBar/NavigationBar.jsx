@@ -90,7 +90,13 @@ const NavigationBar = () => {
               Ver perfil
             </Link>
 
-            <a href="#" onClick={_ => LogOut('/')}>
+            <a
+              href="#"
+              onClick={e => {
+                e.preventDefault()
+                LogOut('/')
+              }}
+            >
               Cerrar sesión
             </a>
           </div>
