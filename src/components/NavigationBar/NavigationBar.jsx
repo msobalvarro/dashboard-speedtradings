@@ -90,7 +90,13 @@ const NavigationBar = () => {
               Ver perfil
             </Link>
 
-            <a href="#" onClick={_ => LogOut('/')}>
+            <a
+              href="#"
+              onClick={e => {
+                e.preventDefault()
+                LogOut('/')
+              }}
+            >
               Cerrar sesión
             </a>
           </div>
@@ -102,7 +108,7 @@ const NavigationBar = () => {
           toggled={showMenu}
           toggle={setShowMenu}
           size={28}
-          color="#fff"
+          color="#ffffff"
         />
       )}
     </nav>

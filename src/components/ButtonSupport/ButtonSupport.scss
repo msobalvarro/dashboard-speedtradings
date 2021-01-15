@@ -1,47 +1,53 @@
 @import '../../utils/constants.scss';
 
 .container-support {
-  animation: fadeInEffect 0.5s;
-  background-color: rgba($color: $colorMain, $alpha: 0.8);
+  text-align: right;
+  padding-left: 16px;
   position: fixed;
-  top: 0;
-  left: 0;
-  height: 100vh;
-  transition: $transition;
-  width: 100vw;
-  z-index: 1000;
+  right: 16px;
+  bottom: 16px;
+  z-index: 99;
+  display: flex;
+  align-items: center;
+  flex-direction: row-reverse;
+  justify-content: space-between;
+}
 
-  span.label {
-    bottom: 30px;
-    color: $greenColor;
-    right: 120px;
-    font-weight: bold;
-    position: absolute;
-  }
+.tooltip {
+  margin-right: 16px;
+  color: $greenColor;
+  font-weight: bold;
+  display: none;
+  animation: fadeInEffect 0.5s;
+  transition: $transition;
 }
 
 .button-support {
-  padding: 25px;
+  padding: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
   border-radius: 50%;
   background-color: $greenColor;
-  box-shadow: rgba(0, 0, 0, 0.8) 0px 10px 20px;
-  position: fixed;
-  right: -50px;
+  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.19), 0 6px 6px rgba(0, 0, 0, 0.23);
   transition: $transition;
-  bottom: -50px;
-  z-index: 1100;
 
-  &:hover {
-    right: 10px;
+  @media (min-width: 580px) {
+    padding: 16px;
+    right: 25px;
+    bottom: 25px;
   }
 
-  &:hover {
-    right: -20px;
-    bottom: -25px;
+  &:hover ~ .tooltip {
+    display: block;
   }
 }
 
 .support__icon {
-  width: 48px;
-  height: 48px;
+  width: 22px;
+  height: 22px;
+  @media (min-width: 580px) {
+    width: 32px;
+    height: 32px;
+  }
 }
