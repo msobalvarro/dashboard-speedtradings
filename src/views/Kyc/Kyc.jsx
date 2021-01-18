@@ -5,7 +5,7 @@ import './Kyc.scss'
 // Import components
 import ActivityIndicator from '../../components/ActivityIndicator/Activityindicator'
 import Modal from '../../components/Modal/Modal'
-import KycUserForm from '../../components/KycUserForm/KycUserForm'
+import KycUserForm from '../../components/KycUserForm/'
 import KycEcommerceForm from '../../components/KycEcommerceForm/KycEcommerceForm'
 
 // Import utils

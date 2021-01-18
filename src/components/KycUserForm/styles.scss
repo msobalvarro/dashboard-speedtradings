@@ -1,7 +1,7 @@
 @import '../../utils/constants.scss';
 
 .KycUserForm {
-  .section {
+  .section__kyc--person {
     animation: fadeEffect 0.5s;
 
     .title {
@@ -9,20 +9,16 @@
       margin-bottom: 2rem;
     }
 
+    .auto__columns {
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    }
+
     .content__kyc--person {
-      /*display: flex;
-      flex-direction: row;
-      justify-content: space-between;*/
       display: grid;
       grid-gap: 25px;
-      grid-template-rows: 1fr;
       grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-      border: 2px dotted blue;
 
       .content__kyc--item {
-        border: 1px solid red;
-        //width: calc(calc(100% - 100px) / 3);
-
         .subsection {
           padding-bottom: 0.7rem;
 

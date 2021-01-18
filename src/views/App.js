@@ -58,7 +58,7 @@ const App = () => {
 
       // Verificamos sí el usuario completó
       if (payload.kyc_type && payload.kyc_type !== null) {
-        setCompletedKyc(true)
+        setCompletedKyc(false)
       }
 
       // Le decimos que el usuario esta logueado

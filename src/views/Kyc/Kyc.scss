@@ -107,18 +107,28 @@
   }
 
   .container {
-    min-width: 1080px;
-    padding: 1rem 2rem;
+    margin: 0 auto;
+    max-width: 1200px;
+    padding: 2% 5%;
     background-color: rgba(0, 0, 0, 0.4);
-    border-radius: 10px;
+    border-radius: 8px;
 
     .header {
       display: flex;
-      flex-direction: row;
-      justify-content: space-between;
+      flex-direction: column;
+      justify-content: center;
       align-items: center;
+      flex-wrap: wrap;
       width: 100%;
       margin-bottom: 1rem;
+      font-size: 0.8rem;
+
+      @media (min-width: 480px) {
+        flex-direction: row;
+
+        justify-content: space-between;
+        font-size: 1rem;
+      }
 
       .logo {
         height: 4rem;
@@ -143,10 +153,15 @@
   .pager,
   .pager-dotted,
   .footer {
-    display: flex;
-    flex-direction: row;
-    justify-content: center;
-    align-items: center;
+    margin-bottom: 16px;
+    width: 100%;
+    max-width: 450px;
+    margin-left: auto;
+
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+    grid-column-gap: 8px;
+    grid-row-gap: 16px;
   }
 
   .footer {
@@ -188,12 +203,15 @@
     }
 
     .back {
-      margin-right: 1rem;
+      order: 1;
+
+      @media (min-width: 379px) {
+        order: 0;
+      }
       padding-right: 1rem;
     }
 
     .forward {
-      margin-left: 1rem;
       padding-left: 1rem;
 
       .icon {
