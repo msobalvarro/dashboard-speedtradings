@@ -18,6 +18,7 @@ import Countries from '../../utils/countries.json'
 
 // Import components
 import TelephoneField from '../TelephoneField/TelephoneField'
+import SingleDatePicker from '../SingleDatePicker/SingleDatePicker'
 
 const KycUserForm = ({
   state = {},
@@ -213,7 +214,6 @@ const KycUserForm = ({
                 <div className="row__kyc--person">
                   <span className="required">Fecha de nacimiento</span>
                   <input
-                    disabled={isReadOnly}
                     value={
                       state.birthday || moment(new Date()).format('YYYY-MM-DD')
                     }
@@ -227,6 +227,14 @@ const KycUserForm = ({
                     }}
                     type="date"
                     className="picker"
+                  />
+                  <SingleDatePicker
+                    onSelectDate={date => {
+                      if (date) {
+                        calculateUserAge(date)
+                        setState({ ...state, birthday: date })
+                      }
+                    }}
                   />
                 </div>
 
