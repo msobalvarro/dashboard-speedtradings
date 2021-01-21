@@ -6,7 +6,7 @@ import './Kyc.scss'
 import ActivityIndicator from '../../components/ActivityIndicator/Activityindicator'
 import Modal from '../../components/Modal/Modal'
 import KycUserForm from '../../components/KycUserForm/'
-import KycEcommerceForm from '../../components/KycEcommerceForm/KycEcommerceForm'
+import KycEcommerceForm from '../../components/KycEcommerceForm/'
 
 // Import utils
 import {
@@ -288,6 +288,21 @@ const Kyc = () => {
           )}
 
           <div className="footer">
+            {!isUser && (
+              <div className="pager-dotted">
+                {Array(3)
+                  .fill(1)
+                  .map((_, index) => (
+                    <div
+                      key={index}
+                      className={`dotted ${
+                        activeSection === index + 1 ? 'active' : ''
+                      }`}
+                    ></div>
+                  ))}
+              </div>
+            )}
+
             <div className="pager">
               {activeSection !== 1 && (
                 <button
@@ -316,21 +331,6 @@ const Kyc = () => {
                   <CancelIcon className="icon" />
                   Cancelar
                 </button>
-              )}
-
-              {!isUser && (
-                <div className="pager-dotted">
-                  {Array(3)
-                    .fill(1)
-                    .map((_, index) => (
-                      <div
-                        key={index}
-                        className={`dotted ${
-                          activeSection === index + 1 ? 'active' : ''
-                        }`}
-                      ></div>
-                    ))}
-                </div>
               )}
 
               {checkNextVisibility() && (
