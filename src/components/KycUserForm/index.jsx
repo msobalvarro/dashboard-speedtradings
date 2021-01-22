@@ -18,7 +18,6 @@ import Countries from '../../utils/countries.json'
 
 // Import components
 import TelephoneField from '../TelephoneField/TelephoneField'
-import SingleDatePicker from '../SingleDatePicker/SingleDatePicker'
 
 const KycUserForm = ({
   state = {},
@@ -227,14 +226,6 @@ const KycUserForm = ({
                     }}
                     type="date"
                     className="picker"
-                  />
-                  <SingleDatePicker
-                    onSelectDate={date => {
-                      if (date) {
-                        calculateUserAge(date)
-                        setState({ ...state, birthday: date })
-                      }
-                    }}
                   />
                 </div>
 
