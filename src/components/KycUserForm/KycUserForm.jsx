@@ -212,7 +212,6 @@ const KycUserForm = ({
               <div className="row__kyc--person">
                 <span className="required">Fecha de nacimiento</span>
                 <input
-                  disabled={isReadOnly}
                   value={
                     state.birthday || moment(new Date()).format('YYYY-MM-DD')
                   }

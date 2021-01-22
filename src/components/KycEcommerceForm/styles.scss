@@ -1,7 +1,7 @@
 @import '../../utils/constants.scss';
 
-.KycUserForm {
-  .section__kyc--person {
+.KycEcommerceForm {
+  .section__kyc--commerce {
     animation: fadeEffect 0.5s;
 
     .title {
@@ -9,15 +9,57 @@
       margin-bottom: 2rem;
     }
 
-    .auto__columns {
-      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    .name-legal-representative {
+      color: $colorYellow;
+      text-transform: capitalize;
     }
 
-    .content__kyc--person {
-      display: grid;
-      grid-gap: 25px;
-      //grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    .paragraph,
+    .check-paragraph {
+      display: block;
+      margin: 1rem 0;
+      padding: 0.5rem 0;
+      line-height: 1.5;
+    }
+
+    .paragraph-comment {
+      display: block;
+      padding-left: 2rem;
+      font-size: 0.8rem;
+      line-height: 1.5;
+      margin-top: -1rem;
+      margin-bottom: 2rem;
+    }
+
+    .check-paragraph {
+      font-size: 0.8em;
+      padding-left: 2rem;
+
+      input[type='checkbox'] {
+        margin-right: 5px;
+      }
+    }
+
+    .radios-group {
+      label {
+        margin-left: 2rem;
+
+        input[type='radio'] {
+          display: inline-block;
+          margin-right: 0.25rem;
+        }
+      }
+    }
+
+    .content__kyc--commerce {
+      width: 100%;
+
+      .auto__columns--commerce {
+        display: grid;
+        grid-column-gap: 25px;
+        grid-row-gap: 16px;
+        grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      }
 
       .content__kyc--item {
         .subsection {
@@ -28,27 +70,35 @@
           }
         }
 
+        .transactions__container {
+          display: flex;
+          flex-wrap: wrap;
+          gap: 8px 16px;
+        }
+
         .subtitle {
+          margin: 8px 0;
+          //font-size: 0.6em;
           color: $colorSecondary;
           margin-bottom: 1rem;
         }
 
-        .row__kyc--person,
+        .row__kyc--commerce,
         .col {
           display: flex;
           flex-direction: column;
 
           span {
-            display: block;
-            margin-bottom: 2px;
+            display: flex;
+            flex-direction: row;
+            align-items: center;
+            margin-bottom: 5px;
 
             &.required {
               &:after {
-                display: inline-block;
                 content: '\2731';
                 color: $colorRed;
-                font-size: 12px;
-                margin-left: 0.25rem;
+                //margin-left: 0.25rem;
               }
             }
           }
@@ -59,7 +109,7 @@
           flex-direction: row;
         }
 
-        .row__kyc--person,
+        .row__kyc--commerce,
         .row-group {
           margin-bottom: 1rem;
           &:last-child {
@@ -100,10 +150,37 @@
 
         .upload-section {
           span {
-            display: block;
             width: fit-content;
             max-width: 250px;
             font-size: 0.85rem;
+          }
+        }
+
+        .legal-file {
+          flex-direction: row;
+          flex-wrap: wrap;
+          justify-content: flex-start;
+          align-items: center;
+          //padding-left: 1rem;
+
+          span {
+            display: inline-block;
+            height: 100%;
+            margin: 0;
+          }
+
+          .required {
+            margin-right: 1rem;
+          }
+
+          .upload {
+            width: fit-content;
+            padding: 0.5rem 1rem;
+
+            .filename:not(:empty) {
+              display: inline-block;
+              margin-right: 1rem;
+            }
           }
         }
 
@@ -159,27 +236,19 @@
           }
         }
       }
-    }
-  }
 
-  .check-input {
-    display: flex;
-    align-items: center;
-    color: $colorYellow;
-    font-weight: bold;
-
-    input[type='checkbox'] {
-      margin-left: 0.5rem;
-    }
-  }
-
-  .toshow {
-    animation: toshow 0.5s linear;
-
-    @keyframes toshow {
-      from {
-        opacity: 0;
+      .beneficiaries {
+        width: 100%;
       }
+    }
+
+    .transactions-section {
+      max-width: 650px;
+    }
+
+    .table {
+      margin-bottom: 24px;
+      //background-color: rgba(0, 0, 0, 0.2);
     }
   }
 }

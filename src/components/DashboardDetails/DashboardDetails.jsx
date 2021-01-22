@@ -65,7 +65,7 @@ const DashboardDetails = ({ plan, data = {}, upgradePlan }) => {
       {/*BARRA DE PROGRESO*/}
       <div className="plan__two-columns">
         <div className="plan__group left__align">
-          <span className="caption">Inversión inicial</span>
+          <span className="caption">Monto invertido</span>
           <p className="plan__value bigger">
             {data?.amount}
             {plan === PLAN.BITCOIN ? ' BTC' : ' ETH'}

@@ -127,7 +127,6 @@ const KycEnterpriseView = ({ idUser }) => {
               <span className="label white">
                 No cuenta con ningún beneficiario
               </span>
-              <button className="button green">Agregar beneficiarios</button>
             </div>
           )}
           {kycInfo?.beneficiaries && (

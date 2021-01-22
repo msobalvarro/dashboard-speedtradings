@@ -4,7 +4,6 @@ import { LogOut } from '../../utils/constanst'
 
 // Import Assets
 import Logo from '../../static/images/logo.png'
-import logoPlayStore from '../../static/images/play-store.png'
 import { ReactComponent as ArrowIcon } from '../../static/icons/arrow-back.svg'
 import './NavigationBar.scss'
 import { useSelector } from 'react-redux'
