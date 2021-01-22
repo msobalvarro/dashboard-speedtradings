@@ -1,10 +1,11 @@
 import React, { useState, useEffect } from 'react'
 import TextGroup from '../TextGroup/TextGroup'
 import './KycPersonView.scss'
-import { Petition, getCountry } from '../../utils/constanst'
+import { calcAge, Petition, getCountry } from '../../utils/constanst'
 import ActivityIndicator from '../../components/ActivityIndicator/Activityindicator'
 import Swal from 'sweetalert2'
 import { useSesionStorage } from '../../utils/hooks/useSesionStorage'
+import ModalAddBeneficiary from '../ModalAddBeneficiary/ModalAddBeneficiary'
 
 const relationship = [
   'Padre / Madre',
@@ -14,10 +15,16 @@ const relationship = [
   'Otro',
 ]
 
-const KycPersonView = ({ idUser }) => {
+const KycPersonView = ({
+  idUser,
+  modalAddBeneficiary,
+  setModalAddBeneficiary,
+}) => {
   const [loader, setLoader] = useState(false)
   const KEY = `kyc-info-${idUser}`
   const [kycInfo, setKycInfo] = useSesionStorage(KEY, {})
+  const [userAge, setUserAge] = useState(0)
+  const [password, setPassword] = useState('')
 
   /**Obtener datos del KYC del usuario */
   const getData = async () => {
@@ -31,11 +38,52 @@ const KycPersonView = ({ idUser }) => {
       if (data.error) {
         throw String(data.message)
       } else {
-        //Cargar la foto de perfil si esta disponible
         setKycInfo(data)
       }
     } catch (error) {
       Swal.fire('Ha ocurrido un error', error, 'error')
+    } finally {
+      setLoader(false)
+    }
+  }
+
+  const handleAddBeneficiary = async () => {
+    const { value } = await Swal.fire({
+      title: 'Ingresa tu contraseña',
+      input: 'password',
+      inputAttributes: {
+        maxlength: 32,
+        minlength: 3,
+        autocapitalize: 'off',
+        autocorrect: 'off',
+      },
+    })
+
+    setLoader(true)
+
+    // Datos de las credenciales a enviar
+    const data = {
+      email: kycInfo?.email,
+      password: value,
+      web: true,
+    }
+
+    try {
+      await Petition.post(`/login`, data).then(response => {
+        if (response.data.error) {
+          Swal.fire('Contraseña incorrecta', '', 'warning')
+        } else {
+          //Guardamos la contraseña
+          const _userAge = calcAge(kycInfo?.birthday)
+          setPassword(value)
+          //Guardamos la edad del usuario
+          setUserAge(_userAge)
+
+          setModalAddBeneficiary(true)
+        }
+      })
+    } catch (error) {
+      console.log(error)
     } finally {
       setLoader(false)
     }
@@ -73,13 +121,15 @@ const KycPersonView = ({ idUser }) => {
               />
               <TextGroup
                 label="Parentesco"
-                value={relationship[kycInfo?.beneficiary?.relationship]}
+                value={relationship[kycInfo?.beneficiary?.relationship - 1]}
               />
             </div>
           ) : (
             <div className="empty__beneficiary">
               <span className="label white">No cuenta con un beneficiario</span>
-              {/*<button className="button green">Agregar beneficiario</button>*/}
+              <button className="button green" onClick={handleAddBeneficiary}>
+                Agregar beneficiario
+              </button>
             </div>
           )}
         </div>
@@ -110,6 +160,16 @@ const KycPersonView = ({ idUser }) => {
           value={kycInfo?.direction2 || 'Sin datos'}
         />
       </div>
+
+      {modalAddBeneficiary && (
+        <ModalAddBeneficiary
+          password={password}
+          setPassword={setPassword}
+          setKycInfo={setKycInfo}
+          userAge={userAge}
+          closeModal={() => setModalAddBeneficiary(false)}
+        />
+      )}
     </section>
   )
 }

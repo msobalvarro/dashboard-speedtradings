@@ -49,6 +49,7 @@ const Profile = () => {
   const [walletBtc, setWalletBtc] = useState('')
   const [walletEth, setWalletEth] = useState('')
   const [info, setInfo] = useState(null)
+  const [modalAddBeneficiary, setModalAddBeneficiary] = useState(false)
 
   // Estado que almacena la url de la foto de perfil del usuario
   const [profilePhoto, setProfilePhoto] = useSesionStorage(
@@ -162,7 +163,7 @@ const Profile = () => {
 
   return (
     <>
-      {!showModalTerms && <NavigationBar />}
+      {!showModalTerms && !modalAddBeneficiary && <NavigationBar />}
 
       <section className="profile">
         <Link to="/">
@@ -247,7 +248,11 @@ const Profile = () => {
         )}
         {checkActiveTab(INFORMATION_TAB) &&
           (profileData.kyc_type === 1 ? (
-            <KycPersonView idUser={profileData.id_user} />
+            <KycPersonView
+              idUser={profileData.id_user}
+              modalAddBeneficiary={modalAddBeneficiary}
+              setModalAddBeneficiary={setModalAddBeneficiary}
+            />
           ) : (
             <KycEnterpriseView idUser={profileData.id_user} />
           ))}

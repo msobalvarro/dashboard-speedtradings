@@ -33,7 +33,7 @@ const Sponsors = () => {
     'https://' + window.location.host + '/#/register/' + globalStorage.username
 
   // Estado para controlar la visibilidad del indicador de carga
-  const [loader, setLoader] = useState(true)
+  const [loader, setLoader] = useState(false)
 
   // Estados para almacenar la información de los planes
   const [data, setData] = useState([])
@@ -60,7 +60,6 @@ const Sponsors = () => {
           if (data && status === 200) {
             setData(data)
           }
-          setLoader(false)
         })
         .catch(reason => {
           throw String(reason)
@@ -71,7 +70,7 @@ const Sponsors = () => {
         'Se ha producido un error al cargar los datos, intentelo mas tarde o contacte a soporte',
         'error'
       )
-
+    } finally {
       setLoader(false)
     }
   }, [])

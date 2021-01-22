@@ -107,18 +107,28 @@
   }
 
   .container {
-    min-width: 1080px;
-    padding: 1rem 2rem;
+    margin: 0 auto;
+    max-width: 1200px;
+    padding: 2% 5%;
     background-color: rgba(0, 0, 0, 0.4);
-    border-radius: 10px;
+    border-radius: 8px;
 
     .header {
       display: flex;
-      flex-direction: row;
-      justify-content: space-between;
+      flex-direction: column;
+      justify-content: center;
       align-items: center;
+      flex-wrap: wrap;
       width: 100%;
       margin-bottom: 1rem;
+      font-size: 0.8rem;
+
+      @media (min-width: 480px) {
+        flex-direction: row;
+
+        justify-content: space-between;
+        font-size: 1rem;
+      }
 
       .logo {
         height: 4rem;
@@ -140,17 +150,46 @@
     }
   }
 
-  .pager,
-  .pager-dotted,
-  .footer {
-    display: flex;
-    flex-direction: row;
-    justify-content: center;
-    align-items: center;
+  .pager {
+    width: 100%;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+    grid-column-gap: 8px;
+    grid-row-gap: 16px;
   }
 
   .footer {
-    justify-content: flex-end;
+    margin: 16px auto 32px auto;
+    width: 100%;
+    max-width: 450px;
+    margin-left: auto;
+
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 16px;
+  }
+
+  .pager-dotted {
+    display: flex;
+    width: 80px;
+    .dotted {
+      width: 0.75rem;
+      height: 0.75rem;
+      margin-right: 0.5rem;
+      background-color: rgba(darken(#fff, 20), 0.4);
+      border-radius: 100px;
+      transition: width 0.25s;
+
+      &:last-child {
+        margin-right: 0;
+      }
+
+      &.active {
+        background-color: $colorSecondary;
+        width: 2rem;
+      }
+    }
   }
 
   .pager {
@@ -188,12 +227,15 @@
     }
 
     .back {
-      margin-right: 1rem;
+      order: 1;
+
+      @media (min-width: 374px) {
+        order: 0;
+      }
       padding-right: 1rem;
     }
 
     .forward {
-      margin-left: 1rem;
       padding-left: 1rem;
 
       .icon {
@@ -212,32 +254,14 @@
         box-shadow: 0 0 0 3px rgba($colorRed, 0.4);
       }
     }
-
-    .dotted {
-      width: 0.75rem;
-      height: 0.75rem;
-      margin-right: 0.5rem;
-      background-color: rgba(darken(#fff, 20), 0.4);
-      border-radius: 100px;
-      transition: width 0.25s;
-
-      &:last-child {
-        margin-right: 0;
-      }
-
-      &.active {
-        background-color: $colorSecondary;
-        width: 2rem;
-      }
-    }
   }
 
   textarea.text-input {
     display: block;
     width: calc(100% - 2rem);
     height: 7rem;
-    margin-left: 1rem;
-    margin-right: 1rem;
+    //margin-left: 1rem;
+    //margin-right: 1rem;
     margin-bottom: 1rem;
   }
 
