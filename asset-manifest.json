@@ -1,19 +1,19 @@
 {
   "files": {
-    "main.css": "/static/css/main.1a8723e2.chunk.css",
-    "main.js": "/static/js/main.a821a074.chunk.js",
-    "main.js.map": "/static/js/main.a821a074.chunk.js.map",
+    "main.css": "/static/css/main.0d1d6373.chunk.css",
+    "main.js": "/static/js/main.dd5ab4b7.chunk.js",
+    "main.js.map": "/static/js/main.dd5ab4b7.chunk.js.map",
     "runtime-main.js": "/static/js/runtime-main.d918a19f.js",
     "runtime-main.js.map": "/static/js/runtime-main.d918a19f.js.map",
     "static/css/2.ab24d203.chunk.css": "/static/css/2.ab24d203.chunk.css",
-    "static/js/2.6f0c91f0.chunk.js": "/static/js/2.6f0c91f0.chunk.js",
-    "static/js/2.6f0c91f0.chunk.js.map": "/static/js/2.6f0c91f0.chunk.js.map",
+    "static/js/2.6a9b3251.chunk.js": "/static/js/2.6a9b3251.chunk.js",
+    "static/js/2.6a9b3251.chunk.js.map": "/static/js/2.6a9b3251.chunk.js.map",
     "index.html": "/index.html",
-    "precache-manifest.fbf109d08080c53f4ea29c9ae0ef041b.js": "/precache-manifest.fbf109d08080c53f4ea29c9ae0ef041b.js",
+    "precache-manifest.aab705a9ff6be0caa037132301999fb4.js": "/precache-manifest.aab705a9ff6be0caa037132301999fb4.js",
     "service-worker.js": "/service-worker.js",
     "static/css/2.ab24d203.chunk.css.map": "/static/css/2.ab24d203.chunk.css.map",
-    "static/css/main.1a8723e2.chunk.css.map": "/static/css/main.1a8723e2.chunk.css.map",
-    "static/js/2.6f0c91f0.chunk.js.LICENSE.txt": "/static/js/2.6f0c91f0.chunk.js.LICENSE.txt",
+    "static/css/main.0d1d6373.chunk.css.map": "/static/css/main.0d1d6373.chunk.css.map",
+    "static/js/2.6a9b3251.chunk.js.LICENSE.txt": "/static/js/2.6a9b3251.chunk.js.LICENSE.txt",
     "static/media/AlyCoin.png": "/static/media/AlyCoin.60352b68.png",
     "static/media/AlyPay.png": "/static/media/AlyPay.ee5c670b.png",
     "static/media/AlySystem-banner.png": "/static/media/AlySystem-banner.1fc9bcce.png",
@@ -41,7 +41,6 @@
     "static/media/logo.png": "/static/media/logo.a55e71ae.png",
     "static/media/moon.svg": "/static/media/moon.9fae7645.svg",
     "static/media/placeholder-profile.jpg": "/static/media/placeholder-profile.0b9235c3.jpg",
-    "static/media/play-store.png": "/static/media/play-store.5d3baf62.png",
     "static/media/playstore.png": "/static/media/playstore.ec88b932.png",
     "static/media/rocket.svg": "/static/media/rocket.7461c5ac.svg",
     "static/media/save.7aec079e.svg": "/static/media/save.7aec079e.svg",
@@ -52,8 +51,8 @@
   "entrypoints": [
     "static/js/runtime-main.d918a19f.js",
     "static/css/2.ab24d203.chunk.css",
-    "static/js/2.6f0c91f0.chunk.js",
-    "static/css/main.1a8723e2.chunk.css",
-    "static/js/main.a821a074.chunk.js"
+    "static/js/2.6a9b3251.chunk.js",
+    "static/css/main.0d1d6373.chunk.css",
+    "static/js/main.dd5ab4b7.chunk.js"
   ]
 }
