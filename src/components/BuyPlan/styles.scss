@@ -1,6 +1,7 @@
 .modal__buyplan {
-  max-width: 500px;
-  & .modal__icon--container {
-    text-align: center;
-  }
+    position: relative;
+    max-width: 500px;
+    & .modal__icon--container {
+        text-align: center;
+    }
 }

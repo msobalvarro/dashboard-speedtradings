@@ -46,9 +46,9 @@ const DashboardDetails = ({ plan, data = {}, upgradePlan }) => {
             }`}
           >
             {plan === 'bitcoin' ? (
-              <BitcoinIcon className="plan__icon icon" color="#ffcb08" />
+              <BitcoinIcon className="card__plan--icon icon" color="#ffcb08" />
             ) : (
-              <EthereumIcon className="plan__icon icon" color="#9ed3da" />
+              <EthereumIcon className="card__plan--icon icon" color="#9ed3da" />
             )}
           </div>
           <span className="value">Plan {plan}</span>
