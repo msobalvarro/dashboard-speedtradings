@@ -225,7 +225,7 @@ const Dashboard = () => {
                     <p className="label white">{greeting}</p>
                 </div>
                 <main className="plan__container">
-                    {dataDashoardBTC.info && !loader ? (
+                    {dataDashoardBTC.info ? (
                         <DashboardDetails
                             plan={BITCOIN.name}
                             data={dataDashoardBTC.info}
@@ -234,18 +234,20 @@ const Dashboard = () => {
                             }
                         />
                     ) : (
-                        <EmptyPlan
-                            plan={BITCOIN.name}
-                            onClick={() =>
-                                setModalBuyPlan({
-                                    visible: true,
-                                    idCrypto: BITCOIN.id,
-                                })
-                            }
-                        />
+                        !loader && (
+                            <EmptyPlan
+                                plan={BITCOIN.name}
+                                onClick={() =>
+                                    setModalBuyPlan({
+                                        visible: true,
+                                        idCrypto: BITCOIN.id,
+                                    })
+                                }
+                            />
+                        )
                     )}
 
-                    {dataDashoardETH.info && !loader ? (
+                    {dataDashoardETH.info ? (
                         <DashboardDetails
                             plan={ETHEREUM.name}
                             data={dataDashoardETH.info}
@@ -254,15 +256,17 @@ const Dashboard = () => {
                             }
                         />
                     ) : (
-                        <EmptyPlan
-                            plan={ETHEREUM.name}
-                            onClick={() =>
-                                setModalBuyPlan({
-                                    visible: true,
-                                    idCrypto: ETHEREUM.id,
-                                })
-                            }
-                        />
+                        !loader && (
+                            <EmptyPlan
+                                plan={ETHEREUM.name}
+                                onClick={() =>
+                                    setModalBuyPlan({
+                                        visible: true,
+                                        idCrypto: ETHEREUM.id,
+                                    })
+                                }
+                            />
+                        )
                     )}
                 </main>
 
