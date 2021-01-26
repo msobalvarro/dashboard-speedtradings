@@ -45,22 +45,20 @@ export const commercialCategories = [
  * recibe el callback de un React.State y almacena dentro del State el objeto con la información
  * de las wallets
  */
-export const getWallets = async (walletState) => {
+export const getWallets = async walletState => {
     const { data } = await Petition.get('/collection/directions')
 
     // Se recorren los pares de llave:valor de la data obtenida y se construye el objeto final de las wallets
-    let walletsData = Object.entries(data).map((entrie) => {
+    let walletsData = Object.entries(data).map(entrie => {
         let [coinName, wallet_hash] = entrie
 
         // Si la entrada contiene subentradas, también se recorren
         if (coinName.toLowerCase() === 'alypay') {
-            let alypay_wallets = Object.entries(wallet_hash).map(
-                (subentrie) => {
-                    const [subCoinName, subWallet_hash] = subentrie
+            let alypay_wallets = Object.entries(wallet_hash).map(subentrie => {
+                const [subCoinName, subWallet_hash] = subentrie
 
-                    return [getCoinSymbol(subCoinName), subWallet_hash]
-                }
-            )
+                return [getCoinSymbol(subCoinName), subWallet_hash]
+            })
 
             wallet_hash = fromEntries(alypay_wallets)
         }
@@ -74,7 +72,7 @@ export const getWallets = async (walletState) => {
 }
 
 // Construye un objeto a partir de las entradas de uno existente
-const fromEntries = (data) => {
+const fromEntries = data => {
     let result = {}
 
     for (let i = 0; i < data.length; i++) {
@@ -89,7 +87,7 @@ const fromEntries = (data) => {
  * Método que retorna el simbolo de una moneda según su nombre
  * @param {String} coinName
  */
-const getCoinSymbol = (coinName) => {
+const getCoinSymbol = coinName => {
     switch (coinName.toUpperCase()) {
         case 'BITCOIN':
             return 'btc'
@@ -167,7 +165,7 @@ export const Round = (number = 0) => Math.round(number * 100) / 100
 /**
  * Return a unique string to use how component key into react
  * */
-export const randomKey = (_) => '_' + Math.random().toString(36).substr(2, 9)
+export const randomKey = _ => '_' + Math.random().toString(36).substr(2, 9)
 
 /**
  * Creates a function like `round`. Extract from lodash library
@@ -247,7 +245,7 @@ export const calculateCryptoPriceWithoutFee = (price = 0, amount = 0) => {
  * Calcula la edad según una fecha
  * @param {String | Date} birthDate - Fecha a evaluar
  */
-export const calcAge = (birthDate) => {
+export const calcAge = birthDate => {
     let NOW = moment(new Date(), 'YYYY-MM-DD')
     let fromDate = moment(birthDate, 'YYYY-MM-DD')
     // Se calcula la edad
@@ -295,7 +293,7 @@ export const uploadFile = async (file, update = null) => {
             .then(({ data }) => {
                 resolve(data)
             })
-            .catch((error) => resolve({ error: true, message: error }))
+            .catch(error => resolve({ error: true, message: error }))
     })
 }
 
@@ -303,7 +301,7 @@ export const uploadFile = async (file, update = null) => {
  * Función para leer un archivo y retornarlo en base64
  * @param {File} file - Archivo a leer y retornar en base64
  */
-export const readFile = (fileId) =>
+export const readFile = fileId =>
     new Promise(async (resolve, _) => {
         Petition.get(`/file/${fileId}`, {
             responseType: 'arraybuffer',
@@ -313,7 +311,7 @@ export const readFile = (fileId) =>
 
                 resolve(blob)
             })
-            .catch((error) => resolve({ error: true, message: error }))
+            .catch(error => resolve({ error: true, message: error }))
     })
 
 /**
@@ -321,7 +319,7 @@ export const readFile = (fileId) =>
  * @param {File} image - Imagen original
  * @return {File} compressImage - Imagen comprimida
  */
-export const compressImage = (image) =>
+export const compressImage = image =>
     new Promise(async (resolve, _) => {
         if (!image) {
             resolve(null)
@@ -369,17 +367,17 @@ export const compressImage = (image) =>
 
 const Petition = Axios.create({
     baseURL: urlServer,
-    validateStatus: (status) => {
+    validateStatus: status => {
         if (status === 401) {
             console.error('logout')
-            window.setTimeout((_) => LogOut(), 2000)
+            window.setTimeout(_ => LogOut(), 2000)
         }
 
         return status >= 200 && status < 300
     },
 })
 
-Petition.interceptors.request.use((config) => {
+Petition.interceptors.request.use(config => {
     // Se añade el token de acceso antes de cada petición
     config.headers = {
         ...config.headers,
@@ -441,7 +439,7 @@ export const getStorage = () => {
 export const getCountry = (code = -1) => {
     if (code === -1) return
     //Obtener nombre de la nacionalidad
-    const country = countries.filter((country) => country.phoneCode === code)
+    const country = countries.filter(country => country.phoneCode === code)
 
     return country[0].name
 }
