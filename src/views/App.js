@@ -23,80 +23,96 @@ import Reset from './Reset/Reset'
 import Kyc from './Kyc/Kyc'
 
 const App = () => {
-  const dispatch = useDispatch()
-  const [loged, setLogin] = useState(false)
-  // Estado que almacena la verificación cuando un usuario ha completado o no el kyc
-  const [completedKyc, setCompletedKyc] = useState(false)
+    const dispatch = useDispatch()
+    const [loged, setLogin] = useState(false)
+    // Estado que almacena la verificación cuando un usuario ha completado o no el kyc
+    const [completedKyc, setCompletedKyc] = useState(false)
 
-  /**
-   * Función que verifica sí un usuario completo la informaciónd el kyc, y sí no lo ha
-   * hecho, le indica que debe hacerlo
-   * @param {React.Component} child - componente a renderizar en caso de haber completado
-   * el formulario kyc
-   */
-  const checkKycComplete = child => {
-    return completedKyc ? child : _ => <Redirect to="/kyc" />
-  }
-
-  /**
-   * Deshabilita el acceso a la vista del kyc cuando este ya eha sido completado
-   */
-  const checkKycAccess = () => {
-    return !completedKyc ? _ => <Kyc /> : _ => <Redirect to="/" />
-  }
-
-  useEffect(() => {
-    const payload = getStorage()
-
-    // Comprueba si hay datos retornados en el payload
-    if (Object.keys(payload).length > 0) {
-      // Creamos el dispatch para el storage de redux
-      dispatch({
-        type: SETSTORAGE,
-        payload,
-      })
-
-      // Verificamos sí el usuario completó
-      if (payload.kyc_type && payload.kyc_type !== null) {
-        setCompletedKyc(true)
-      }
-
-      // Le decimos que el usuario esta logueado
-      setLogin(true)
-    } else {
-      setLogin(false)
-      // Destruimos el sorage
-      dispatch({ type: DELETESTORAGE })
+    /**
+     * Función que verifica sí un usuario completo la informaciónd el kyc, y sí no lo ha
+     * hecho, le indica que debe hacerlo
+     * @param {React.Component} child - componente a renderizar en caso de haber completado
+     * el formulario kyc
+     */
+    const checkKycComplete = child => {
+        return completedKyc ? child : _ => <Redirect to="/kyc" />
     }
-  }, [])
 
-  return (
-    <>
-      <HashRouter>
-        {loged && (
-          <Switch>
-            <Route path="/" exact component={checkKycComplete(Dashboard)} />
-            <Route path="/sponsors" component={checkKycComplete(Sponsors)} />
-            <Route path="/profile" component={checkKycComplete(Profile)} />
-            <Route path="/kyc" component={checkKycAccess()} />
-            <Route path="*" component={checkKycComplete(NotFound)} />
-          </Switch>
-        )}
+    /**
+     * Deshabilita el acceso a la vista del kyc cuando este ya eha sido completado
+     */
+    const checkKycAccess = () => {
+        return !completedKyc ? _ => <Kyc /> : _ => <Redirect to="/" />
+    }
 
-        {!loged && (
-          <Switch>
-            <Route path="/" exact component={Login} />
-            <Route path="/register" exact component={Register} />
-            <Route path="/register/:username" component={Register} />
-            <Route path="/reset/password" component={Reset} />
-            <Route path="*" component={NotFound} />
-          </Switch>
-        )}
-      </HashRouter>
+    useEffect(() => {
+        const payload = getStorage()
 
-      <ButtonSupport />
-    </>
-  )
+        // Comprueba si hay datos retornados en el payload
+        if (Object.keys(payload).length > 0) {
+            // Creamos el dispatch para el storage de redux
+            dispatch({
+                type: SETSTORAGE,
+                payload,
+            })
+
+            // Verificamos sí el usuario completó
+            if (payload.kyc_type && payload.kyc_type !== null) {
+                setCompletedKyc(true)
+            }
+
+            // Le decimos que el usuario esta logueado
+            setLogin(true)
+        } else {
+            setLogin(false)
+            // Destruimos el sorage
+            dispatch({ type: DELETESTORAGE })
+        }
+    }, [])
+
+    return (
+        <>
+            <HashRouter>
+                {loged && (
+                    <Switch>
+                        <Route
+                            path="/"
+                            exact
+                            component={checkKycComplete(Dashboard)}
+                        />
+                        <Route
+                            path="/sponsors"
+                            component={checkKycComplete(Sponsors)}
+                        />
+                        <Route
+                            path="/profile"
+                            component={checkKycComplete(Profile)}
+                        />
+                        <Route path="/kyc" component={checkKycAccess()} />
+                        <Route
+                            path="*"
+                            component={checkKycComplete(Dashboard)}
+                        />
+                    </Switch>
+                )}
+
+                {!loged && (
+                    <Switch>
+                        <Route path="/" exact component={Login} />
+                        <Route path="/register" exact component={Register} />
+                        <Route
+                            path="/register/:username"
+                            component={Register}
+                        />
+                        <Route path="/reset/password" component={Reset} />
+                        <Route path="*" component={Login} />
+                    </Switch>
+                )}
+            </HashRouter>
+
+            <ButtonSupport />
+        </>
+    )
 }
 
 export default App

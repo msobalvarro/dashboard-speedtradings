@@ -1,7 +1,7 @@
 .modal__upgrade {
-  max-width: 400px;
-
-  & .mt {
-    margin-top: 64px;
-  }
+    max-width: 400px;
+    position: relative;
+    & .mt {
+        margin-top: 64px;
+    }
 }
