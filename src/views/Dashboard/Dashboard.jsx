@@ -312,7 +312,7 @@ const Dashboard = () => {
                                             }
                                         >
                                             <BitcoinIcon
-                                                className="switch__icon icon"
+                                                className="switch__icon icon-color"
                                                 color="#ffcb08"
                                             />
                                         </div>
@@ -330,7 +330,7 @@ const Dashboard = () => {
                                             }
                                         >
                                             <EthereumIcon
-                                                className="switch__icon icon"
+                                                className="switch__icon icon-color"
                                                 color="#9ed3da"
                                             />
                                         </div>
