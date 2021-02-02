@@ -20,7 +20,8 @@ const chartOptions = {
 }
 
 const LineChart = ({ dataDashoardBTC, dataDashoardETH }) => {
-    const [chartData, setChartData] = useState({})
+    const [chartDataBTC, setChartDataBTC] = useState({})
+    const [chartDataETH, setChartDataETH] = useState({})
 
     const getLabels = _data => {
         if (!_data) return []
@@ -28,8 +29,6 @@ const LineChart = ({ dataDashoardBTC, dataDashoardETH }) => {
         //Copiar datos e invetir orden de los valores
         const orderedData = _data.slice()
         orderedData.reverse()
-
-        console.log(orderedData)
 
         //Obtener los labels
         return orderedData.map(item => moment(item.date).format('ddd DD MMM'))
@@ -43,13 +42,12 @@ const LineChart = ({ dataDashoardBTC, dataDashoardETH }) => {
 
         orderedData.reverse()
 
-        console.log(orderedData)
         //Obtener los valores para las graficas
         return orderedData.map(item => item.percentage)
     }
 
-    const loadChart = () => {
-        setChartData({
+    const loadChartBTC = () => {
+        setChartDataBTC({
             labels: getLabels(dataDashoardBTC.history),
             datasets: [
                 {
@@ -69,6 +67,13 @@ const LineChart = ({ dataDashoardBTC, dataDashoardETH }) => {
                     pointHitRadius: 10,
                     data: getSeries(dataDashoardBTC.history),
                 },
+            ],
+        })
+    }
+    const loadChartETH = () => {
+        setChartDataETH({
+            labels: getLabels(dataDashoardBTC.history),
+            datasets: [
                 {
                     label: 'Ethereum',
                     fill: false,
@@ -92,14 +97,23 @@ const LineChart = ({ dataDashoardBTC, dataDashoardETH }) => {
 
     useEffect(() => {
         //cargamos los datos de la grafica
-
-        loadChart()
-        console.log(dataDashoardBTC)
+        dataDashoardBTC.history && loadChartBTC()
+        dataDashoardETH.history && loadChartETH()
     }, [dataDashoardBTC, dataDashoardETH])
 
     return (
         <section className="graphic__container">
-            <Line data={chartData} options={chartOptions} />
+            {dataDashoardBTC.history && (
+                <div className="graphic__item">
+                    <Line data={chartDataBTC} options={chartOptions} />
+                </div>
+            )}
+
+            {dataDashoardETH.history && (
+                <div className="graphic__item">
+                    <Line data={chartDataETH} options={chartOptions} />
+                </div>
+            )}
         </section>
     )
 }
