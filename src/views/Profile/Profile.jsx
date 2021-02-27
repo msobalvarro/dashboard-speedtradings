@@ -44,7 +44,7 @@ const Profile = () => {
     })
 
     // Estado muestra u oculta el modal de terminos y condiciones
-    const [showModalTerms, setShowModalTerms] = useState(true)
+    const [showModalTerms, setShowModalTerms] = useState(false)
 
     const [walletBtc, setWalletBtc] = useState('')
     const [walletEth, setWalletEth] = useState('')
