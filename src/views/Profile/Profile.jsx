@@ -128,12 +128,13 @@ const Profile = () => {
                 btc: type === BITCOIN ? newWallet : walletBtc,
                 eth: type === ETHEREUM ? newWallet : walletEth,
                 password: password,
+                payWithAlypay: true,
             }
 
             await Petition.post('/profile/update-wallet', dataSend).then(
                 async ({ data }) => {
                     if (data.error) {
-                        throw String(data.message)
+                        throw String('Error al actualizar wallet')
                     } else {
                         //Actualizamos wallet en la interfaz
                         type === BITCOIN && setWalletBtc(newWallet)
