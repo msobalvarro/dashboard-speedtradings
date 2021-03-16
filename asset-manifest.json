@@ -1,18 +1,18 @@
 {
   "files": {
-    "main.css": "/static/css/main.cca111e6.chunk.css",
-    "main.js": "/static/js/main.389fa20c.chunk.js",
-    "main.js.map": "/static/js/main.389fa20c.chunk.js.map",
+    "main.css": "/static/css/main.6d43e32b.chunk.css",
+    "main.js": "/static/js/main.bd8137d9.chunk.js",
+    "main.js.map": "/static/js/main.bd8137d9.chunk.js.map",
     "runtime-main.js": "/static/js/runtime-main.d918a19f.js",
     "runtime-main.js.map": "/static/js/runtime-main.d918a19f.js.map",
     "static/css/2.ab24d203.chunk.css": "/static/css/2.ab24d203.chunk.css",
     "static/js/2.4feba605.chunk.js": "/static/js/2.4feba605.chunk.js",
     "static/js/2.4feba605.chunk.js.map": "/static/js/2.4feba605.chunk.js.map",
     "index.html": "/index.html",
-    "precache-manifest.f89e8e2d4101f10b51ac60fbb152cfae.js": "/precache-manifest.f89e8e2d4101f10b51ac60fbb152cfae.js",
+    "precache-manifest.f0962b714df49da3efd6cd0a5b263ece.js": "/precache-manifest.f0962b714df49da3efd6cd0a5b263ece.js",
     "service-worker.js": "/service-worker.js",
     "static/css/2.ab24d203.chunk.css.map": "/static/css/2.ab24d203.chunk.css.map",
-    "static/css/main.cca111e6.chunk.css.map": "/static/css/main.cca111e6.chunk.css.map",
+    "static/css/main.6d43e32b.chunk.css.map": "/static/css/main.6d43e32b.chunk.css.map",
     "static/js/2.4feba605.chunk.js.LICENSE.txt": "/static/js/2.4feba605.chunk.js.LICENSE.txt",
     "static/media/AlyCoin.png": "/static/media/AlyCoin.60352b68.png",
     "static/media/AlyPay.png": "/static/media/AlyPay.ee5c670b.png",
@@ -52,7 +52,7 @@
     "static/js/runtime-main.d918a19f.js",
     "static/css/2.ab24d203.chunk.css",
     "static/js/2.4feba605.chunk.js",
-    "static/css/main.cca111e6.chunk.css",
-    "static/js/main.389fa20c.chunk.js"
+    "static/css/main.6d43e32b.chunk.css",
+    "static/js/main.bd8137d9.chunk.js"
   ]
 }
