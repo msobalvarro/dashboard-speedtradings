@@ -106,8 +106,12 @@ const Profile = () => {
                 setInfo(data)
 
                 //Cargar wallets
-                setWalletBtc(data?.wallet_btc || 'Sin wallet')
-                setWalletEth(data?.wallet_eth || 'Sin wallet')
+                setWalletBtc(
+                    data?.btc_alypay || data?.wallet_btc || 'Sin wallet'
+                )
+                setWalletEth(
+                    data?.eth_alypay || data?.wallet_eth || 'Sin wallet'
+                )
             }
         } catch (error) {
             Swal.fire('Ha ocurrido un error', error, 'error')
